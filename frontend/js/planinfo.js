@@ -2,6 +2,12 @@
 loadLayout('subscriptions');
 
 async function initPlanInfo() {
+    // ✅ CHECK FOR SUCCESS FLAG FROM PREVIOUS SESSION
+    const wasUpdated = sessionStorage.getItem('plan_update_success');
+    if (wasUpdated === 'true') {
+        showToast("Plan Updated Successfully!", 'success');
+        sessionStorage.removeItem('plan_update_success'); // Clear it so it doesn't show again on next manual refresh
+    }
     // 1. Get ID from Session
     const planId = sessionStorage.getItem('current_plan_id');
     const planType = sessionStorage.getItem('current_plan_type');
@@ -83,7 +89,10 @@ async function initPlanInfo() {
             btnSecondary.innerText = "Cancel";
             btnSecondary.className = "btn-delete-plan";
             
-            btnSecondary.onclick = () => location.reload();
+            btnSecondary.onclick = () => {
+                isEditMode = false;
+                location.reload();
+            };
         } else {
             // --- SUBMIT CHANGES ---
             const price = document.getElementById('pPrice').value.trim();
@@ -139,7 +148,9 @@ async function initPlanInfo() {
 
             const updateRes = await window.pywebview.api.update_plan(updateData);
             if (updateRes.ok) {
-                showToast("Plan Updated Successfully!", 'success');
+                // ✅ Save the success message in memory first
+                sessionStorage.setItem('plan_update_success', 'true');
+                // ✅ Now reload immediately
                 location.reload();
             } else {
                 showToast("Update failed: " + JSON.stringify(updateRes.error), 'error');
