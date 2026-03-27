@@ -1,6 +1,13 @@
 /* frontend/js/customer.js */
 
 document.addEventListener('DOMContentLoaded', async () => {
+    const pendingToast = sessionStorage.getItem('pending_customer_toast');
+    if (pendingToast) {
+        // Split the message and the type (e.g., "Message Text|success")
+        const [msg, type] = pendingToast.split('|');
+        showToast(msg, type || 'info');
+        sessionStorage.removeItem('pending_customer_toast');
+    }
     const filterType = document.getElementById('filterType');
     const filterInput = document.getElementById('filterInput');
     const tableBody = document.getElementById('customerTableBody');

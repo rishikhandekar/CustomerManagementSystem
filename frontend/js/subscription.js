@@ -2,6 +2,12 @@
 loadLayout('subscriptions');
 
 document.addEventListener('DOMContentLoaded', async () => {
+    const pendingToast = sessionStorage.getItem('pending_subscription_toast');
+    if (pendingToast) {
+        const [msg, type] = pendingToast.split('|');
+        showToast(msg, type || 'info');
+        sessionStorage.removeItem('pending_subscription_toast');
+    }
     const tabCable = document.getElementById('tabCable');
     const tabInternet = document.getElementById('tabInternet');
     const tableBody = document.getElementById('planTableBody');

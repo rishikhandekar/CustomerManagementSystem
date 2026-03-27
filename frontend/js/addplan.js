@@ -21,13 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // A. Get User ID
         const userId = sessionStorage.getItem('user_id');
         if (!userId) {
-            alert("Error: User not logged in. Please log in again.");
+            showToast("Error: User not logged in. Please log in again.", 'error');
             return;
         }
 
         // B. Check Selection
         if (!checkCable.checked && !checkInternet.checked) {
-            alert("Please select at least one Subscription Type.");
+            showToast("Please select at least one Subscription Type.", 'warning');
             return;
         }
 
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const duration = document.getElementById('cableDuration').value.trim();
 
             if (!name || !price || !duration) {
-                alert("Please fill all required fields for Cable Plan (Name, Price, Duration).");
+                showToast("Please fill all required fields for Cable Plan (Name, Price, Duration).", 'warning');
                 return; // 🛑 STOP! Nothing is saved yet.
             }
         }
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const duration = document.getElementById('netDuration').value.trim();
 
             if (!speed || !price || !duration) {
-                alert("Please fill all required fields for Internet Plan (Speed, Price, Duration).");
+                showToast("Please fill all required fields for Internet Plan (Speed, Price, Duration).", 'warning');
                 return;
             }
         }
@@ -101,9 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // --- STEP 3: FINAL FEEDBACK ---
         if (errors.length > 0) {
-            alert("Failed to add plans:\n" + errors.join("\n"));
+            showToast("Failed to add plans:\n" + errors.join("\n"), 'error');
         } else if (successCount > 0) {
-            alert("Plan(s) Added Successfully!");
+            // ✅ Save to memory and redirect instantly
+            sessionStorage.setItem('pending_subscription_toast', 'Plan(s) Added Successfully!|success');
             window.location.href = 'subscription.html';
         }
     });

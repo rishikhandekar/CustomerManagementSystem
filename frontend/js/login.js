@@ -1,3 +1,13 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const pendingToast = sessionStorage.getItem("pending_auth_toast");
+    if (pendingToast) {
+        const [msg, type] = pendingToast.split('|');
+        showToast(msg, type || 'success');
+        sessionStorage.removeItem("pending_auth_toast");
+    }
+});
+
+
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 

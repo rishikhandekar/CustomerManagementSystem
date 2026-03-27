@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnWhatsappReminder) {
         btnWhatsappReminder.addEventListener('click', () => {
             if (!subscriptions || subscriptions.length === 0) {
-                alert("No plans available for this customer.");
+                showToast("No plans available for this customer.", 'warning');
                 return;
             }
 
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedWaPlanIds = Array.from(checkboxes).map(cb => cb.value);
 
         if (selectedWaPlanIds.length === 0) {
-            alert("Please select at least one plan.");
+            showToast("Please select at least one plan.", 'warning');
             return;
         }
 
@@ -213,12 +213,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (res.ok) {
-                    alert("WhatsApp bot started! Opening browser to send reminder...");
+                    showToast("WhatsApp bot started! Opening browser...", 'success');
                 } else {
-                    alert("Failed to send reminder: " + res.error);
+                    showToast("Failed to send reminder: " + res.error, 'error');
                 }
             } catch (err) {
-                alert("System Error: " + err);
+                showToast("System Error: " + err, 'error');
             } finally {
                 btnWhatsappReminder.innerText = originalText;
                 btnWhatsappReminder.disabled = false;
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const userId = sessionStorage.getItem('user_id');
 
         if (!custId || !userId) {
-            alert("No customer selected. Going back.");
+            sessionStorage.setItem('pending_customer_toast', 'No customer selected. Going back.|error');
             window.location.href = 'customer.html';
             return;
         }
@@ -289,10 +289,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     else switchView('cable'); 
                 }
             } else {
-                alert("Error fetching details: " + res.error);
+                showToast("Error fetching details: " + res.error, 'error');
             }
         } catch (err) {
-            alert("System Error: " + err);
+            showToast("System Error: " + err, 'error');
         }
     }
 
@@ -476,11 +476,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (res.ok) {
                             renderDeletedTabs(res.data);
                         } else {
-                            alert("Error: " + res.error);
+                            showToast("Error: " + res.error, 'error');
                             btnDel.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4h6v2"></path></svg> Deleted Plans`;
                         }
                     } catch (e) {
-                        alert("API Error: Restart main.py");
+                        showToast("API Error: Restart main.py", 'error');
                     }
                 });
                 planTabsContainer.appendChild(btnDel);
@@ -674,7 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // (DOM element might be hidden or have stale data when viewing history)
             const currentSub = subscriptions.find(s => s.id === activeSubId);
             if (!currentSub) {
-                alert("Plan not found.");
+                showToast("Plan not found.", 'error');
                 return;
             }
             
@@ -760,10 +760,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             } else {
-                alert("Error: " + res.error);
+                showToast("Error: " + res.error, 'error');
             }
         } catch (err) {
-            alert("System Error: " + err);
+            showToast("System Error: " + err, 'error');
         }
     }
 
@@ -1592,14 +1592,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (res.ok) {
-                    alert("Plan Added Successfully!");
+                    showToast("Plan Added Successfully!", 'success');
                     addModal.classList.add('hidden');
                     await fetchDetails(true); 
                 } else {
-                    alert("Error adding plan: " + res.error);
+                    showToast("Error adding plan: " + res.error, 'error');
                 }
             } catch (err) {
-                alert("Error: " + err);
+                showToast("Error: " + err, 'error');
             }
         });
     }
@@ -1642,16 +1642,16 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const res = await window.pywebview.api.update_customer_info(payload);
                 if(res.ok) {
-                    alert("Saved Successfully!");
+                    showToast("Saved Successfully!", 'success');
                     isEditMode = false;
                     if(btnRemovePlan) btnRemovePlan.classList.add('hidden');
                     await fetchDetails(true); 
                     btnCancel.click(); 
                 } else {
-                    alert("Error saving: " + res.error);
+                    showToast("Error saving: " + res.error, 'error');
                 }
             } catch(e) {
-                alert("Error: " + e);
+                showToast("Error: " + e, 'error');
             }
             btnSubmit.innerText = "Submit";
             btnSubmit.disabled = false;
@@ -1684,10 +1684,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     removeModal.classList.add('hidden');
                     await fetchDetails(true); 
                 } else {
-                    alert("Error removing plan: " + res.error);
+                    showToast("Error removing plan: " + res.error, 'error');
                 }
             } catch (err) {
-                alert("System Error: " + err);
+                showToast("System Error: " + err, 'error');
             }
         });
     }
@@ -1706,12 +1706,12 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Basic validation: Ensure amount is valid and greater than 0
             if (!amount || amount <= 0) {
-                alert("Please enter a valid amount.");
+                showToast("Please enter a valid amount.", 'warning');
                 return;
             }
             // Ensure a plan is actually selected before paying
             if (!activeSubId) {
-                alert("No active subscription selected.");
+                showToast("No active subscription selected.", 'warning');
                 return;
             }
 
@@ -1721,7 +1721,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Cheque validation: If 'cheque' is selected, the cheque number cannot be empty
             if (mode === 'cheque' && !chequeVal.trim()) {
-                alert("Please enter the Cheque Number.");
+                showToast("Please enter the Cheque Number.", 'warning');
                 document.getElementById('payChequeNo').focus(); 
                 return;
             }
@@ -1906,7 +1906,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnAdjustAmount.addEventListener('click', async () => {
             const advance = parseFloat(document.getElementById('fAdvance').value) || 0;
             if(advance <= 0) {
-                alert("No Advance Balance to adjust.");
+                showToast("No Advance Balance to adjust.", 'warning');
                 return;
             }
 
@@ -1932,10 +1932,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         }
                     } else {
-                        alert("Error checking plans: " + res.error);
+                        showToast("Error checking plans: " + res.error, 'error');
                     }
                 } catch(e) {
-                    alert("System Error: " + e);
+                    showToast("System Error: " + e, 'error');
                     btnAdjustAmount.innerText = "Adjust Amount";
                 }
                 return;
@@ -1968,7 +1968,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnAdjustOtherPlans.addEventListener('click', () => {
             const advance = parseFloat(document.getElementById('fAdvance').value) || 0;
             if(advance <= 0) {
-                alert("No Advance Balance to adjust.");
+                showToast("No Advance Balance to adjust.", 'warning');
                 return;
             }
 
@@ -2030,7 +2030,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Check if ID is truly missing
         if (!subId || subId === "null" || subId === "undefined") {
-            alert("Error: Subscription ID is missing. Please click the plan tab again.");
+            showToast("Error: Subscription ID is missing. Please click the plan tab again.", 'error');
             return;
         }
 
@@ -2048,7 +2048,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (!strategy) {
-            alert("Please select an adjustment method.");
+            showToast("Please select an adjustment method.", 'warning');
             return;
         }
 
@@ -2065,13 +2065,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (res.ok) {
-                alert("Adjustment Successful!");
+                showToast("Adjustment Successful!", 'success');
                 await fetchDetails(true);
             } else {
-                alert("Adjustment Failed: " + res.error);
+                showToast("Adjustment Failed: " + res.error, 'error');
             }
         } catch (e) {
-            alert("System Error: " + e);
+            showToast("System Error: " + e, 'error');
         } finally {
             if (btn) btn.innerText = originalText;
             
@@ -2097,7 +2097,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const advance = parseFloat(document.getElementById('fAdvance').value) || 0;
             
             if (advance <= 0) {
-                alert("No Advance Balance available to transfer.");
+                showToast("No Advance Balance available to transfer.", 'warning');
                 return;
             }
 
@@ -2155,16 +2155,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (res.ok) {
-                    alert("Advance Transfer Successful!");
+                    showToast("Advance Transfer Successful!", 'success');
                     // ✅ Close modal and reset state before refreshing
                     transferAdvanceModal.classList.add('hidden');
                     targetTransferPlanId = null;
                     await fetchDetails(true);
                 } else {
-                    alert("Transfer Failed: " + res.error);
+                    showToast("Transfer Failed: " + res.error, 'error');
                 }
             } catch (e) {
-                alert("System Error: " + e);
+                showToast("System Error: " + e, 'error');
             } finally {
                 btnConfirmTransferAdvance.innerText = "Transfer";
                 btnConfirmTransferAdvance.disabled = false;
@@ -2180,7 +2180,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // ✅ SAFETY CHECK: Fail if cheque is selected but empty
         if (mode === 'cheque' && !chequeNo.trim()) {
-            alert("Payment Failed: Cheque Number is required.");
+            showToast("Payment Failed: Cheque Number is required.", 'error');
             return;
         }
 
@@ -2201,7 +2201,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (res.ok) {
-                alert("Payment Successful!");
+                showToast("Payment Successful!", 'success');
                 document.getElementById('payAmount').value = ""; 
                 document.getElementById('payChequeNo').value = ""; 
                 
@@ -2212,10 +2212,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 await fetchDetails(true); 
             } else {
-                alert("Payment Error: " + res.error);
+                showToast("Payment Error: " + res.error, 'error');
             }
         } catch (err) {
-            alert("System Error: " + err);
+            showToast("System Error: " + err, 'error');
         }
     }
 
@@ -2286,7 +2286,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     tbody.innerHTML = html;
                 }
-            } catch(e) { alert("Error: "+e); }
+            } catch(e) { showToast("Error: " + e, 'error'); }
         });
     }
 
@@ -2320,6 +2320,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.error(err);
             list.innerHTML = `<p style="color:red; padding:10px;">System Error: ${err.message}</p>`;
+            showToast("System Error: " + err.message, 'error');
         }
 
         // ... (Keep your renderRows function below this) ...
@@ -2675,7 +2676,7 @@ document.addEventListener('DOMContentLoaded', () => {
         confirmBtn.onclick = async () => {
             const amount = parseFloat(document.getElementById('oscInputAmount').value);
             if (!amount || amount <= 0) {
-                alert("Please enter a valid amount");
+                showToast("Please enter a valid amount", 'warning');
                 return;
             }
 
@@ -2697,10 +2698,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('oscModal').style.display = 'none';
                     await fetchDetails(true); 
                 } else {
-                    alert("Error: " + res.error);
+                    showToast("Error: " + res.error, 'error');
                 }
             } catch (e) {
-                alert("System Error: " + e);
+                showToast("System Error: " + e, 'error');
             } finally {
                 confirmBtn.disabled = false;
                 confirmBtn.innerText = currentOscOp === 'add' ? "Add" : "Subtract";
@@ -2767,15 +2768,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (res.ok) {
-                    alert("Debt Transfer Successful!");
+                    showToast("Debt Transfer Successful!", 'success');
                     document.getElementById('transferDebtModal').classList.add('hidden');
                     targetDebtTransferPlanId = null;
                     await fetchDetails(true);
                 } else {
-                    alert("Transfer Failed: " + res.error);
+                    showToast("Transfer Failed: " + res.error, 'error');
                 }
             } catch (e) {
-                alert("System Error: " + e);
+                showToast("System Error: " + e, 'error');
             } finally {
                 btnConfirmTransferDebt.innerText = "Transfer Debt";
                 btnConfirmTransferDebt.disabled = false;
@@ -2849,14 +2850,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (res.ok) {
+                    sessionStorage.setItem('pending_customer_toast', 'Customer deleted successfully!|success');
                     window.location.href = 'customer.html';
                 } else {
-                    alert("Failed to delete customer: " + res.error);
+                    showToast("Failed to delete customer: " + res.error, 'error');
                     btnConfirmDeleteCust.innerText = "Yes, Delete";
                     btnConfirmDeleteCust.disabled = false;
                 }
             } catch (err) {
-                alert("System error: " + err);
+                showToast("System error: " + err, 'error');
                 btnConfirmDeleteCust.innerText = "Yes, Delete";
                 btnConfirmDeleteCust.disabled = false;
             }

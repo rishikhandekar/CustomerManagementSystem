@@ -32,6 +32,14 @@ async function initProfile() {
         return;
     }
 
+    // ✅ NEW: Check for pending password reset toast
+    const pendingToast = sessionStorage.getItem("pending_auth_toast");
+    if (pendingToast) {
+        const [msg, type] = pendingToast.split('|');
+        showToast(msg, type || 'success');
+        sessionStorage.removeItem("pending_auth_toast");
+    }
+
     // 1. Fetch Profile Data
     try {
         const res = await window.pywebview.api.get_admin_profile({ user_id: userId });

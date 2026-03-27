@@ -70,7 +70,7 @@ document.getElementById("resetPwForm").addEventListener("submit", async (e) => {
         return;
     }
 
-    showToast("Password updated successfully!", 'success');
+    sessionStorage.setItem("pending_auth_toast", "Password updated successfully!|success");
 
     sessionStorage.removeItem("otp_email");
 
