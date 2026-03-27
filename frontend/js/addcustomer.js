@@ -269,17 +269,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // B. Validation
         if (!name || !phone || !aadhaar || !shortAddress || !longAddress) {
-            alert("Please fill all required fields (*)");
+            showToast("Please fill all required fields (*)", 'warning');
             return;
         }
 
         if (selectedPlans.size === 0) {
-            alert("Please select at least one Subscription Plan.");
+            showToast("Please select at least one Subscription Plan.", 'warning');
             return;
         }
 
         const userId = sessionStorage.getItem('user_id');
-        if (!userId) { alert("Session Error. Please login."); return; }
+        if (!userId) { showToast("Session Error. Please login.", 'error'); return; }
 
         btnSubmit.innerText = "Saving...";
         btnSubmit.disabled = true;
@@ -319,17 +319,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await window.pywebview.api.create_customer_with_plans(payload);
 
             if (res.ok) {
-                alert("Customer Added Successfully!");
+                showToast("Customer Added Successfully!", 'success');
                 window.location.href = "customer.html";
             } else {
-                alert("Error: " + JSON.stringify(res.error));
+                showToast("Error: " + JSON.stringify(res.error), 'error');
                 btnSubmit.innerText = "Submit";
                 btnSubmit.disabled = false;
             }
 
         } catch (err) {
             console.error(err);
-            alert("Unexpected error occurred.");
+            showToast("Unexpected error occurred.", 'error');
             btnSubmit.innerText = "Submit";
             btnSubmit.disabled = false;
         }

@@ -83,7 +83,7 @@ async function initProfile() {
             }
         } else {
             console.error("Backend Error:", res.error);
-            alert("Failed to load profile from database: " + res.error);
+            showToast("Failed to load profile: " + res.error, 'error');
         }
     } catch (err) {
         console.error("System Error: ", err);
@@ -141,7 +141,7 @@ async function initProfile() {
         try {
             const res = await window.pywebview.api.update_admin_profile(payload);
             if (res.ok) {
-                alert("Profile updated successfully!");
+                showToast("Profile updated successfully!", 'success');
                 sessionStorage.setItem('user_name', payload.name);
                 
                 // On success, re-lock the fields and change button back to "Edit"
@@ -155,12 +155,12 @@ async function initProfile() {
                 });
                 btnSave.innerText = "Edit Profile"; 
             } else {
-                alert("Update failed: " + res.error);
+                showToast("Update failed: " + res.error, 'error');
                 btnSave.innerText = "Save Profile Changes"; 
                 btnCancel.style.display = "block"; // Bring cancel back on error
             }
         } catch (err) {
-            alert("System Error: " + err);
+            showToast("System Error: " + err, 'error');
             btnSave.innerText = "Save Profile Changes"; 
             btnCancel.style.display = "block"; // Bring cancel back on error
         } finally {
@@ -199,7 +199,7 @@ async function initProfile() {
         const email = document.getElementById('profEmail').value;
         const btnPw = document.getElementById('btnChangePassword');
         
-        if (!email) return alert("Email not found.");
+        if (!email) return showToast("Email not found.", 'warning');
 
         btnPw.innerText = "Sending OTP... ⏳";
         btnPw.disabled = true;
@@ -214,12 +214,12 @@ async function initProfile() {
                 
                 window.location.href = "otp.html";
             } else {
-                alert("Error sending OTP: " + res.error);
+                showToast("Error sending OTP: " + res.error, 'error');
                 btnPw.innerText = "Send OTP to Email";
                 btnPw.disabled = false;
             }
         } catch (err) {
-            alert("System Error: " + err);
+            showToast("System Error: " + err, 'error');
             btnPw.innerText = "Send OTP to Email";
             btnPw.disabled = false;
         }

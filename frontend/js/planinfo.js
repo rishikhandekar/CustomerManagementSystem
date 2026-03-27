@@ -109,7 +109,7 @@ async function initPlanInfo() {
             }
 
             if (missingFields.length > 0) {
-                alert("Please fill in the required fields:\n- " + missingFields.join("\n- "));
+                showToast("Please fill in the required fields:\n- " + missingFields.join("\n- "), 'warning');
                 return;
             }
             // -----------------------------------
@@ -139,10 +139,10 @@ async function initPlanInfo() {
 
             const updateRes = await window.pywebview.api.update_plan(updateData);
             if (updateRes.ok) {
-                alert("Plan Updated Successfully!");
+                showToast("Plan Updated Successfully!", 'success');
                 location.reload();
             } else {
-                alert("Update failed: " + JSON.stringify(updateRes.error));
+                showToast("Update failed: " + JSON.stringify(updateRes.error), 'error');
             }
         }
     });
@@ -206,7 +206,7 @@ async function initPlanInfo() {
             });
 
             if (delRes.ok) {
-                alert("Plan Deleted Successfully.");
+                showToast("Plan Deleted Successfully.", 'success');
                 window.location.href = 'subscription.html';
             } else {
                 // Hide confirm modal
