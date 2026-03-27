@@ -1,3 +1,13 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const pendingToast = sessionStorage.getItem("pending_otp_toast");
+    if (pendingToast) {
+        // Show for 180,000ms (3 minutes)
+        showToast(pendingToast, 'info', 180000); 
+        // Clear it so it doesn't show again if they refresh manually
+        sessionStorage.removeItem("pending_otp_toast"); 
+    }
+});
+
 // 1. Handle "Go Back" Logic
 document.getElementById("btnBack").addEventListener("click", (e) => {
     e.preventDefault();

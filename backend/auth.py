@@ -165,16 +165,12 @@ def verify_supabase_otp(email, code, otp_type):
 # Password Reset
 # -------------------------
 def send_password_reset(email):
-    """Send password reset OTP via Supabase."""
     email = normalize_email(email)
-
-    # Check user exists in our table
-    users = db_module.supabase.table("users").select("email").eq("email", email).limit(1).execute().data
-    if not users:
-        return {"ok": False, "error": "This Email ID is not registered"}
-
     try:
+        # Let Supabase handle the stealth check
         db_module.supabase.auth.reset_password_for_email(email)
+        
+        # ✅ Return True so the JS moves to the OTP page
         return {"ok": True}
     except Exception as e:
         return {"ok": False, "error": str(e)}
