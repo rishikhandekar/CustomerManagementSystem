@@ -1,0 +1,250 @@
+/* frontend/css/dashboard.css */
+
+/* --- TYPOGRAPHY (From Resources Folder) --- */
+@font-face {
+  font-family: 'PoppinsLocal';
+  src: url('../resources/fonts/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'PoppinsLocal';
+  src: url('../resources/fonts/Poppins-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'PoppinsLocal';
+  src: url('../resources/fonts/Poppins-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'PoppinsLocal';
+  src: url('../resources/fonts/Poppins-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "PoppinsLocal", "Poppins", sans-serif;
+  background-color: #f8f9fa; 
+  color: #111;
+  min-height: 100vh;
+}
+
+/* Layout Container */
+.app-container { display: flex; height: 100vh; width: 100vw; }
+
+/* --- MAIN CONTENT --- */
+.main-content { 
+    flex-grow: 1; 
+    display: flex; 
+    flex-direction: column; 
+    margin-left: 250px;    /* ✅ Pushes content right of the sidebar */
+    margin-top: 70px;      /* ✅ Pushes content below the header */
+    height: calc(100vh - 70px); 
+    overflow-y: auto;      /* ✅ Essential for scrolling the dashboard */
+    padding-bottom: 50px; 
+}
+
+/* Page Title Section */
+.page-header {
+  padding: 30px 40px 25px 40px;
+  text-align: center; /* ✅ Centers the welcome text */
+}
+.page-header h1 {
+  font-size: 26px;
+  font-weight: 600;
+  color: #111;
+}
+.page-header span {
+  color: #1565c0; /* Highlight user name in brand blue */
+  font-weight: 700;
+}
+
+/* --- NEW KPI CARDS --- */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  padding: 0 40px 20px 40px;
+}
+
+.kpi-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.kpi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.kpi-header h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #444;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Toggle Pills (Cable/Net/Both) */
+.kpi-tabs {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 20px;
+  padding: 4px;
+}
+
+.kpi-tab-btn {
+  background: transparent;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.kpi-tab-btn.active {
+  background: #fff;
+  color: #1565c0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.kpi-amount {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 15px;
+  font-family: 'PoppinsLocal', sans-serif;
+}
+
+/* Payment Modes UI */
+.payment-modes-wrapper {
+  margin-top: auto;
+}
+
+.mode-bar {
+  display: flex;
+  height: 8px;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.mode-segment { height: 100%; transition: width 0.4s ease; }
+.bg-cash   { background-color: #22c55e; } /* Vivid Green  */
+.bg-upi    { background-color: #eab308; } /* Clear Blue   */
+.bg-net    { background-color: #a855f7; } /* Purple       */
+.bg-cheque { background-color: #f97316; } /* Bright Orange*/
+
+/* Payment bar hover tooltip */
+.bar-tooltip {
+  position: fixed;
+  background: #1e293b;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  pointer-events: none;
+  z-index: 9999;
+  display: none;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  font-family: 'PoppinsLocal', sans-serif;
+}
+
+.mode-legend {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+
+/* Custom Select Styling for Charts */
+.select-wrapper { position: relative; }
+.select-wrapper select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 20px;
+  padding: 8px 15px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  color: #333;
+}
+.select-wrapper::after {
+  content: "▼";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  pointer-events: none;
+  color: #666;
+}
+
+/* --- CHARTS & TABLE (Existing styles) --- */
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding: 10px 40px 30px 40px; }
+.card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.card-header h3 { font-size: 16px; font-weight: 600; }
+.chart-container { height: 250px; position: relative; width: 100%; }
+.doughnut-container { width: 100%; margin: 0 auto; }
+.legend-indicator, .legend-row { font-size: 12px; color: #555; display: flex; gap: 15px; align-items: center; font-weight: 500; }
+.dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+.blue { background-color: #4379F2; } .dark-blue { background-color: #3b66bc; } .teal { background-color: #3db9d3; }
+
+.table-card { 
+    margin: 0 40px 40px 40px; 
+    background: #fff; 
+    border-radius: 12px; 
+    border: 1px solid #e2e8f0; 
+    overflow: hidden; 
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
+    padding: 0 0 5px 0 !important; /* ✅ Adds 20px of perfect breathing room at the bottom */
+    flex-shrink: 0; 
+}
+
+/* ✅ Removes the grey line from the very last row of tables so they blend cleanly into the bottom */
+.table-card tbody tr:last-child td,
+#defaultersTableBody tr:last-child td {
+    border-bottom: none !important;
+}
+.table-card h3 { margin: 20px; font-weight: 600; font-size: 16px; }

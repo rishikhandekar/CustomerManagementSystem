@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMS - Admin Profile</title>
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/profile.css" />
+</head>
+<body>
+
+  <div class="app-container">
+    <div id="sidebar-placeholder"></div>
+
+    <main class="main-content">
+      <div id="header-placeholder"></div>
+
+      <div class="page-header">
+        <h1>Admin Profile</h1>
+        <p class="subtitle">Manage your account and business preferences.</p>
+      </div>
+
+      <div class="profile-grid">
+        
+        <div style="display: flex; flex-direction: column; gap: 30px;">
+          
+          <div class="card">
+            <div class="card-header">
+              <h3>Personal Details</h3>
+            </div>
+            <div class="card-body">
+              <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="profName" class="dashboard-input" placeholder="Enter your name">
+              </div>
+              <div class="input-group">
+                <label>Phone Number</label>
+                <input type="text" id="profPhone" class="dashboard-input" placeholder="Enter phone number">
+              </div>
+              <div class="input-group">
+                <label>
+                  <span>Email Address</span>
+                  <span class="badge-locked">Read Only</span>
+                </label>
+                <input type="email" id="profEmail" class="dashboard-input input-locked" disabled>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Account Security</h3>
+            </div>
+            <div class="card-body" style="justify-content: center;">
+              <div class="kpi-row">
+                <div class="kpi-mini">
+                  <span class="kpi-label">Auth Method</span>
+                  <span class="kpi-value" id="authMethod">Loading...</span>
+                </div>
+                <div class="kpi-mini">
+                  <span class="kpi-label">Last Login</span>
+                  <span class="kpi-value" id="lastLogin">Loading...</span>
+                </div>
+              </div>
+              <hr class="dashboard-divider">
+              <div class="action-row">
+                <div>
+                  <strong style="color: #111; font-size: 14px; display: block;">Change Password</strong>
+                  <span style="color: #64748b; font-size: 12px;">Verify via Email OTP</span>
+                </div>
+                <button id="btnChangePassword" class="btn-action btn-red">Send OTP</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 30px;">
+          
+          <div class="card">
+            <div class="card-header">
+              <h3>Business & Agency Details</h3>
+            </div>
+            <div class="card-body">
+              <div class="input-group">
+                <label>Business Name</label>
+                <input type="text" id="bizName" class="dashboard-input" placeholder="e.g. Rishi Cable">
+              </div>
+              
+              <div class="form-row">
+                <div class="input-group">
+                  <label>Support Contact</label>
+                  <input type="text" id="bizContact" class="dashboard-input" placeholder="Customer Helpline">
+                </div>
+                <div class="input-group">
+                  <label>GSTIN / Tax ID</label>
+                  <input type="text" id="bizGst" class="dashboard-input" placeholder="Optional">
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label>Business Address</label>
+                <textarea id="bizAddress" class="dashboard-textarea" placeholder="Full office address"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- WhatsApp Automation Card -->
+          <div class="card">
+            <div class="card-header">
+              <h3>WhatsApp Automation</h3>
+            </div>
+            <div class="card-body">
+              <div class="action-row">
+                <div>
+                  <strong style="color: #111; font-size: 14px; display: block;">WhatsApp Connection</strong>
+                  <span style="color: #64748b; font-size: 12px;">Manage your linked WhatsApp session</span>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                  <button id="btnLinkWhatsApp" class="btn-action btn-green">Reconnect / Link</button>
+                  <button id="btnUnlinkWhatsApp" class="btn-action btn-red">Unlink</button>
+                </div>
+              </div>
+              <hr class="dashboard-divider">
+              <div class="action-row">
+                <div>
+                  <strong style="color: #111; font-size: 14px; display: block;">Send Auto Reminder</strong>
+                  <span style="color: #64748b; font-size: 12px;">Manually trigger today's due/overdue reminders</span>
+                </div>
+                <button id="btnForceReminders" class="btn-dashboard-blue">Send Auto Reminder</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="save-wrapper">
+            <button id="btnCancelEdit" class="btn-dashboard-outline" style="display: none;">Cancel</button>
+            <button id="btnSaveProfile" class="btn-dashboard-primary">Edit Profile</button>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- CMS Custom Alert Modal -->
+  <div id="cmsAlertOverlay" class="cms-alert-overlay" style="display:none;">
+    <div class="cms-alert-box">
+      <h3 id="cmsAlertTitle" class="cms-alert-title"></h3>
+      <p id="cmsAlertMessage" class="cms-alert-message"></p>
+      <button id="cmsAlertOk" class="btn-dashboard-primary cms-alert-btn">OK</button>
+    </div>
+  </div>
+
+  <script src="../js/layout.js"></script>
+  <script src="../js/profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CMS - Subscriptions</title>
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/subscription.css">
+</head>
+<body>
+    <div class="app-container">
+        <div id="sidebar-placeholder"></div>
+        <main class="main-content">
+            <div id="header-placeholder"></div>
+
+            <div class="filter-section">
+                <div class="filter-controls">
+                    <div class="select-wrapper">
+                        <select id="filterSelect">
+                            <option value="name">Name</option>
+                            <option value="price">Price</option>
+                            <option value="duration">Duration</option>
+                        </select>
+                        <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+
+                    <div class="search-wrapper">
+                        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="searchInput" placeholder="Search Plan...">
+                    </div>
+                    
+                </div>
+
+                <a href="addplan.html" class="btn-add">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                     Add Plan
+                 </a>
+
+            </div>
+
+            <div class="plan-tabs-container">
+                <div class="plan-tabs">
+                    <div class="plan-tab active" id="tabCable">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline></svg>
+                        Cable Plans
+                        <input type="checkbox" checked onclick="return false;" style="display: none;"> 
+                    </div>
+                    <div class="plan-tab" id="tabInternet">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        Internet Plans
+                        <input type="checkbox" onclick="return false;" style="display: none;"> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="card table-card">
+                <div class="table-scroll-wrapper">
+                    <table class="plan-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 18%;">Plan Name</th>
+                                <th style="width: 15%; text-align: center;">Price (₹)</th>
+                                <th style="width: 25%; text-align: center;">Duration (days)</th>
+                                <th style="width: 10%; text-align: center;">Customers Using</th>
+                                <th style="width: 15%; text-align: center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="planTableBody">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </main>
+    </div>
+    <script src="../js/layout.js"></script>
+    <script src="../js/subscription.js"></script>
+</body>
+</html>

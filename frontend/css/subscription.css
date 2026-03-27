@@ -1,0 +1,657 @@
+/* frontend/css/subscription.css */
+
+/* --- 1. FONTS & RESET --- */
+@font-face {
+  font-family: 'PoppinsLocal';
+  src: url('../resources/fonts/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'PoppinsLocal';
+  src: url('../resources/fonts/Poppins-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'PoppinsLocal';
+  src: url('../resources/fonts/Poppins-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'PoppinsLocal';
+  src: url('../resources/fonts/Poppins-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "PoppinsLocal", "Poppins", sans-serif;
+  background-color: #f8f9fa;
+  color: #111;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-container {
+    display: block;
+    height: 100vh;
+    width: 100vw;
+}
+
+.main-content {
+    margin-left: 250px; /* ✅ Pushes content right to avoid the 250px fixed sidebar */
+    padding: 70px 0 0 0; /* ✅ 70px top padding pushes content down to avoid the 70px fixed header */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    background: #f8f9fa;
+}
+
+/* --- 2. FILTER & SEARCH (Matched to Customer Page) --- */
+.filter-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    margin-top: 10px;
+}
+
+.filter-controls {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.select-wrapper {
+    position: relative;
+    width: 200px;
+}
+
+.select-wrapper select {
+    width: 100%;
+    padding: 10px 35px 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    appearance: none;
+    background-color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    color: #333;
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.select-wrapper .chevron {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #888;
+}
+
+.search-wrapper {
+    position: relative;
+    width: 220px;
+}
+
+.search-wrapper input {
+    width: 100%;
+    padding: 10px 15px 10px 40px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.search-wrapper input:focus {
+    border-color: #1565c0;
+    box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
+}
+
+.search-wrapper .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+}
+
+.btn-add {
+    margin-left: auto;
+    background-color: #1565c0;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(21, 101, 192, 0.2);
+}
+
+.btn-add:hover {
+    background-color: #0d47a1;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(21, 101, 192, 0.3);
+}
+
+/* --- 3. MODERN PILL TABS --- */
+.plan-tabs-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.plan-tabs {
+    display: inline-flex;
+    background: #fff;
+    padding: 6px;
+    border-radius: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border: 1px solid #eaeaea;
+}
+
+.plan-tab {
+    padding: 10px 24px;
+    border-radius: 24px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #666;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.plan-tab:hover {
+    color: #1565c0;
+}
+
+.plan-tab.active {
+    background: #1565c0;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(21, 101, 192, 0.3);
+}
+
+.plan-tab.active svg {
+    stroke: #fff;
+}
+
+/* --- 4. TABLE CARD & LAYOUT --- */
+.table-card {
+    margin: 10px 40px 40px 40px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 
+                0 2px 4px -1px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+}
+
+.table-scroll-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar {
+    height: 8px; width: 8px;
+}
+.table-scroll-wrapper::-webkit-scrollbar-thumb {
+    background: #ccc; border-radius: 4px;
+}
+.table-scroll-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* --- 5. BEAUTIFUL TABLE WITH ANIMATIONS --- */
+.plan-table {
+    width: 100%;
+    min-width: 1000px;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+.plan-table th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f1f5f9;
+    padding: 16px 20px;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #1e293b;
+    border-bottom: 2px solid #cbd5e1;
+    white-space: nowrap;
+}
+
+.plan-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 14.5px;
+    font-weight: 500;
+    color: #0f172a;
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.plan-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.plan-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.plan-table th:nth-child(1),
+.plan-table td:nth-child(1) {
+    text-align: left;
+}
+
+.plan-table td:nth-child(2),
+.plan-table td:nth-child(3),
+.plan-table td:nth-child(4),
+.plan-table td:nth-child(5) {
+    text-align: center;
+}
+
+.plan-name {
+    font-weight: 600;
+    color: #111;
+    font-size: 15px;
+}
+
+/* --- 9. TABLE OPEN BUTTON (Matches Customer Page) --- */
+.plan-table td button {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #bbdefb;
+    border-radius: 6px;
+    padding: 6px 16px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.plan-table td button:hover {
+    background-color: #1565c0;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(21, 101, 192, 0.2);
+}
+
+/* --- 6. ACTION BUTTONS --- */
+.btn-action {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    font-family: inherit;
+    margin: 0 3px;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+}
+
+.btn-edit { background-color: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; }
+.btn-edit:hover { background-color: #bbdefb; }
+
+.btn-delete { background-color: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+.btn-delete:hover { background-color: #ffcdd2; }
+
+/* --- 7. MODALS --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5); 
+    display: none; 
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(3px); /* Modern blur effect */
+}
+
+.modal-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    animation: fadeSlideUp 0.3s ease-out forwards;
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #111;
+}
+
+.modal-text {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn-cancel {
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 6px;
+    color: #333;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-cancel:hover {
+    background: #f5f5f5;
+}
+
+.btn-confirm {
+    padding: 10px 20px;
+    border: none;
+    background: #c62828;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-confirm:hover {
+    background: #b71c1c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(198, 40, 40, 0.3);
+}
+
+/* Prevent inputs from stretching modal */
+input[type="text"], input[type="number"] {
+    font-family: "PoppinsLocal", sans-serif;
+}
+
+/* --- 8. FORMS & INPUTS (For Add Plan & Plan Info) --- */
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    margin: 20px 40px 10px 40px;
+}
+
+.form-header h2 {
+    font-size: 24px;
+    color: #111;
+    font-weight: 600;
+}
+
+.btn-back {
+    text-decoration: none;
+    color: #111;
+    font-weight: 600;
+    border: 1px solid #ddd;
+    padding: 8px 18px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    transition: all 0.2s ease;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+}
+.btn-back:hover {
+    background: #f5f5f5;
+    border-color: #999;
+    color: #111;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+}
+
+.form-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    border: 1px solid #eaeaea;
+    max-width: 800px;
+    animation: fadeSlideUp 0.4s ease-out forwards;
+
+    margin: 10px 40px 40px 40px; /* ⭐ important */
+}
+
+.form-card h4 {
+    margin-bottom: 15px;
+    color: #1565c0;
+    font-size: 16px;
+    font-weight: 600;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 8px;
+    display: inline-block;
+}
+
+.input-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.input-row > * {
+    flex: 1;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex: 1;
+}
+
+.input-group label {
+    font-size: 13px;
+    color: #555;
+    font-weight: 600;
+}
+
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.form-input, .form-textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    color: #333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: #fff;
+}
+
+.form-input:disabled, .form-textarea:disabled {
+    background: #f9f9f9;
+    color: #888;
+    cursor: not-allowed;
+    border-color: #eee;
+}
+
+.form-input:focus:not(:disabled), .form-textarea:focus:not(:disabled) {
+    border-color: #1565c0;
+    box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
+    outline: none;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.edit-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: 0.2s;
+}
+.edit-icon:hover { opacity: 1; }
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-submit {
+    padding: 12px 24px;
+    background: #1565c0;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    flex: 1;
+}
+.btn-submit:hover {
+    background: #0d47a1;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(21, 101, 192, 0.35);
+}
+
+.action-buttons .btn-cancel {
+    flex: 1;
+    padding: 12px 24px;
+    text-align: center;
+}
+
+.btn-delete-plan {
+    padding: 12px 24px;
+    background: #c62828;
+    color: #fff;
+    border: 1px solid #ffcdd2;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    flex: 1;
+}
+
+.btn-delete-plan:hover {
+    background: #b71c1c;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(198,40,40,0.35);
+}
+
+/* Modal specific buttons for Plan Info */
+.btn-modal-delete {
+    padding: 10px 20px;
+    border: none;
+    background: #c62828;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+.btn-modal-delete:hover {
+    background: #b71c1c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(198, 40, 40, 0.3);
+}
+
+.btn-modal-cancel {
+    padding: 10px 20px;
+    border: 1px solid #cecece;
+    background: #ffffff;
+    border-radius: 6px;
+    color: #333;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+.btn-modal-cancel:hover { background: #f5f5f5; }
+
+/* Custom Checkbox spacing for Add Plan */
+label input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/* Pencil icon on editable fields — matches customer info page */
+
+.form-input.editable-pencil {
+    background-color: #ffffff;
+    border: 1px solid #1565c0;
+    padding-right: 30px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%231565c0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+.form-textarea.editable-pencil {
+    background-color: #ffffff;
+    border: 1px solid #1565c0;
+    padding-right: 30px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%231565c0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px top 12px;
+}
+
+/* Remove spin buttons from number inputs */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type=number] {
+    appearance: textfield;
+}

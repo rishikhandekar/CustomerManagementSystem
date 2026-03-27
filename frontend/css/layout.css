@@ -1,0 +1,109 @@
+/* frontend/css/layout.css */
+
+/* --- SIDEBAR --- */
+.sidebar { 
+    position: fixed; /* ✅ Keeps it locked on the left regardless of scroll */
+    left: 0;
+    top: 0;
+    width: 250px;
+    height: 100vh; /* ✅ Forces sidebar to span full screen height */
+    background-color: #ffffff;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column; /* ✅ Allows us to use margin-top: auto for the footer */
+    padding: 0;
+    z-index: 1000;
+}
+
+.logo-area { 
+    height: 70px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; /* ✅ Perfectly centers 'CMS' */
+    border-bottom: 1px solid #f0f0f0; /* ✅ Soft separator line */
+    flex-shrink: 0;
+}
+
+.logo-area h2 { 
+    font-size: 24px; 
+    font-weight: 700; /* ✅ Bold typography from Dashboard */
+    letter-spacing: 0.5px; 
+    color: #111; /* ✅ High-contrast deep black */
+    font-family: 'PoppinsLocal', sans-serif;
+}
+
+.nav-menu { 
+    padding: 40px 20px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    flex-grow: 1; /* ✅ Pushes the sidebar-footer to the bottom */
+    overflow-y: auto; /* Allow menu to scroll if it gets too long */
+}
+
+.nav-item { 
+    text-decoration: none; 
+    color: #111; 
+    font-weight: 500; 
+    font-size: 16px; 
+    padding: 12px 20px; 
+    border-radius: 30px; 
+    transition: all 0.2s ease; 
+}
+
+.nav-item.active { 
+    background-color: #e3f2fd; 
+    color: #1565c0; 
+    font-weight: 600; 
+}
+
+.nav-item:hover:not(.active) { 
+    background-color: #f5f5f5; 
+}
+
+.sidebar-footer { 
+    padding: 30px 40px; 
+    border-top: 1px solid #f0f0f0; 
+    margin-top: auto; /* ✅ Final push to lock logout at the absolute bottom */
+    background: #fff;
+    flex-shrink: 0;
+}
+
+.logout-link { 
+    text-decoration: none; 
+    color: #000; 
+    font-weight: 600; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    font-size: 16px; 
+    transition: color 0.2s ease;
+}
+
+.logout-link:hover {
+    color: #c62828;
+}
+
+/* --- TOP HEADER --- */
+.top-header { 
+    height: 70px; 
+    background: #ffffff; 
+    border-bottom: 1px solid #e0e0e0; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 0 40px;
+    position: fixed; /* ✅ Locked to top */
+    top: 0;
+    right: 0;
+    left: 250px; /* ✅ Pushed right by sidebar width */
+    z-index: 900;
+}
+
+.user-profile { 
+    /* ✅ This pushes the profile icon to the far right */
+    margin-left: auto; 
+    cursor: pointer; 
+    color: #333;
+}
+

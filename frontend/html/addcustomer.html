@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS - Add Customer</title>
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/customer.css">
+</head>
+<body>
+    <div class="app-container">
+        <div id="sidebar-placeholder"></div>
+
+        <main class="main-content">
+            <div id="header-placeholder"></div>
+
+            <div class="form-page-header">
+                <h2>Add Customer</h2>
+                <a href="customer.html" class="btn-back">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Go Back
+                </a>
+            </div>
+
+            <div class="form-card">
+                
+                <div class="section-title">Personal Info</div>
+                <div class="form-grid">
+                    <input type="text" id="custName" class="form-input" placeholder="Full Name*">
+                    <input type="text" id="custPhone" class="form-input" placeholder="Phone No*" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    <input type="email" id="custEmail" class="form-input" placeholder="Email ID">
+                    <input type="text" id="custAadhaar" class="form-input" placeholder="Aadhaar ID*" maxlength="12" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    <input type="text" id="custAltPhone" class="form-input" placeholder="Alternate Phone No" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    
+                    <input type="text" id="custShortAddress" class="form-input" placeholder="Short Address / Area*">
+                    <input type="text" id="custLongAddress" class="form-input" placeholder="Long Address*" style="grid-column: span 3;">
+                </div>
+
+                <div class="section-title">Subscription</div>
+                <div class="subscription-toggles">
+                    <div class="sub-toggle" id="toggleCable">
+                        <div class="toggle-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        </div>
+                        <span>Cable</span>
+                    </div>
+                    <div class="sub-toggle" id="toggleInternet">
+                        <div class="toggle-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        </div>
+                        <span>Internet</span>
+                    </div>
+                </div>
+
+                <div id="plansContainer" class="plans-container">
+                    
+                    <div id="cableSection" class="hidden">
+                        <div class="sub-label">Cable Plan</div>
+                        <div class="plans-grid" id="cableGrid">
+                            </div>
+                        <div style="text-align: right; margin-bottom: 20px;">
+                            <span class="load-more" id="loadMoreCable">Load More...</span>
+                        </div>
+                    </div>
+
+                    <div id="internetSection" class="hidden">
+                        <div class="sub-label">Internet Plan</div>
+                        <div class="plans-grid" id="internetGrid">
+                            </div>
+                        <div style="text-align: right;">
+                            <span class="load-more" id="loadMoreInternet">Load More...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 40px;">
+                    <button id="btnSubmit" class="btn-submit">Submit</button>
+                    <button id="btnCancel" class="btn-cancel" onclick="window.location.href='customer.html'">Cancel</button>
+                </div>
+
+
+
+            </div>
+        </main>
+    </div>
+
+    <div id="planAdjustmentModal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 id="adjModalTitle">Adjust Plan Cost</h3>
+                <span class="close-modal" id="btnCloseAdjModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="adjModalPlanName" style="font-weight: 600; margin-bottom: 15px; color:#555;"></p>
+                
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div style="flex:1;">
+                        <label style="font-size: 12px; color: #666; display:block; margin-bottom:4px;">Base Price</label>
+                        <input type="text" id="adjBasePrice" class="form-input" readonly style="background:#f5f5f5; color:#888;">
+                    </div>
+                    <div style="flex:1;">
+                        <label style="font-size: 12px; color: #666; display:block; margin-bottom:4px;">Duration</label>
+                        <input type="text" id="adjDuration" class="form-input" readonly style="background:#f5f5f5; color:#888;">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div style="flex:1;">
+                        <label style="font-size: 12px; color: #666; display:block; margin-bottom:4px;">Add. Charge</label>
+                        <input type="number" id="adjAddCharge" class="form-input" value="0">
+                    </div>
+                    <div style="flex:1;">
+                        <label style="font-size: 12px; color: #666; display:block; margin-bottom:4px;">Discount</label>
+                        <input type="number" id="adjDiscount" class="form-input" value="0">
+                    </div>
+                </div>
+
+                <div style="text-align: center; font-size: 16px; font-weight: bold; color: #2e7d32; padding: 10px; background: #e8f5e9; border-radius: 6px; margin-top: 10px;">
+                    Net Amount: ₹<span id="adjNetAmount">0</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCancelAdj" class="btn-cancel">Cancel</button>
+                <button id="btnConfirmAdj" class="btn-submit">Confirm & Add</button>
+            </div>
+        </div>
+    </div>
+
+    <template id="planSelectionCardTemplate">
+        <div class="plan-card">
+            <input type="checkbox" class="plan-checkbox" style="pointer-events: none;">
+            <div style="display:flex; flex-direction:column;">
+                <span class="plan-name" style="font-weight:600;"></span>
+                
+                <small class="plan-base-price"></small>
+                <small class="plan-duration" style="color:#64748b;"></small>
+                
+                <div class="plan-selected-details" style="display: none;">
+                    <div class="plan-net-amount" style="font-weight:bold; color:#2e7d32; margin-top:4px;"></div>
+                    <div class="plan-breakdown" style="font-size:10px; color:#666;"></div>
+                    <div class="plan-duration-selected" style="font-size:10px; color:#64748b;"></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="../js/layout.js"></script>
+    <script src="../js/addcustomer.js"></script>
+</body>
+</html>

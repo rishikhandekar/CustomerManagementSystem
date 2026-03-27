@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CMS - Dashboard</title>
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <script src="../js/chart.min.js"></script>
+</head>
+<body>
+
+  <div class="app-container">
+    <div id="sidebar-placeholder"></div>
+
+    <main class="main-content">
+      
+      <div id="header-placeholder"></div>
+
+      <div class="page-header">
+        <h1 id="welcomeHeader">Welcome <span id="userNameDisplay">Admin</span>, here is your Dashboard.</h1>
+      </div>
+
+      <div class="kpi-grid">
+        
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <h3>💰 Total Collected (This Month)</h3>
+            <div class="kpi-tabs" id="tabsCollected">
+              <button class="kpi-tab-btn active" data-type="both">Both</button>
+              <button class="kpi-tab-btn" data-type="cable">Cable</button>
+              <button class="kpi-tab-btn" data-type="net">Net</button>
+            </div>
+          </div>
+          <div class="kpi-amount" id="amtCollected">₹0</div>
+          
+          <div class="payment-modes-wrapper">
+            <div class="mode-bar">
+              <div class="mode-segment bg-cash" id="barCash" style="width: 0%;"></div>
+              <div class="mode-segment bg-upi" id="barUpi" style="width: 0%;"></div>
+              <div class="mode-segment bg-net" id="barNet" style="width: 0%;"></div>
+              <div class="mode-segment bg-cheque" id="barCheque" style="width: 0%;"></div>
+            </div>
+            <div class="mode-legend">
+              <div class="legend-item"><div class="legend-dot bg-cash"></div><span id="txtCash">Cash: 0%</span></div>
+              <div class="legend-item"><div class="legend-dot bg-upi"></div><span id="txtUpi">UPI: 0%</span></div>
+              <div class="legend-item"><div class="legend-dot bg-net"></div><span id="txtNet">Bank: 0%</span></div>
+              <div class="legend-item"><div class="legend-dot bg-cheque"></div><span id="txtCheque">Cheque: 0%</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi-card" style="justify-content: flex-start;">
+          <div class="kpi-header">
+            <h3>⚠️ Total Pending Dues</h3>
+            <div class="kpi-tabs" id="tabsPending">
+              <button class="kpi-tab-btn active" data-type="both">Both</button>
+              <button class="kpi-tab-btn" data-type="cable">Cable</button>
+              <button class="kpi-tab-btn" data-type="net">Net</button>
+            </div>
+          </div>
+          <div class="kpi-amount" id="amtPending" style="color: #c62828;">₹0</div>
+          <p style="font-size: 13px; color: #64748b; font-weight: 500;">Calculated from all active & inactive customers.</p>
+        </div>
+
+      </div>
+
+      <div class="action-grid" style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; padding: 0 40px 30px 40px;">
+        
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 280px;">
+          <div class="card-header" style="margin-bottom: 5px;">
+            <h3 style="font-size: 15px;">⏳ Expiring Soon (7 Days)</h3>
+            <div class="kpi-tabs" id="tabsExpiring" style="margin-bottom: 0; padding: 2px;">
+              <button class="kpi-tab-btn active" data-type="both" style="padding: 2px 10px; font-size: 11px;">Both</button>
+              <button class="kpi-tab-btn" data-type="cable" style="padding: 2px 10px; font-size: 11px;">Cable</button>
+              <button class="kpi-tab-btn" data-type="net" style="padding: 2px 10px; font-size: 11px;">Net</button>
+            </div>
+          </div>
+          <div style="text-align: center; margin: 15px 0;">
+            <span id="amtExpiring" style="font-size: 42px; font-weight: 700; color: #f59e0b;">0</span>
+            <span style="font-size: 14px; color: #64748b; font-weight: 500; display: block;">Plans Expiring</span>
+          </div>
+          <div style="background: #f8fafc; padding: 10px; border-radius: 8px; text-align: center; font-size: 12px; font-weight: 600; color: #475569; border: 1px dashed #cbd5e1;">
+            Range: <span id="txtExpiringDates">Loading...</span>
+          </div>
+        </div>
+
+        <div class="card" style="padding: 0 0 8px 0; overflow: hidden; display: flex; flex-direction: column; min-height: 280px;">
+          <div class="card-header" style="padding: 20px 20px 10px 20px; margin-bottom: 0;">
+            <h3 style="font-size: 15px; color: #c62828;">🚨 Top 5 Defaulters</h3>
+          </div>
+          <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+              <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <th style="padding: 10px 20px; font-size: 12px; color: #64748b; text-transform: uppercase;">Customer Name</th>
+                <th style="padding: 10px 20px; font-size: 12px; color: #64748b; text-transform: uppercase;">Phone</th>
+                <th style="padding: 10px 20px; font-size: 12px; color: #64748b; text-transform: uppercase;">Pending Amount</th>
+                <th style="padding: 10px 20px; font-size: 12px; color: #64748b; text-transform: uppercase; text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="defaultersTableBody">
+              </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <div class="charts-grid">
+        <div class="card">
+          <div class="card-header" style="flex-direction: column; align-items: flex-start; gap: 15px;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+              <h3>12-Month Revenue Trend</h3>
+              <div class="select-wrapper" style="width: 150px;">
+                <select id="chartYearType" style="padding: 4px 10px; font-size: 12px; height: 30px; border-color: #cbd5e1;">
+                  <option value="cy">Calendar Year</option>
+                  <option value="fy">Financial Year</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="kpi-tabs" id="chartServiceType" style="margin-bottom: 0;">
+              <button class="kpi-tab-btn active" data-type="both">Both</button>
+              <button class="kpi-tab-btn" data-type="cable">Cable</button>
+              <button class="kpi-tab-btn" data-type="net">Net</button>
+            </div>
+
+          </div>
+          <div class="chart-container">
+            <canvas id="growthChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>Customer Report</h3>
+            <div class="legend-row">
+              <span><span class="dot dark-blue"></span> Active</span>
+              <span><span class="dot teal"></span> Inactive</span>
+            </div>
+          </div>
+          <div class="chart-container doughnut-container" style="position: relative;">
+            <canvas id="reportChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card" style="margin: 0 40px 40px 40px; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); padding: 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px;">
+          <h3 style="margin: 0; font-weight: 600; font-size: 16px;">📅 Daily Plan Tracker</h3>
+          
+          <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+            
+            <div class="select-wrapper" style="width: 150px;">
+              <select id="trackerDateType" style="padding: 4px 10px; font-size: 12px; height: 30px; border-color: #cbd5e1;">
+                <option value="activation">Activated Date</option>
+                <option value="renewal">Renewal Date</option>
+                <option value="expiry" selected>Expiry Date</option>
+              </select>
+            </div>
+            
+            <input type="date" id="trackerDate" style="padding: 3px 10px; font-size: 12px; height: 30px; border: 1px solid #cbd5e1; border-radius: 20px; outline: none; font-family: inherit; color: #333; cursor: pointer;" />
+
+            <div class="kpi-tabs" id="tabsTracker" style="margin-bottom: 0; padding: 2px;">
+              <button class="kpi-tab-btn active" data-type="both" style="padding: 2px 10px; font-size: 11px;">Both</button>
+              <button class="kpi-tab-btn" data-type="cable" style="padding: 2px 10px; font-size: 11px;">Cable</button>
+              <button class="kpi-tab-btn" data-type="net" style="padding: 2px 10px; font-size: 11px;">Net</button>
+            </div>
+
+          </div>
+        </div>
+        
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+          <thead>
+            <tr>
+              <th style="background-color: #f8fafc; padding: 12px 20px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0;">ID</th>
+              <th style="background-color: #f8fafc; padding: 12px 20px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0;">Customer Name</th>
+              <th style="background-color: #f8fafc; padding: 12px 20px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0;">Plan Name</th>
+              <th style="background-color: #f8fafc; padding: 12px 20px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0;">Phone</th>
+              <th style="background-color: #f8fafc; padding: 12px 20px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0;">Address</th>
+              <th style="text-align: right; background-color: #f8fafc; padding: 12px 20px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="trackerTableBody">
+            </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../js/layout.js"></script>
+  <script>
+    loadLayout('dashboard'); 
+  </script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

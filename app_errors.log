@@ -1,0 +1,970 @@
+
+============================================================
+[2026-03-27 13:26:18]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 187, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 150, in handle_request
+    status, headers = self._receive_response(
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 294, in _receive_response
+    event = self._receive_stream_event(request, stream_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 336, in _receive_stream_event
+    self._receive_events(request, stream_id)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 364, in _receive_events
+    events = self._read_incoming_data(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 438, in _read_incoming_data
+    raise self._read_exception  # pragma: nocover
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 187, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 150, in handle_request
+    status, headers = self._receive_response(
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 294, in _receive_response
+    event = self._receive_stream_event(request, stream_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 336, in _receive_stream_event
+    self._receive_events(request, stream_id)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 364, in _receive_events
+    events = self._read_incoming_data(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 455, in _read_incoming_data
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 443, in _read_incoming_data
+    raise RemoteProtocolError("Server disconnected")
+httpcore.RemoteProtocolError: Server disconnected
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 367, in get_daily_tracker_data
+    res = query.eq("current_billing_end_date", ren_str).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.RemoteProtocolError: Server disconnected
+
+
+============================================================
+[2026-03-27 13:26:18]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 187, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 150, in handle_request
+    status, headers = self._receive_response(
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 294, in _receive_response
+    event = self._receive_stream_event(request, stream_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 336, in _receive_stream_event
+    self._receive_events(request, stream_id)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 364, in _receive_events
+    events = self._read_incoming_data(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 438, in _read_incoming_data
+    raise self._read_exception  # pragma: nocover
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 187, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 150, in handle_request
+    status, headers = self._receive_response(
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 294, in _receive_response
+    event = self._receive_stream_event(request, stream_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 336, in _receive_stream_event
+    self._receive_events(request, stream_id)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 364, in _receive_events
+    events = self._read_incoming_data(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 455, in _read_incoming_data
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 443, in _read_incoming_data
+    raise RemoteProtocolError("Server disconnected")
+httpcore.RemoteProtocolError: Server disconnected
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 367, in get_daily_tracker_data
+    res = query.eq("current_billing_end_date", ren_str).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.RemoteProtocolError: Server disconnected
+
+
+============================================================
+[2026-03-27 13:26:28]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 187, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 150, in handle_request
+    status, headers = self._receive_response(
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 294, in _receive_response
+    event = self._receive_stream_event(request, stream_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 336, in _receive_stream_event
+    self._receive_events(request, stream_id)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 364, in _receive_events
+    events = self._read_incoming_data(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 438, in _read_incoming_data
+    raise self._read_exception  # pragma: nocover
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 187, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 150, in handle_request
+    status, headers = self._receive_response(
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 294, in _receive_response
+    event = self._receive_stream_event(request, stream_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 336, in _receive_stream_event
+    self._receive_events(request, stream_id)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 364, in _receive_events
+    events = self._read_incoming_data(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 455, in _read_incoming_data
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 443, in _read_incoming_data
+    raise RemoteProtocolError("Server disconnected")
+httpcore.RemoteProtocolError: Server disconnected
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 141, in get_dashboard_stats
+    .execute()
+     ^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.RemoteProtocolError: Server disconnected
+
+
+============================================================
+[2026-03-27 13:26:28]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 187, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 150, in handle_request
+    status, headers = self._receive_response(
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 294, in _receive_response
+    event = self._receive_stream_event(request, stream_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 336, in _receive_stream_event
+    self._receive_events(request, stream_id)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 364, in _receive_events
+    events = self._read_incoming_data(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 438, in _read_incoming_data
+    raise self._read_exception  # pragma: nocover
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 187, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 150, in handle_request
+    status, headers = self._receive_response(
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 294, in _receive_response
+    event = self._receive_stream_event(request, stream_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 336, in _receive_stream_event
+    self._receive_events(request, stream_id)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 364, in _receive_events
+    events = self._read_incoming_data(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 455, in _read_incoming_data
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 443, in _read_incoming_data
+    raise RemoteProtocolError("Server disconnected")
+httpcore.RemoteProtocolError: Server disconnected
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2623, in get_customers
+    .execute()
+     ^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.RemoteProtocolError: Server disconnected
+
+
+============================================================
+[2026-03-27 13:26:28]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 187, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 150, in handle_request
+    status, headers = self._receive_response(
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 294, in _receive_response
+    event = self._receive_stream_event(request, stream_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 336, in _receive_stream_event
+    self._receive_events(request, stream_id)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 364, in _receive_events
+    events = self._read_incoming_data(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 438, in _read_incoming_data
+    raise self._read_exception  # pragma: nocover
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 187, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 150, in handle_request
+    status, headers = self._receive_response(
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 294, in _receive_response
+    event = self._receive_stream_event(request, stream_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 336, in _receive_stream_event
+    self._receive_events(request, stream_id)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 364, in _receive_events
+    events = self._read_incoming_data(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 455, in _read_incoming_data
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 443, in _read_incoming_data
+    raise RemoteProtocolError("Server disconnected")
+httpcore.RemoteProtocolError: Server disconnected
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2623, in get_customers
+    .execute()
+     ^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.RemoteProtocolError: Server disconnected
+
+
+============================================================
+[2026-03-27 14:22:38]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:38]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:40]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:40]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:40]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:40]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:40]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:40]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:40]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:40]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:42]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:42]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:42]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:42]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:42]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:42]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:43]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:43]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:43]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:43]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+    page = int(payload.get("page", 0)) if payload else 0
+               ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:56]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:56]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:56]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:56]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:57]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:57]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:57]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:57]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:57]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 14:22:57]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2612, in get_customers
+AttributeError: 'str' object has no attribute 'get'
+
+
+============================================================
+[2026-03-27 16:21:39]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 187, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 150, in handle_request
+    status, headers = self._receive_response(
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 294, in _receive_response
+    event = self._receive_stream_event(request, stream_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 336, in _receive_stream_event
+    self._receive_events(request, stream_id)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 364, in _receive_events
+    events = self._read_incoming_data(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 438, in _read_incoming_data
+    raise self._read_exception  # pragma: nocover
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 187, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 150, in handle_request
+    status, headers = self._receive_response(
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 294, in _receive_response
+    event = self._receive_stream_event(request, stream_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 336, in _receive_stream_event
+    self._receive_events(request, stream_id)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 364, in _receive_events
+    events = self._read_incoming_data(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 455, in _read_incoming_data
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 443, in _read_incoming_data
+    raise RemoteProtocolError("Server disconnected")
+httpcore.RemoteProtocolError: Server disconnected
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 367, in get_daily_tracker_data
+    res = query.eq("current_billing_end_date", ren_str).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.RemoteProtocolError: Server disconnected
+
+
+============================================================
+[2026-03-27 16:21:39]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 187, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 150, in handle_request
+    status, headers = self._receive_response(
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 294, in _receive_response
+    event = self._receive_stream_event(request, stream_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 336, in _receive_stream_event
+    self._receive_events(request, stream_id)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 364, in _receive_events
+    events = self._read_incoming_data(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 438, in _read_incoming_data
+    raise self._read_exception  # pragma: nocover
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 187, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 150, in handle_request
+    status, headers = self._receive_response(
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 294, in _receive_response
+    event = self._receive_stream_event(request, stream_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 336, in _receive_stream_event
+    self._receive_events(request, stream_id)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 364, in _receive_events
+    events = self._read_incoming_data(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 455, in _read_incoming_data
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\http2.py", line 443, in _read_incoming_data
+    raise RemoteProtocolError("Server disconnected")
+httpcore.RemoteProtocolError: Server disconnected
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 367, in get_daily_tracker_data
+    res = query.eq("current_billing_end_date", ren_str).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.RemoteProtocolError: Server disconnected
+
+
+============================================================
+[2026-03-27 17:22:10]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 1845, in update_customer_info
+    db_module.supabase.table('subscriptions').update(update_payload).eq("id", sub_id).eq("user_id", user_id).execute()
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 53, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': 'invalid input syntax for type numeric: ""', 'code': '22P02', 'hint': None, 'details': None}
+
+
+============================================================
+[2026-03-27 17:22:15]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 1845, in update_customer_info
+    db_module.supabase.table('subscriptions').update(update_payload).eq("id", sub_id).eq("user_id", user_id).execute()
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 53, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': 'invalid input syntax for type numeric: ""', 'code': '22P02', 'hint': None, 'details': None}
+

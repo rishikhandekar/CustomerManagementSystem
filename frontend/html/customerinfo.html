@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS - Customer Info</title>
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/customer.css">
+    <style>
+        /* Small fix for visibility of adjustment buttons */
+        .advance-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .btn-adjust {
+            flex: 1;
+            padding: 6px 4px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid #0056b3;
+            background-color: #e3f2fd;
+            color: #0056b3;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .btn-adjust:hover {
+            background-color: #2196f3;
+            color: white;
+        }
+        .modal-content .btn-submit[style*="background"] {
+            color: white !important; 
+            border: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div id="sidebar-placeholder"></div>
+
+        <main class="main-content">
+            <div id="header-placeholder"></div>
+            <div class="form-page-header">
+                <h2>Customer Info</h2>
+                <a href="#" onclick="history.back(); return false;" class="btn-back">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Go Back
+                </a>
+            </div>
+
+            <div class="form-card">
+                
+                <div class="info-layout-grid">
+                    <div class="personal-info-col">
+                        <label>Customer Name</label>
+                        <input type="text" id="infoName" class="form-input" readonly>
+                        
+                        <label>Aadhaar ID</label>
+                        <input type="text" id="infoAadhaar" class="form-input" readonly maxlength="12" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+                        <label>Customer ID</label>
+                        <input type="text" id="infoCustId" class="form-input" readonly> 
+                        
+                        <label>Total Pending (All Plans - Current)</label>
+                        <input type="text" id="infoTotalPendingCurrent" class="form-input highlight-box" readonly>
+                    </div>
+
+                    <div class="personal-info-col">
+                        <label>Phone No</label>
+                        <input type="text" id="infoPhone" class="form-input" readonly maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+                        <label>Alternate Phone No</label>
+                        <input type="text" id="infoAltPhone" class="form-input" readonly maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+                        <label>Additional Note</label>
+                        <textarea id="infoNotes" class="form-input text-area-notes" readonly></textarea>
+                    </div>
+
+                    <div class="personal-info-col">
+                        <label>Email ID</label>
+                        <input type="text" id="infoEmail" class="form-input" readonly>
+
+                        <label>Short Address</label>
+                        <input type="text" id="infoShortAddr" class="form-input" readonly>
+
+                        <label>Long Address</label>
+                        <input type="text" id="infoLongAddr" class="form-input" readonly>
+
+                        <label>Total Pending (All Plans - Upcoming)</label>
+                        <input type="text" id="infoTotalPendingUpcoming" class="form-input highlight-box" readonly>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-title">Subscription</div>
+                
+                <div class="subscription-controls-wrapper">
+                    
+                    <div class="subscription-toggles">
+                        <div class="sub-toggle" id="viewCable">
+                            <div class="toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+                            <span>Cable</span>
+                        </div>
+                        <div class="sub-toggle" id="viewInternet">
+                            <div class="toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+                            <span>Internet</span>
+                        </div>
+                    </div>
+
+                    <div class="subscription-totals-text">
+                        <div id="typeTotalCurrentText">Total Cable Pending (till Current) : ₹0</div>
+                        <div id="typeTotalUpcomingText">Total Cable Pending (till Upcoming) : ₹0</div>
+                    </div>
+
+                </div>
+
+                <div id="planDetailsContainer" class="plan-details-container hidden">
+                    
+                    <div id="multiPlanTabs" class="multi-plan-tabs hidden"></div>
+
+                    <div class="plan-header-row">
+                        <h3 id="planTitle">Cable Plan</h3>
+                        <div class="plan-actions">
+                            <button id="btnRemovePlan" class="btn-action btn-red-outline hidden">Remove Plan</button>
+                            <button id="btnToggleStatus" class="btn-action btn-red">Stop Plan</button>
+                            <button id="btnHistory" class="btn-action btn-yellow">History</button>
+                            <button id="btnWhatsappReminder" class="btn-action btn-green">WhatsApp Reminder</button>
+                        </div>
+                    </div>
+
+                    <div id="planFormsWrapper">
+                        <div class="form-grid">
+                            <div>
+                                <label>Plan Name</label>
+                                <input type="text" id="pName" class="form-input" readonly>
+                            </div>
+                            <div>
+                                <label>Plan Price</label>
+                                <input type="text" id="pPrice" class="form-input" readonly>
+                            </div>
+                            <div>
+                                <label>Plan Duration</label>
+                                <input type="text" id="pDuration" class="form-input" readonly>
+                            </div>
+
+                            <div>
+                                <label>Last Activated Date</label>
+                                <input type="text" id="pLastActive" class="form-input" readonly placeholder="YYYY-MM-DD">
+                            </div>
+                            <div>
+                                <label>Renewal Date</label>
+                                <input type="text" id="pRenewal" class="form-input" readonly placeholder="YYYY-MM-DD">
+                            </div>
+                            <div>
+                                <label id="lblSpecific">Setup Box ID No</label>
+                                <input type="text" id="pSpecificId" class="form-input" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div>
+                                <label>Pending Amount</label>
+                                <input type="text" id="fPending" class="form-input" readonly>
+                            </div>
+                            <div>
+                                <label>Current Plan Amount</label>
+                                <input type="text" id="fCurrent" class="form-input" readonly>
+                            </div>
+                            <div>
+                                <label>Upcoming Plan Amount</label>
+                                <input type="text" id="fUpcoming" class="form-input" readonly>
+                            </div>
+
+                            <div>
+                                <label>Additional Charges</label>
+                                <input type="text" id="fAdditional" class="form-input" readonly oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            </div>
+                            <div>
+                                <label>Discount Amount</label>
+                                <input type="text" id="fDiscount" class="form-input" readonly oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            </div>
+                            
+                            <div class="osc-input-wrapper">
+                                <label>Other Service Charges</label>
+                                <input type="text" id="fOther" class="form-input" readonly>
+                                <div class="osc-btn-group">
+                                    <button type="button" class="btn-osc add" onclick="openOscModal('add')">+ Add</button>
+                                    <button type="button" class="btn-osc sub" onclick="openOscModal('sub')">- Sub</button>
+                                </div>
+                            </div>
+                            
+
+                            <div>
+                                <label>Advance Amount Paid</label>
+                                <input type="text" id="fAdvance" class="form-input" readonly>
+                                
+                                <div class="advance-controls">
+                                    <button id="btnAdjustAmount" class="btn-adjust">Adjust Amount</button>
+                                    <button id="btnAdjustOtherPlans" class="btn-adjust">Adjust Other Plans</button>
+                                    <button id="btnTransferAdvance" class="btn-adjust hidden">Transfer Amount</button>
+                                    <button id="btnShowAdvLogs" class="btn-adjust">History</button>
+                                </div>
+                            </div>
+                            <div>
+                                <label>Total Amount (till current)</label>
+                                <input type="text" id="calcTotalCurrent" class="form-input bold-amt" readonly>
+                            </div>
+                            <div>
+                                <label>Total Amount (full upcoming)</label>
+                                <input type="text" id="calcTotalUpcoming" class="form-input bold-amt" readonly>
+                            </div>
+                        </div>
+
+                        <div class="payment-row">
+                            <div style="flex:1;">
+                                <label>Amount Paid</label>
+                                <input type="text" id="payAmount" class="form-input" placeholder="Enter Amount" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
+                            </div>
+
+                            <div style="flex:1.5; display: flex; gap: 10px;">
+                                <div style="flex:1;">
+                                    <label>Payment Mode</label>
+                                    <div class="select-wrapper" style="width:100%;">
+                                        <select id="payMode" class="form-input">
+                                            <option value="cash">Cash</option>
+                                            <option value="upi">UPI</option>
+                                            <option value="bank">Net Banking</option>
+                                            <option value="cheque">Cheque</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div id="chequeInputContainer" class="hidden" style="flex:1;">
+                                    <label>Cheque No</label>
+                                    <input type="text" id="payChequeNo" class="form-input" placeholder="Cheque Number" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                </div>
+                            </div>
+
+                            <div style="flex:0.5; display:flex; align-items:end; gap:10px;">
+                                <div class="status-badge" id="pStatus">Active</div>
+                                <button id="btnPay" class="btn-pay">Paid</button>
+                            </div>
+                        </div>
+                    </div> 
+                    <div id="historyContainer" class="hidden">
+                        <div class="history-tabs-row">
+                            <button id="tabPaymentHistory" class="history-tab active">Payment History</button>
+                            <button id="tabPlanHistory" class="history-tab">Plan History</button>
+                        </div>
+
+                        <div id="paymentHistoryView">
+                            <table class="history-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 25%;">Date / Time</th>
+                                        <th style="width: 20%;">Amount</th>
+                                        <th style="width: 20%;">Mode</th>
+                                        <th style="width: 35%;">Details / Cheque No</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="paymentHistoryBody">
+                                    </tbody>
+                            </table>
+                        </div>
+
+                        <div id="planHistoryView" class="hidden">
+                            <p class="empty-history">Plan history records.</p>
+                        </div>
+
+                        
+                    </div>
+
+                    <div id="deletedPlansMainView" class="hidden" style="padding: 20px;">
+                        <h3 style="color: #c62828; margin-bottom: 20px; border-bottom: 1px solid #ffcdd2; padding-bottom: 10px;">
+                            Archived Plans
+                        </h3>
+                        <div id="deletedPlansGrid" class="deleted-plans-grid">
+                            </div>
+                    </div>
+
+                </div> <div id="noPlanMessage" class="hidden" style="text-align:center; padding:30px; color:#666;">
+                    Customer does not have this subscription plan.
+                </div>
+
+                <div id="footerDefault" class="action-buttons" style="margin-top: 40px;">
+                    <button id="btnEdit" class="btn-submit">Edit Customer Info</button>
+                    <button id="btnDelete" class="btn-cancel">Delete Customer Info</button>
+                </div>
+
+                <div id="footerEdit" class="action-buttons hidden" style="margin-top: 40px;">
+                    <button id="btnSubmit" class="btn-submit">Submit</button>
+                    <button id="btnCancel" class="btn-cancel">Cancel</button>
+                </div>
+
+            </div>
+
+            <div id="addPlanModal" class="modal-overlay hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 id="modalTitle">Add New Cable Plan</h3>
+                        <button id="btnCloseModal" class="close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="availablePlansGrid" class="plans-selection-grid">
+                            </div>
+
+                        <div id="addPlanConfirmSection" class="confirmation-footer hidden">
+                            <div id="addPlanConfirmText">
+                                <p class="confirm-plan-text">Add "<strong id="confirmPlanName"></strong>" to this customer?</p>
+                                <div class="confirm-plan-inputs">
+                                    <div class="confirm-plan-field">
+                                        <label class="confirm-plan-label">Add. Charge</label>
+                                        <input type="number" id="newPlanAdd" class="form-input confirm-plan-input" value="0">
+                                    </div>
+                                    <div class="confirm-plan-field">
+                                        <label class="confirm-plan-label">Discount</label>
+                                        <input type="number" id="newPlanDisc" class="form-input confirm-plan-input" value="0">
+                                    </div>
+                                </div>
+                                <div class="confirm-plan-net">
+                                    Net Amount: ₹<span id="newPlanNet">0</span>
+                                </div>
+                            </div>
+                            <div class="modal-btn-row-center">
+                                <button id="btnCancelAddPlan" class="btn-modal-cancel-red">Cancel</button>
+                                <button id="btnConfirmAddPlan" class="btn-modal-add-blue">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="removePlanModal" class="modal-overlay hidden">
+                <div class="modal-content" style="width: 450px; text-align: center; padding: 30px;">
+                    <h3 style="font-size: 20px; margin-bottom: 10px;">
+                        Confirm Remove "<span id="removeModalPlanName">the Plan</span>"?
+                    </h3>
+                    
+                    <p style="color: #666; margin-bottom: 30px; font-size: 14px;">
+                        Once removed, the plan data cannot be restored.
+                    </p>
+                    <div class="modal-btn-row">
+                        <button id="btnCancelRemove" class="btn-modal-cancel">Cancel</button>
+                        <button id="btnConfirmRemove" class="btn-modal-remove">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="paymentPriorityModal" class="modal-overlay hidden">
+                <div class="modal-content" style="width: 500px; text-align: center; padding: 30px; position: relative;">
+                    <h3 class="modal-h3">Payment Allocation</h3>
+                    <p class="modal-p">
+                        Did the customer pay for <strong>Other Service Charges</strong>?
+                    </p>
+                    <div class="modal-btn-row">
+                        <button id="btnPayNo" class="btn-modal-cancel" style="min-width: 140px; padding: 12px 20px; white-space: nowrap; font-size: 14px;">No</button>
+                        <button id="btnPayYes" class="btn-modal-add-blue" style="min-width: 140px; padding: 12px 20px; white-space: nowrap; font-size: 14px;">Yes</button>
+                    </div>
+                    <button onclick="document.getElementById('paymentPriorityModal').classList.add('hidden')" class="close-btn" style="position: absolute; top: 10px; right: 15px;">&times;</button>
+                </div>
+            </div>
+
+            <div id="paymentOverpaySingleModal" class="modal-overlay hidden">
+                <div class="modal-content" style="width: 500px; text-align: center; padding: 30px; position: relative;">
+                    <h3 class="modal-h3">Payment Adjustment</h3>
+                    <p class="modal-p">
+                        Since the <strong>Total Pending (All Plans)</strong> matches this plan's total amount, and the amount paid is high:<br><br>
+                        Do you want to adjust the excess in <strong>Upcoming Plan Amount</strong> or keep the remaining in <strong>Advance</strong>?
+                    </p>
+                    <div class="modal-btn-row">
+                        <button id="btnOverpayUpcomingSingle" class="btn-modal-cancel" style="min-width: 160px; padding: 12px 20px; white-space: nowrap; font-size: 14px;">Adjust Upcoming</button>
+                        <button id="btnOverpayAdvance" class="btn-modal-add-blue" style="min-width: 160px; padding: 12px 20px; white-space: nowrap; font-size: 14px;">Keep in Advance</button>
+                    </div>
+                    <button onclick="document.getElementById('paymentOverpaySingleModal').classList.add('hidden')" class="close-btn" style="position: absolute; top: 10px; right: 15px;">&times;</button>
+                </div>
+            </div>
+
+            <div id="paymentOverpayMultiModal" class="modal-overlay hidden">
+                <div class="modal-content" style="width: 500px; text-align: center; padding: 30px; position: relative;">
+                    <h3 class="modal-h3">Payment Adjustment</h3>
+                    <p class="modal-p">
+                        Since amount is more than Total Due, how to adjust?<br><br>
+                        <strong>1. Adjust Other Plans:</strong> Clears current plan first, then uses remaining money for <b>OTHER</b> plans.<br><br>
+                        <strong>2. Adjust Upcoming:</strong> Clears current plan first, then uses remaining money for <b>Upcoming</b> bills on this plan.
+                    </p>
+                    <div class="modal-btn-row">
+                        <button id="btnOverpayUpcomingMulti" class="btn-modal-cancel" style="min-width: 160px; padding: 12px 20px; white-space: nowrap; font-size: 14px;">Adjust Upcoming</button>
+                        <button id="btnOverpayOtherPlans" class="btn-modal-add-blue" style="min-width: 160px; padding: 12px 20px; white-space: nowrap; font-size: 14px;">Adjust Other Plans</button>
+                    </div>
+                    <button onclick="document.getElementById('paymentOverpayMultiModal').classList.add('hidden')" class="close-btn" style="position: absolute; top: 10px; right: 15px;">&times;</button>
+                </div>
+            </div>
+
+            <div id="paymentPrioritySelectModal" class="modal-overlay hidden">
+                <div class="modal-content" style="width: 500px; text-align: center; padding: 30px; position: relative;">
+                    <h3 class="modal-h3">Payment Priority (All Plans)</h3>
+                    <p class="modal-p">
+                        You are adjusting across multiple plans.<br><br>
+                        Did the customer pay for <strong>Other Service Charges</strong> specifically?
+                    </p>
+                    <div class="modal-btn-row">
+                        <button id="btnPriorityPlan" class="btn-modal-cancel" style="min-width: 160px; padding: 12px 20px; white-space: nowrap; font-size: 14px;">No (Prioritize Plan)</button>
+                        <button id="btnPriorityOther" class="btn-modal-add-blue" style="min-width: 160px; padding: 12px 20px; white-space: nowrap; font-size: 14px;">Yes (Prioritize Other)</button>
+                    </div>
+                    <button onclick="document.getElementById('paymentPrioritySelectModal').classList.add('hidden')" class="close-btn" style="position: absolute; top: 10px; right: 15px;">&times;</button>
+                </div>
+            </div>
+
+            <div id="paymentExcessModal" class="modal-overlay hidden">
+                <div class="modal-content" style="width: 500px; text-align: center; padding: 30px;">
+                    <h3 class="modal-h3">Excess Payment Adjustment</h3>
+                    
+                    <p style="font-size: 15px; margin-bottom: 25px; color: #555;">
+                        After clearing all pending, current, and other charges for <strong>ALL</strong> plans, there is still amount left.<br><br>
+                        How would you like to use the remaining balance?
+                    </p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <button id="btnExcessUpcoming" class="btn-submit" style="background: #2e7d32; color: white;">
+                            Adjust Upcoming Amount (All Plans)
+                        </button>
+                        <button id="btnExcessAdvance" class="btn-submit" style="background: #1976d2; color: white;">
+                            Keep in Advance Balance
+                        </button>
+                    </div>
+                    
+                    <button id="btnCloseExcessModal" class="close-btn" style="top:10px; right:10px;">&times;</button>
+                </div>
+            </div>
+
+            <div id="startPlanModal" class="modal-overlay hidden">
+                <div class="modal-content" style="width: 500px; text-align: center; padding: 30px;">
+                    <h3 class="modal-h3">Advance Balance Adjustment</h3>
+                    
+                    <p id="startPlanTextCase1" class="hidden" style="font-size: 15px; margin-bottom: 20px; color: #555;">
+                        The <strong>Current Plan</strong> is already fully paid.<br>
+                        Do you want to use your <strong>Advance Balance</strong> to pay for the <strong>Upcoming Plan</strong>?
+                    </p>
+
+                    <p id="startPlanTextCase2" class="hidden" style="font-size: 15px; margin-bottom: 20px; color: #555;">
+                        You have sufficient <strong>Advance Balance</strong> to pay the current bill.<br>
+                        Do you want to use the <em>remaining</em> advance for the <strong>Upcoming Plan</strong> as well?
+                    </p>
+                    
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <button id="btnStartCurrentOnly" class="btn-submit" style="background: #757575; color: white;">
+                            Current Only
+                        </button>
+                        <button id="btnStartBoth" class="btn-submit" style="background: #2e7d32; color: white;">
+                            Current & Upcoming
+                        </button>
+                    </div>
+                    
+                    <button id="btnCloseStartModal" class="close-btn" style="top:10px; right:10px;">&times;</button>
+                </div>
+            </div>
+
+            <div id="adjAmountModal" class="modal-overlay hidden">
+                <div class="modal-content" style="width: 450px; padding: 25px;">
+                    <h3 style="margin-bottom: 20px;">Adjust Advance (Current Plan)</h3>
+                    <p style="margin-bottom: 20px; color: #555;">Where do you want to adjust the Advance Amount?</p>
+                    
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <button id="btnAdjOther" class="btn-submit" style="background: #1976d2; color: white;">Pending + Current + OSC</button>
+                        <button id="btnAdjUpcoming" class="btn-submit" style="background: #2e7d32; color: white;">Upcoming Plan Amount</button>
+                    </div>
+                    <button class="close-btn" onclick="document.getElementById('adjAmountModal').classList.add('hidden')">&times;</button>
+                </div>
+            </div>
+
+            <div id="adjExcessModal" class="modal-overlay hidden">
+                <div class="modal-content" style="width: 500px; padding: 25px;">
+                    <h3 style="margin-bottom: 15px;">Adjust Advance (Excess)</h3>
+                    <p style="margin-bottom: 20px; color: #555;">
+                        Advance is greater than Total Pending.<br>
+                        Do you want to use advance to clear till <strong>Current Amount</strong> only, or also <strong>Upcoming</strong>?
+                    </p>
+                    
+                    <div class="modal-btn-col">
+                        <button id="btnAdjExcessCurrent" class="btn-submit" style="background: #757575; color: white;">Clear Till Current Only (Keep Remainder in Advance)</button>
+                        <button id="btnAdjExcessAll" class="btn-submit" style="background: #2e7d32; color: white;">Clear Till Current + Upcoming</button>
+                    </div>
+                    <button class="close-btn" onclick="document.getElementById('adjExcessModal').classList.add('hidden')">&times;</button>
+                </div>
+            </div>
+
+            <div id="adjPartialModal" class="modal-overlay hidden">
+                <div class="modal-content" style="width: 500px; padding: 25px;">
+                    <h3 style="margin-bottom: 15px;">Adjust Advance (Partial)</h3>
+                    <p style="margin-bottom: 20px; color: #555;">
+                        Advance is less than Total Pending.<br>
+                        How do you want to prioritize the clearance for <strong>ALL PLANS</strong>?
+                    </p>
+                    
+                    <div class="modal-btn-col">
+                        <button id="btnAdjPriorityOther" class="btn-submit" style="background: #1976d2; color: white;">
+                            1. Other Charges &rarr; 2. Pending &rarr; 3. Current
+                        </button>
+                        <button id="btnAdjPriorityPlan" class="btn-submit" style="background: #2e7d32; color: white;">
+                            1. Pending &rarr; 2. Current &rarr; 3. Other Charges
+                        </button>
+                    </div>
+                    <button class="close-btn" onclick="document.getElementById('adjPartialModal').classList.add('hidden')">&times;</button>
+                </div>
+            </div>
+
+            <div id="viewDatesModal" class="modal-overlay hidden">
+                <div class="modal-content" style="width: 500px; padding: 25px;">
+                    <h3 style="margin-bottom: 15px;">Payment Details</h3>
+                    <div id="allocationsList" style="max-height: 300px; overflow-y: auto;">
+                        </div>
+                    <div style="text-align: right; margin-top: 20px;">
+                        <button class="btn-modal-cancel" onclick="document.getElementById('viewDatesModal').classList.add('hidden')">Close</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="viewAdvanceModal" class="modal-overlay hidden">
+                <div class="modal-content" style="width: 600px; padding: 25px;">
+                    <h3 style="margin-bottom: 15px;">Advance Balance History</h3>
+                    
+                    <div class="history-scroll-container">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Reason / Target</th>
+                                </tr>
+                            </thead>
+                            <tbody id="advanceHistoryBody">
+                                </tbody>
+                        </table>
+                    </div>
+
+                    <div style="text-align: right; margin-top: 20px;">
+                        <button class="btn-modal-cancel" onclick="document.getElementById('viewAdvanceModal').classList.add('hidden')">Close</button>
+                    </div>
+                </div>
+            </div>
+            
+        </main>
+    </div>
+
+    <div id="whatsappOptionsModal" class="modal-overlay hidden" style="z-index: 10005;">
+        <div class="modal-content" style="width: 450px; padding: 25px; text-align: center;">
+            <h3 style="margin-bottom: 15px; color: #333;">Send WhatsApp Reminder</h3>
+            <p style="margin-bottom: 20px; color: #555; font-size: 14px;">Select the details you want to send to the customer:</p>
+
+            <div class="modal-btn-col">
+                <button id="btnWaCurrent" class="btn-submit" style="background: #1976d2; color: white; font-weight:bold;">Total Current Due (₹0)</button>
+                <button id="btnWaUpcoming" class="btn-submit" style="background: #2e7d32; color: white; font-weight:bold;">Total Till Upcoming (₹0)</button>
+                <button id="btnWaOsc" class="btn-submit" style="background: #f57f17; color: white; font-weight:bold;">Only OSC (₹0)</button>
+                <button id="btnWaOnlyUpcoming" class="btn-submit" style="background: #ab47bc; color: white; font-weight:bold;">Only Upcoming Plan (₹0)</button>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button class="btn-modal-cancel" onclick="document.getElementById('whatsappOptionsModal').classList.add('hidden')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="waMultiPlanModal" class="modal-overlay hidden" style="z-index: 10004;">
+        <div class="modal-content" style="width: 450px; padding: 25px;">
+            <h3 style="margin-top: 0; text-align: center; font-size: 18px; font-weight: 600; color: #333; margin-bottom: 15px;">
+                Select Plans for Reminder
+            </h3>
+            
+            <div id="waPlanChecklist" style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+            </div>
+            
+            <div style="display: flex; gap: 10px;">
+                <button type="button" class="btn-modal-cancel" onclick="document.getElementById('waMultiPlanModal').classList.add('hidden'); document.getElementById('waMultiPlanModal').style.display='none';" style="flex: 1;">Cancel</button>
+                <button id="btnWaNextToOptions" class="btn-submit" style="flex: 1; background: #1976d2; color: white;">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="whatsappLangModal" class="modal-overlay hidden" style="z-index: 10006;">
+        <div class="modal-content" style="width: 450px; padding: 25px; text-align: center;">
+            <h3 style="margin-bottom: 15px; color: #333;">Select Language</h3>
+            <p style="margin-bottom: 20px; color: #555; font-size: 14px;">In which language should the message be sent?</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button class="lang-btn" data-lang="en">English</button>
+                <button class="lang-btn" data-lang="hi">Hindi (हिंदी)</button>
+                <button class="lang-btn" data-lang="mr">Marathi (मराठी)</button>
+                <button class="lang-btn" data-lang="ur">Urdu (اردو)</button>
+                <button class="lang-btn" data-lang="gu">Gujarati (ગુજરાતી)</button>
+                <button class="lang-btn" data-lang="te">Telugu (తెలుగు)</button>
+                <button class="lang-btn" data-lang="ta">Tamil (தமிழ்)</button>
+                <button class="lang-btn" data-lang="bn">Bengali (বাংলা)</button>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button class="btn-modal-cancel" onclick="document.getElementById('whatsappLangModal').classList.add('hidden')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="delScopeModal" class="modal-overlay hidden" style="z-index: 10000;">
+        <div class="modal-content" style="width:450px; padding:30px; text-align:center;">
+            <h3 style="margin-top:0; color:#333; margin-bottom:15px;">Adjust Advance (Deleted Plans)</h3>
+            <p style="color:#666; font-size:14px; margin-bottom:25px;">
+                You have multiple deleted plans. Where do you want to adjust this advance amount?
+            </p>
+            <div style="display:flex; gap:15px; justify-content:center;">
+                <button onclick="handleDelScope('single')" style="padding:12px 20px; background:#e3f2fd; color:#1565c0; border:1px solid #90caf9; border-radius:8px; cursor:pointer; font-weight:600;">
+                    This Plan Only
+                </button>
+                <button onclick="handleDelScope('multi')" style="padding:12px 20px; background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7; border-radius:8px; cursor:pointer; font-weight:600;">
+                    This + Other Deleted Plans
+                </button>
+            </div>
+            <div style="margin-top:20px;">
+                <button onclick="document.getElementById('delScopeModal').classList.add('hidden')" style="background:none; border:none; color:#888; text-decoration:underline; cursor:pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="delPriorityModal" class="modal-overlay hidden" style="z-index: 10001;">
+        <div class="modal-content" style="width:500px; padding:30px; text-align:center;">
+            <h3 style="margin-top:0; color:#333; margin-bottom:15px;">Select Clearance Priority</h3>
+            <p style="color:#666; font-size:14px; margin-bottom:25px;">
+                How do you want to prioritize the clearance for all deleted plans?
+            </p>
+            <div style="display:flex; gap:15px; justify-content:center;">
+                <button onclick="handleDelPriority('plan')" style="padding:12px 20px; background:#fff3e0; color:#ef6c00; border:1px solid #ffcc80; border-radius:8px; cursor:pointer; font-weight:600; text-align:left;">
+                    1. Pending Plan Amount &#8594; 2. OSC<br>
+                    <span style="font-size:11px; font-weight:normal; opacity:0.8;">(Clears Bill Amount First)</span>
+                </button>
+                <button onclick="handleDelPriority('osc')" style="padding:12px 20px; background:#f3e5f5; color:#7b1fa2; border:1px solid #ce93d8; border-radius:8px; cursor:pointer; font-weight:600; text-align:left;">
+                    1. OSC &#8594; 2. Pending Plan Amount<br>
+                    <span style="font-size:11px; font-weight:normal; opacity:0.8;">(Clears Service Charges First)</span>
+                </button>
+            </div>
+            <div style="margin-top:20px;">
+                <button onclick="document.getElementById('delPriorityModal').classList.add('hidden')" style="background:none; border:none; color:#888; text-decoration:underline; cursor:pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="transferAdvanceModal" class="modal-overlay hidden" style="z-index: 10003;">
+        <div class="modal-content" style="width: 450px; padding: 25px;">
+            <h3 style="margin-bottom: 15px; color: #333;">Transfer Advance Balance</h3>
+            <p style="margin-bottom: 15px; color: #555; font-size: 14px;">
+                Select an active plan to transfer the remaining advance balance (₹<span id="transferAmtDisplay" style="font-weight:bold; color:#1565c0;">0</span>):
+            </p>
+            
+            <div id="activePlansForTransfer" style="display:flex; flex-direction:column; gap:10px; max-height:250px; overflow-y:auto; margin-bottom:20px;">
+                </div>
+            
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="btn-modal-cancel" onclick="document.getElementById('transferAdvanceModal').classList.add('hidden')">Cancel</button>
+                <button id="btnConfirmTransferAdvance" class="btn-submit" style="background: #7b1fa2; color: white;" disabled>Transfer</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="transferDebtModal" class="modal-overlay hidden" style="z-index: 10004;">
+        <div class="modal-content" style="width: 450px; padding: 25px;">
+            <h3 style="margin-bottom: 15px; color: #333;">Transfer Pending Debt</h3>
+            <p style="margin-bottom: 15px; color: #555; font-size: 14px;">
+                Select an active plan to transfer the total pending debt (₹<span id="transferDebtAmtDisplay" style="font-weight:bold; color:#c62828;">0</span>):
+            </p>
+            
+            <div id="activePlansForDebtTransfer" style="display:flex; flex-direction:column; gap:10px; max-height:250px; overflow-y:auto; margin-bottom:20px;">
+                </div>
+            
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="btn-modal-cancel" onclick="document.getElementById('transferDebtModal').classList.add('hidden')">Cancel</button>
+                <button id="btnConfirmTransferDebt" class="btn-submit" style="background: #c62828; color: white;" disabled>Transfer Debt</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="oscModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:99999; justify-content:center; align-items:center;">
+        <div style="background:white; padding:20px; border-radius:8px; width:300px; box-shadow:0 4px 6px rgba(0,0,0,0.2);">
+            <h3 id="oscModalTitle" style="margin-top:0; text-align:center; font-size:18px; font-weight:600; color:#333;">Update Charges</h3>
+            
+            <div style="margin:15px 0;">
+                <label style="display:block; font-size:12px; color:#666; margin-bottom:5px;">Enter Amount (₹)</label>
+                <input type="number" id="oscInputAmount" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; font-size:16px;" placeholder="0">
+            </div>
+
+            <div style="display:flex; gap:10px;">
+                <button id="btnConfirmOsc" style="flex:1; padding:8px; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Confirm</button>
+                <button type="button" onclick="document.getElementById('oscModal').style.display='none'" style="flex:1; padding:8px; background:#f5f5f5; color:#333; border:1px solid #ccc; border-radius:4px; cursor:pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteCustomerModal" class="modal-overlay hidden" style="z-index: 10010;">
+        <div class="modal-content" style="width: 450px; text-align: center; padding: 30px;">
+            <h3 style="font-size: 20px; margin-bottom: 15px; color:#333;">Permanently Delete Customer?</h3>
+            <p style="color: #666; margin-bottom: 25px; font-size: 14px; line-height: 1.6;">
+                Are you sure? This will <strong>permanently delete</strong> all of their active and deleted plans. <br><br>
+                Only their basic info (Name, Phone, ID, Address) will be saved to the <strong>Deleted Customers</strong> list.
+            </p>
+            <div class="modal-btn-row">
+                <button id="btnCancelDeleteCust" class="btn-modal-cancel">Cancel</button>
+                <button id="btnConfirmDeleteCust" class="btn-submit" style="background:#c62828; color:white; border:none;">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <template id="paymentRowTemplate">
+        <tr>
+            <td class="pay-date">
+                <span class="pay-date-text"></span>
+                <span class="pay-time-text" style="color:#888; font-size:11px; margin-left:5px;"></span>
+            </td>
+            <td class="pay-amount" style="font-weight:600; color:#2e7d32;"></td>
+            <td class="pay-mode"></td>
+            <td class="pay-detail" style="font-size:13px; color:#444;"></td>
+        </tr>
+    </template>
+
+    <template id="paymentMsgTemplate">
+        <tr>
+            <td colspan="4" class="pay-msg-cell" style="text-align:center; padding:20px;"></td>
+        </tr>
+    </template>
+
+    <template id="planHistoryTableTemplate">
+        <div class="table-scroll-wrapper">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Period</th><th>Plan</th><th>Base</th><th style="color:#2e7d32;">+Add</th><th style="color:#c62828;">-Disc</th><th style="color:#f57f17;">+Other</th><th>Net Bill</th><th>Paid</th><th>Status</th><th>View</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </template>
+
+    <template id="planRowUpcomingTemplate">
+        <tr style="background-color: #f3e5f5; opacity: 0.9; border-left: 3px solid #ab47bc;">
+            <td><div style="font-weight:600; font-size:12px; color:#7b1fa2;">UPCOMING</div></td>
+            <td class="td-plan td-sm" style="font-style:italic;"></td>
+            <td class="td-base td-sm"></td>
+            <td class="td-add td-sm-green"></td>
+            <td class="td-disc td-sm-red"></td>
+            <td class="td-other td-sm-orange">-</td>
+            <td class="td-bill"></td>
+            <td class="td-paid td-sm"></td>
+            <td><span style="background:#e1bee7; color:#7b1fa2; padding:2px 6px; border-radius:10px; font-size:10px;">PLANNED</span></td>
+            <td><button class="btn-view">📅</button></td>
+        </tr>
+    </template>
+
+    <template id="planRowCurrentTemplate">
+        <tr>
+            <td><div class="td-label" style="font-weight:600; font-size:12px;"></div><div class="td-date" style="font-size:11px;"></div></td>
+            <td class="td-plan" style="font-size:13px;"></td>
+            <td class="td-base" style="font-size:13px;"></td>
+            <td class="td-add td-sm-green"></td>
+            <td class="td-disc td-sm-red"></td>
+            <td class="td-other td-sm-orange"></td>
+            <td class="td-bill"></td>
+            <td class="td-paid" style="font-size:13px;"></td>
+            <td class="td-status"></td>
+            <td><button class="btn-view">📅</button></td>
+        </tr>
+    </template>
+
+    <template id="planRowPastTemplate">
+        <tr>
+            <td><div class="td-start" style="font-weight:600; font-size:13px;"></div><div class="td-end" style="font-size:11px;"></div></td>
+            <td class="td-plan" style="font-size:13px;"></td>
+            <td class="td-base" style="font-size:13px;"></td>
+            <td class="td-add" style="font-size:13px;"></td>
+            <td class="td-disc" style="font-size:13px;"></td>
+            <td class="td-other" style="font-size:13px;"></td>
+            <td class="td-bill"></td>
+            <td class="td-paid" style="font-size:13px;"></td>
+            <td class="td-status"></td>
+            <td><button class="btn-view">📅</button></td>
+        </tr>
+    </template>
+
+    <template id="planMsgTemplate">
+        <p class="plan-msg-cell" style="text-align:center; padding:20px;"></p>
+    </template>
+
+    <template id="archivedHistoryTableTemplate">
+        <div style="padding:10px; background:#ffebee; color:#c62828; text-align:center; font-weight:600; margin-bottom:10px; border-radius:4px;">⚠️ ARCHIVED HISTORY (DELETED PLAN)</div>
+        <div class="table-scroll-wrapper">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Plan</th>
+                        <th>Base</th>
+                        <th style="color:#2e7d32;">+Add</th>
+                        <th style="color:#c62828;">-Disc</th>
+                        <th style="color:#f57f17;">+Other</th>
+                        <th>Net Bill</th>
+                        <th>Paid</th>
+                        <th>Status</th>
+                        <th>View</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </template>
+
+    <template id="archivedRowRecentTemplate">
+        <tr style="background-color: #fffde7; border-left: 3px solid #fbc02d;">
+            <td>
+                <div style="font-weight:600; font-size:12px; color:#f57f17;">MOST RECENT</div>
+                <div class="td-date" style="font-size:11px;"></div>
+            </td>
+            <td class="td-plan" style="font-size:13px;"></td>
+            <td class="td-base" style="font-size:13px;"></td>
+            <td class="td-add td-sm-green"></td>
+            <td class="td-disc td-sm-red"></td>
+            <td class="td-other td-sm-orange"></td>
+            <td class="td-bill"></td>
+            <td class="td-paid" style="font-size:13px;"></td>
+            <td class="td-status"></td>
+            <td><button class="btn-view">📅</button></td>
+        </tr>
+    </template>
+
+    <template id="archivedRowPastTemplate">
+        <tr>
+            <td><div class="td-start" style="font-weight:600; font-size:13px;"></div><div class="td-end" style="font-size:11px; color:#666;"></div></td>
+            <td class="td-plan"></td>
+            <td class="td-base"></td>
+            <td class="td-add td-sm-green"></td>
+            <td class="td-disc td-sm-red"></td>
+            <td class="td-other" style="color:#f57f17;"></td>
+            <td class="td-bill" style="font-weight:700;"></td>
+            <td class="td-paid"></td>
+            <td class="td-status"><span class="status-badge-archived"></span></td>
+            <td><button class="btn-view">📅</button></td>
+        </tr>
+    </template>
+
+    <template id="archivedMsgTemplate">
+        <tr><td colspan="10" style="text-align:center; padding:20px; color:#999;">No history records found.</td></tr>
+    </template>
+
+    <template id="noPlansMsgTemplate">
+        <p style="padding:20px; text-align:center;">No new plans available.</p>
+    </template>
+
+    <template id="planCardTemplate">
+        <div class="selection-card">
+            <strong class="card-name"></strong><br>
+            <small class="card-price"></small>
+            <small class="card-duration" style="color:#64748b; display:block; margin-top:2px;"></small>
+        </div>
+    </template>
+
+    <input type="hidden" id="hiddenUpcomingPlanPrice" value="0">
+
+    <script src="../js/layout.js"></script>
+    <script src="../js/customerinfo.js"></script>
+</body>
+</html>

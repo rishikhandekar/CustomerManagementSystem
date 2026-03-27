@@ -1,0 +1,51 @@
+@import url('customer.css'); 
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 40px;
+}
+
+.page-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #c62828; 
+}
+
+.table-card {
+    margin: 0 40px 40px 40px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    background: #fff;
+    padding: 0;
+    overflow: hidden;
+}
+
+.deleted-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.deleted-table th {
+    background-color: #ffebee;
+    padding: 15px 20px;
+    font-weight: 600;
+    color: #c62828;
+    text-align: left;
+}
+
+.deleted-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid #eee;
+    color: #555;
+    font-size: 15px;
+}
+
+/* Make ID, Phone, and Alt Phone columns monospaced */
+.deleted-table td:nth-child(1),
+.deleted-table td:nth-child(3),
+.deleted-table td:nth-child(4) {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+}

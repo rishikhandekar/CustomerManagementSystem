@@ -1,0 +1,10 @@
+# Secret Keys
+.env
+database_keys.txt
+
+# Temporary Python files
+__pycache__/
+*.pyc
+
+# Private WhatsApp Session
+WhatsApp_Session/

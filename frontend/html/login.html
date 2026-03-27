@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cable Media Service — Login</title>
+
+  <!-- external CSS -->
+  <link rel="stylesheet" href="../css/style.css" />
+
+  <!-- inline fallback style if external CSS doesn't load (optional) -->
+  <style id="inline-fallback" media="none">
+    /* This is a tiny fallback only; real style is in css/style.css */
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">Cable Media Service</div>
+  </header>
+
+  <main class="page">
+    <section class="login-card" role="main" aria-labelledby="login-title">
+      <h1 id="login-title" class="title">Login</h1>
+      <p class="subtitle">Don't have account? <a href="register.html" class="link">Register</a></p>
+
+      <form id="loginForm" class="form" onsubmit="return false;">
+        <label class="field-label" for="email">Email</label>
+        <input id="email" name="email" type="email" class="input" placeholder="hello@reallygreatsite.com" autocomplete="username" required />
+
+        <label class="field-label" for="password">Password</label>
+        <input id="password" name="password" type="password" class="input" placeholder="******" autocomplete="current-password" required />
+
+        <div class="forgot-row">
+          <a href="forget-password.html" class="forgot-link">FORGET PASSWORD?</a>
+        </div>
+
+        <button id="btnLogin" class="btn btn-primary" type="submit">Login</button>
+
+        <div class="divider">OR LOGIN WITH</div>
+
+        <button id="btnGoogle" class="btn btn-ghost" type="button">
+          <span class="google-btn-text">Google</span>
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <script src="../js/login.js"></script>
+</body>
+</html>

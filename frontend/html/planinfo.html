@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CMS - Plan Info</title>
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/subscription.css">
+</head>
+<body>
+    <div class="app-container">
+        <div id="sidebar-placeholder"></div>
+        <main class="main-content">
+            <div id="header-placeholder"></div>
+
+            <div class="form-header">
+                <h2>Plan Info</h2>
+                <a href="subscription.html" class="btn-back">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Go Back
+                </a>
+            </div>
+
+            <div class="form-card" id="planFormCard">
+                <div id="editModeBanner" style="display:none; background:#e3f2fd; color:#1565c0; font-size:13px; font-weight:600; padding:10px 16px; border-radius:6px; margin-bottom:20px; border-left:4px solid #1565c0;">
+                    ✏️ You are in Edit Mode, make your changes and click Submit
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Plan Name*</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="pName" class="form-input" disabled>
+                            <img src="../resources/icons/edit.svg" class="edit-icon" style="display:none">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Price*</label>
+                        <input type="number" id="pPrice" class="form-input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" disabled>
+                    </div>
+                    <div class="input-group">
+                        <label>Duration (Days)*</label>
+                        <input type="number" id="pDuration" class="form-input" oninput="this.value = this.value.replace(/[^0-9]/g, '')"disabled>
+                    </div>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Total Unique Customers</label>
+                        <input type="text" id="pCustomerCount" class="form-input" style="background: #f9f9f9; font-weight: bold; color: #111;" disabled>
+                    </div>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label id="lblDynamic">Extra Info</label>
+                        <input type="number" id="pDynamic" class="form-input" oninput="this.value = this.value.replace(/[^0-9]/g, '')" disabled>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Additional Note</label>
+                    <textarea id="pNotes" class="form-textarea" disabled></textarea>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="btnPrimary" class="btn-submit">Edit Plan</button>
+                    <button id="btnSecondary" class="btn-delete-plan">Delete Plan</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal 1: Confirm Delete (normal flow) -->
+    <div id="deleteModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-title">Confirm Delete?</div>
+            <div class="modal-text" id="deleteModalText">Once deleted, it cannot be restored.</div>
+            <div class="modal-actions">
+                <button id="btnModalCancel" class="btn-submit" style="flex:none">Cancel</button>
+                <button id="btnModalDelete" class="btn-modal-delete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Cannot Delete (customers still using plan) -->
+    <div id="blockModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-title">Cannot Delete Plan</div>
+            <div class="modal-text" id="blockModalText"></div>
+            <div class="modal-actions">
+                <button id="btnBlockOk" class="btn-submit">OK</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../js/layout.js"></script>
+    <script src="../js/planinfo.js"></script>
+</body>
+</html>

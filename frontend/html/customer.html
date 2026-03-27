@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CMS - Customers</title>
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/customer.css" />
+</head>
+<body>
+
+  <div class="app-container">
+    <div id="sidebar-placeholder"></div>
+
+    <main class="main-content">
+      
+      <div id="header-placeholder"></div>
+
+      <div class="filter-section">
+        <div class="filter-controls">
+            <div class="select-wrapper">
+                <select id="filterType">
+                    <option value="name">Name</option>
+                    <option value="phone">Phone No</option>
+                    <option value="address">Short Address</option>
+                    <option value="id">ID</option>
+                </select>
+                <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+
+            <div class="search-wrapper">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="filterInput" placeholder="Enter Name" />
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <a href="deletedcustomers.html" class="btn-deleted-customers">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4h6v2"></path></svg>
+                Deleted Customers
+            </a>
+            <a href="addcustomer.html" class="btn-add">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add Customer
+            </a>
+        </div>
+      </div>
+
+      <div class="card table-card">
+        <div class="table-scroll-wrapper">
+          <table class="customer-table">
+            <thead>
+              <tr>
+                <th style="width: 20%;">Customer Name</th>
+                <th style="width: 15%; text-align: center;">Phone No</th>
+                <th style="width: 25%; text-align: center;">Short Address</th>
+                <th style="width: 10%; text-align: center;">ID</th>
+                <th style="width: 15%; text-align: center;">Action</th> 
+              </tr>
+            </thead>
+            <tbody id="customerTableBody">
+              </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <template id="customerRowTemplate">
+    <tr>
+        <td class="td-name"></td>
+        <td class="td-phone"></td>
+        <td class="td-address"></td>
+        <td class="td-id"><span style="font-family:monospace; background:#eee; padding:2px 6px; border-radius:4px;"></span></td>
+        <td class="action-cell"><button class="btn-open">Open</button></td>
+    </tr>
+</template>
+
+  <script src="../js/layout.js"></script>
+  <script>
+      loadLayout('customers');
+  </script>
+  <script src="../js/customer.js"></script>
+</body>
+</html>

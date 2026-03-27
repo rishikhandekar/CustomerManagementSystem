@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CMS - Deleted Customers</title>
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/deletedcustomers.css">
+</head>
+<body>
+    <div class="app-container">
+        <div id="sidebar-placeholder"></div>
+        
+        <main class="main-content">
+            <div id="header-placeholder"></div>
+
+            <div class="page-header">
+                <h2>Deleted Customers</h2>
+                <a href="customer.html" class="btn-back">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Go Back
+                </a>
+            </div>
+
+            <div class="filter-section" style="margin: 0 40px 20px 40px;">
+                <div class="filter-controls">
+                    <div class="select-wrapper">
+                        <select id="searchType">
+                            <option value="name">Name</option>
+                            <option value="id">ID</option>
+                            <option value="phone">Phone No</option>
+                            <option value="address">Short Address</option>
+                        </select>
+                        <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+
+                    <div class="search-wrapper">
+                        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="searchInput" placeholder="Enter Name" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-card">
+                <table class="deleted-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Customer Name</th>
+                            <th>Phone No</th>
+                            <th>Alternate Phone No</th>
+                            <th>Short Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="deletedTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/layout.js"></script>
+    <script src="../js/deletedcustomers.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CMS - Add Plan</title>
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/subscription.css">
+</head>
+<body>
+    <div class="app-container">
+        <div id="sidebar-placeholder"></div>
+        <main class="main-content">
+            <div id="header-placeholder"></div>
+
+            <div class="form-header">
+                <h2>Add Plan</h2>
+                <a href="subscription.html" class="btn-back">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Go Back
+                </a>
+            </div>
+
+            <div class="form-card">
+                <div style="margin-bottom: 20px;">
+                    <label style="margin-right: 20px;">
+                        <input type="checkbox" id="checkCable"> Cable
+                    </label>
+                    <label>
+                        <input type="checkbox" id="checkInternet"> Internet
+                    </label>
+                </div>
+
+                <div id="formCable" style="display:none; border-bottom:1px solid #eee; padding-bottom:20px; margin-bottom:20px;">
+                    <h4>Cable Plan Info</h4>
+                    <div class="input-row">
+                        <input type="text" id="cableName" class="form-input" placeholder="Plan Name*">
+                        <input type="number" id="cablePrice" class="form-input" placeholder="Price*" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        <input type="text" id="cableDuration" class="form-input" placeholder="Duration (Days)*" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    </div>
+                    <div class="input-row">
+                        <input type="text" id="cableChannels" class="form-input" placeholder="Number Of Channels" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    </div>
+                </div>
+
+                <div id="formInternet" style="display:none;">
+                    <h4>Internet Plan Info</h4>
+                    <div class="input-row">
+                        <input type="text" id="netSpeed" class="form-input" placeholder="Speed (Mbps)*" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        <input type="number" id="netPrice" class="form-input" placeholder="Price*" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        <input type="text" id="netDuration" class="form-input" placeholder="Duration (Days)*" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    </div>
+                    <div class="input-row">
+                         <input type="text" id="netName" class="form-input" placeholder="Plan Name (Optional)">
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="btnSubmit" class="btn-submit">Submit</button>
+                    <button onclick="location.href='subscription.html'" class="btn-cancel">Cancel</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="../js/layout.js"></script>
+    <script src="../js/addplan.js"></script>
+</body>
+</html>

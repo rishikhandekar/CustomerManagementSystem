@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cable Media Service — Create new Account</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">Cable Media Service</div>
+  </header>
+
+  <main class="page">
+    <section class="login-card" role="main" aria-labelledby="register-title">
+      <h1 id="register-title" class="title">Create new Account</h1>
+      <p class="subtitle">Already Registered? <a href="login.html" class="link">Login</a></p>
+
+      <form id="registerForm" class="form" onsubmit="return false;">
+        <label class="field-label" for="name">NAME</label>
+        <input id="name" name="name" type="text" class="input" placeholder="Jiara Martins" autocomplete="name" required />
+
+        <label class="field-label" for="email">EMAIL</label>
+        <input id="email" name="email" type="email" class="input" placeholder="hello@reallygreatsite.com" autocomplete="email" required />
+
+        <label class="field-label" for="password">PASSWORD</label>
+        <div class="password-wrapper">
+          <input id="password" name="password" type="password" class="input" placeholder="******" required />
+          
+          <div id="passwordReqs" class="password-reqs">
+            <ul class="req-list">
+              <li id="reqLength" class="req-item">At least 8 characters</li>
+              <li id="reqLower" class="req-item">At least 1 lowercase letter</li>
+              <li id="reqUpper" class="req-item">At least 1 uppercase letter</li>
+              <li id="reqNumber" class="req-item">At least 1 number</li>
+              <li id="reqSpecial" class="req-item">At least 1 special character</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Register button -->
+        <button id="btnRegister" class="btn btn-primary" type="submit">Register</button>
+
+        <div class="divider">OR REGISTER WITH</div>
+
+        <button id="btnGoogle" class="btn btn-ghost" type="button">
+          <span class="google-btn-text">Google</span>
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <script src="../js/register.js"></script>
+</body>
+</html>

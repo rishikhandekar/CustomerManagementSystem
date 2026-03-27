@@ -1,0 +1,1458 @@
+upcoming (advance system):
+
+main.py:
+
+# backend/main.py
+import webview
+from .database import supabase  # ✅ FIXED: Added missing import
+from .auth import (
+    register_user,
+    login_user,
+    login_with_google,
+    create_and_store_otp,
+    verify_otp,
+    reset_password_by_user,
+    get_user_by_email,
+    start_google_oauth_flow,
+    check_google_login_status,
+    get_google_user_id
+)
+from datetime import datetime
+import datetime # Import full datetime for timedelta
+
+class Api:
+
+    def process_payment(self, payload):
+        """
+        Handles payment logic.
+        Priority 'Yes': Other -> Pending -> Current -> Upcoming -> Advance
+        Priority 'No':  Pending -> Current -> Other -> Upcoming -> Advance
+        """
+        try:
+            sub_id = payload.get("subscription_id")
+            user_id = payload.get("user_id")
+            customer_id = payload.get("customer_id")
+            
+            amount_paid = float(payload.get("amount") or 0)
+            mode = payload.get("mode")
+            pay_other_first = payload.get("pay_other_first") # Boolean
+
+            # 1. Fetch current subscription data
+            sub_res = supabase.table('subscriptions').select("*").eq("id", sub_id).single().execute()
+            if not sub_res.data:
+                return {"ok": False, "error": "Subscription not found"}
+            
+            sub = sub_res.data
+            
+            # 2. Get current balances
+            other_charges = float(sub.get('other_service_charges') or 0)
+            pending = float(sub.get('pending_amount') or 0)
+            current = float(sub.get('current_amount') or 0)
+            upcoming = float(sub.get('upcoming_amount') or 0)
+            advance = float(sub.get('advance_balance') or 0)
+
+            remaining = amount_paid
+
+            # 3. EXECUTE PRIORITY (Step 1, 2, 3)
+            if pay_other_first:
+                # YES: Other -> Pending -> Current
+                
+                # 1. Other
+                if remaining > 0 and other_charges > 0:
+                    deduct = min(remaining, other_charges)
+                    other_charges -= deduct
+                    remaining -= deduct
+                
+                # 2. Pending
+                if remaining > 0 and pending > 0:
+                    deduct = min(remaining, pending)
+                    pending -= deduct
+                    remaining -= deduct
+                
+                # 3. Current
+                if remaining > 0 and current > 0:
+                    deduct = min(remaining, current)
+                    current -= deduct
+                    remaining -= deduct
+
+            else:
+                # NO: Pending -> Current -> Other
+                
+                # 1. Pending
+                if remaining > 0 and pending > 0:
+                    deduct = min(remaining, pending)
+                    pending -= deduct
+                    remaining -= deduct
+                
+                # 2. Current
+                if remaining > 0 and current > 0:
+                    deduct = min(remaining, current)
+                    current -= deduct
+                    remaining -= deduct
+                
+                # 3. Other
+                if remaining > 0 and other_charges > 0:
+                    deduct = min(remaining, other_charges)
+                    other_charges -= deduct
+                    remaining -= deduct
+
+            # 4. UPCOMING (Always deducted last, before Advance)
+            # This ensures money clears upcoming before becoming "Advance"
+            if remaining > 0 and upcoming > 0:
+                deduct = min(remaining, upcoming)
+                upcoming -= deduct
+                remaining -= deduct
+
+            # 5. ADVANCE (Store whatever is left)
+            if remaining > 0:
+                advance += remaining
+
+            # 6. Update Database
+            update_data = {
+                "other_service_charges": other_charges,
+                "pending_amount": pending,
+                "current_amount": current,
+                "upcoming_amount": upcoming,
+                "advance_balance": advance
+            }
+            supabase.table('subscriptions').update(update_data).eq("id", sub_id).execute()
+
+            # 7. Record Payment
+            import datetime
+            payment_record = {
+                "user_id": user_id,
+                "customer_id": customer_id,
+                "subscription_id": sub_id,
+                "amount": amount_paid,
+                "mode": mode,
+                "date": datetime.date.today().isoformat(), # This now matches the new column
+                "created_at": datetime.datetime.now().isoformat()
+            }
+            supabase.table('payments').insert(payment_record).execute()
+
+            return {"ok": True}
+
+        except Exception as e:
+            return {"ok": False, "error": str(e)}
+
+    def perform_global_expiry_check(self):
+        """
+        Runs immediately when App opens.
+        Checks ALL subscriptions in the database (for all users).
+        If today >= renewal_date, mark as 'inactive'.
+        """
+        try:
+            import datetime
+            today_str = datetime.date.today().isoformat()
+
+            # Logic: Update ALL rows where status is 'active' AND date is today or past.
+            # We use 'lte' (Less Than or Equal) to catch today's expiries too.
+            
+            # Note: Since RLS is disabled, this one command cleans up the entire DB.
+            res = supabase.table('subscriptions')\
+                .update({"status": "inactive"})\
+                .eq("status", "active")\
+                .lte("current_billing_end_date", today_str)\
+                .execute()
+                
+            print(f"Global Expiry Check Ran: Updated {len(res.data)} subscriptions.")
+            return {"ok": True, "count": len(res.data)}
+
+        except Exception as e:
+            print("Global Expiry Error:", e)
+            return {"ok": False, "error": str(e)}
+
+    def remove_subscription(self, payload):
+        """Permanently deletes a customer's subscription."""
+        try:
+            sub_id = payload.get("subscription_id")
+            
+            # Delete from subscriptions table
+            res = supabase.table('subscriptions').delete().eq("id", sub_id).execute()
+            
+            if res.data:
+                return {"ok": True}
+            else:
+                return {"ok": False, "error": "Subscription not found or delete failed."}
+                
+        except Exception as e:
+            return {"ok": False, "error": str(e)}
+
+    def get_available_plans(self, payload):
+        """Fetch plans of a specific type (cable/internet) for the dropdown."""
+        user_id = payload.get("user_id")
+        plan_type = payload.get("type") # 'cable' or 'internet'
+        
+        table = "cable_plans" if plan_type == "cable" else "internet_plans"
+        
+        try:
+            # Fetch all plans created by this admin
+            res = supabase.table(table).select("*").eq("user_id", user_id).execute()
+            return {"ok": True, "data": res.data}
+        except Exception as e:
+            return {"ok": False, "error": str(e)}
+
+    # 2. Update: Use Actual Duration when adding new plan
+    def add_subscription_to_customer(self, payload):
+        try:
+            user_id = payload.get("user_id")
+            cust_id = payload.get("customer_id")
+            plan_id = payload.get("plan_id")
+            plan_type = payload.get("type")
+            plan_name = payload.get("plan_name")
+            
+            # --- 1. GET THE FINANCIALS (Updated) ---
+            price = float(payload.get("price") or 0)
+            # Fetch the new values sent from frontend
+            additional = float(payload.get("additional_charge") or 0)
+            discount = float(payload.get("discount_amount") or 0)
+
+            # --- 2. CALCULATE NET AMOUNT ---
+            # Formula: (Plan Price + Additional) - Discount
+            final_amount = (price + additional) - discount
+            if final_amount < 0: final_amount = 0
+
+            # --- 3. Fetch Duration & Speed from Master Table ---
+            duration_days = 30
+            speed_val = None 
+
+            if plan_type == 'cable':
+                p_res = supabase.table('cable_plans').select('duration').eq('id', plan_id).single().execute()
+                if p_res.data and p_res.data.get('duration'):
+                    duration_days = int(p_res.data['duration'])
+            else:
+                p_res = supabase.table('internet_plans').select('duration, speed_mbps').eq('id', plan_id).single().execute()
+                if p_res.data:
+                    if p_res.data.get('duration'): duration_days = int(p_res.data['duration'])
+                    if p_res.data.get('speed_mbps'): speed_val = str(p_res.data.get('speed_mbps')) + " Mbps"
+
+            import datetime
+            today = datetime.date.today()
+            end_date = today + datetime.timedelta(days=duration_days)
+
+            row = {
+                "user_id": user_id,
+                "customer_id": cust_id,
+                "plan_name_cached": plan_name,
+                "price": price,
+                "duration": duration_days,
+                "status": "active",
+                "activation_date": str(today),
+                "current_billing_start_date": str(today),
+                "current_billing_end_date": str(end_date),
+                
+                # ✅ SAVE THE CALCULATED VALUES
+                "current_amount": final_amount,   # Calculated Net Amount
+                "upcoming_amount": final_amount,  # Starts same as current
+                "additional_charge": additional,  # Save for later
+                "discount_amount": discount,      # Save for later
+                
+                "pending_amount": 0,
+                "created_at": datetime.datetime.now().isoformat()
+            }
+
+            if plan_type == 'cable':
+                row['cable_plan_id'] = plan_id
+            else:
+                row['internet_plan_id'] = plan_id
+                row['plan_mbps'] = speed_val 
+
+            res = supabase.table('subscriptions').insert(row).execute()
+            return {"ok": True} if res.data else {"ok": False, "error": "Failed to insert"}
+
+        except Exception as e:
+            return {"ok": False, "error": str(e)}
+
+    def update_customer_info(self, payload):
+        try:
+            user_id = payload.get("user_id")
+            cust_id = payload.get("customer_id")
+            sub_id = payload.get("subscription_id")
+            
+            profile_data = payload.get("profile")
+            sub_data = payload.get("subscription")
+
+            if profile_data:
+                supabase.table('customers').update({
+                    "name": profile_data.get("name"),
+                    "phone": profile_data.get("phone"),
+                    "alt_phone": profile_data.get("alt_phone"),
+                    "email": profile_data.get("email"),
+                    "aadhaar_number": profile_data.get("aadhaar"),
+                    "short_address": profile_data.get("short_address"),
+                    "long_address": profile_data.get("long_address"),
+                    "notes": profile_data.get("notes")
+                }).eq("id", cust_id).eq("user_id", user_id).execute()
+
+            if sub_id and sub_data:
+                # ✅ SMART UPDATE: Check what data was sent
+                update_payload = {
+                    "activation_date": sub_data.get("activation_date"),
+                    "current_billing_end_date": sub_data.get("renewal_date"),
+                    "pending_amount": sub_data.get("pending_amount"),
+                    "additional_charge": sub_data.get("additional_charge"),
+                    "discount_amount": sub_data.get("discount_amount"),
+                    "other_service_charges": sub_data.get("other_service_charges"),
+                    "advance_balance": sub_data.get("advance_balance"),
+                    
+                    # ✅ FIX: Save the recalculated Upcoming Amount immediately!
+                    # This ensures the DB is ready for the next renewal cycle.
+                    "upcoming_amount": sub_data.get("upcoming_amount") 
+                }
+
+                # Only update the specific field relevant to the plan type
+                if sub_data.get("plan_mbps") is not None:
+                    update_payload["plan_mbps"] = sub_data.get("plan_mbps")
+                
+                if sub_data.get("setup_box_id") is not None:
+                    update_payload["setup_box_id"] = sub_data.get("setup_box_id")
+
+                supabase.table('subscriptions').update(update_payload).eq("id", sub_id).execute()
+
+            return {"ok": True, "message": "Saved Successfully"}
+        except Exception as e:
+            print(f"Error updating: {e}")
+            return {"ok": False, "error": str(e)}
+
+    # 1. Update: Check for Expiry every time details are fetched
+    def get_customer_details(self, payload):
+        user_id = payload.get("user_id")
+        customer_id = payload.get("customer_id")
+
+        try:
+            # --- ✅ AUTO EXPIRY LOGIC (Fixed for 12:00 AM Expiry) ---
+            import datetime
+            today_str = datetime.date.today().isoformat()
+            
+            # Logic: If Today is Feb 26, and Renewal Date is Feb 26.
+            # We want it to be INACTIVE.
+            # So we look for active plans where renewal_date <= today.
+            
+            expired_subs = supabase.table('subscriptions')\
+                .select("id")\
+                .eq("customer_id", customer_id)\
+                .eq("status", "active")\
+                .lte("current_billing_end_date", today_str)\
+                .execute() 
+            
+            # Mark found subs as inactive
+            if expired_subs.data:
+                for sub in expired_subs.data:
+                    supabase.table('subscriptions').update({"status": "inactive"}).eq("id", sub['id']).execute()
+            # ----------------------------
+
+            cust_res = supabase.table('customers').select("*").eq("id", customer_id).single().execute()
+            if not cust_res.data:
+                return {"ok": False, "error": "Customer not found"}
+            
+            # Fetch Subscriptions
+            sub_res = supabase.table('subscriptions')\
+                .select("*, internet_plans(speed_mbps), cable_plans(num_channels)")\
+                .eq("customer_id", customer_id)\
+                .order('created_at', desc=False)\
+                .order('plan_name_cached', desc=False)\
+                .execute()
+            
+            return {"ok": True, "data": {"profile": cust_res.data, "subscriptions": sub_res.data}}
+        except Exception as e:
+            return {"ok": False, "error": str(e)}
+
+    # 3. New Function: Handle Start/Stop Logic
+    def toggle_subscription_status(self, payload):
+        try:
+            sub_id = payload.get("subscription_id")
+            action = payload.get("action") 
+            
+            sub_data = supabase.table('subscriptions').select("*").eq("id", sub_id).single().execute()
+            if not sub_data.data:
+                return {"ok": False, "error": "Subscription not found"}
+            
+            sub = sub_data.data
+
+            if action == 'stop':
+                supabase.table('subscriptions').update({"status": "inactive"}).eq("id", sub_id).execute()
+            
+            elif action == 'start':
+                # 1. Get Stored Values
+                stored_price = float(sub.get('price') or 0)
+                stored_add = float(sub.get('additional_charge') or 0)
+                stored_disc = float(sub.get('discount_amount') or 0)
+                
+                old_pending = float(sub.get('pending_amount') or 0)
+                old_current = float(sub.get('current_amount') or 0)
+                old_upcoming = float(sub.get('upcoming_amount') or 0)
+                
+                # ✅ FIX 1: Fetch existing Advance Balance
+                advance = float(sub.get('advance_balance') or 0)
+
+                # 2. Get Duration
+                duration_days = 30
+                if sub.get('cable_plan_id'):
+                    p_res = supabase.table('cable_plans').select('duration').eq('id', sub['cable_plan_id']).single().execute()
+                    if p_res.data and p_res.data.get('duration'): duration_days = int(p_res.data['duration'])
+                elif sub.get('internet_plan_id'):
+                    p_res = supabase.table('internet_plans').select('duration').eq('id', sub['internet_plan_id']).single().execute()
+                    if p_res.data and p_res.data.get('duration'): duration_days = int(p_res.data['duration'])
+
+                # 3. Shift Balances
+                new_pending = old_pending + old_current
+
+                # ✅ FIX 2: TRUST THE OLD UPCOMING VALUE
+                # Even if it is 0 (Paid), we move 0 to Current. We do NOT recalculate.
+                new_current = old_upcoming 
+
+                # 4. Generate NEXT Upcoming Plan
+                # (Price + Add - Disc)
+                new_upcoming = (stored_price + stored_add) - stored_disc
+                if new_upcoming < 0: new_upcoming = 0
+
+                # 5. AUTO-PAY USING ADVANCE
+                # If we have advance money, pay off the NEW items immediately.
+                
+                if advance > 0:
+                    # Pay Current First (if unpaid)
+                    if new_current > 0:
+                        deduct = min(advance, new_current)
+                        new_current -= deduct
+                        advance -= deduct
+                    
+                    # Pay Upcoming Next
+                    if advance > 0 and new_upcoming > 0:
+                        deduct = min(advance, new_upcoming)
+                        new_upcoming -= deduct
+                        advance -= deduct
+
+                # 6. Update Dates & Save
+                import datetime
+                today = datetime.date.today()
+                new_renewal = today + datetime.timedelta(days=duration_days)
+
+                update_data = {
+                    "status": "active",
+                    "duration": duration_days,
+                    "activation_date": str(today),
+                    "current_billing_end_date": str(new_renewal),
+                    
+                    "pending_amount": new_pending,
+                    "current_amount": new_current,
+                    "upcoming_amount": new_upcoming,
+                    "advance_balance": advance, # ✅ Save remaining advance
+                    
+                    "additional_charge": stored_add,
+                    "discount_amount": stored_disc,
+                }
+                
+                supabase.table('subscriptions').update(update_data).eq("id", sub_id).execute()
+
+            return {"ok": True}
+
+        except Exception as e:
+            return {"ok": False, "error": str(e)}
+        
+    def get_customers(self, user_id):
+        """Fetch all customers for the logged-in user."""
+        try:
+            # Select specific columns to show in the table
+            # .eq('user_id', user_id) ensures we only show this business's customers
+            response = supabase.table('customers').select("*").eq('user_id', user_id).order('created_at', desc=True).execute()
+            
+            return {"ok": True, "data": response.data}
+        except Exception as e:
+            print(f"Error fetching customers: {e}")
+            return {"ok": False, "error": str(e)}
+
+    def create_customer_with_plans(self, payload):
+        try:
+            customer_data = payload.get('customer')
+            subscriptions_data = payload.get('subscriptions')
+            user_id = customer_data.get('user_id')
+
+            # 1. Get Customer ID
+            last_cust = supabase.table('customers').select('customer_seq_id').eq('user_id', user_id).gt('customer_seq_id', 0).order('customer_seq_id', desc=True).limit(1).execute()
+            next_id = 1 
+            if last_cust.data and len(last_cust.data) > 0:
+                current_max = last_cust.data[0]['customer_seq_id']
+                if current_max is not None: next_id = current_max + 1
+
+            # 2. Insert Customer
+            cust_payload = {
+                "user_id": user_id,
+                "customer_seq_id": next_id,
+                "name": customer_data.get('name'),
+                "phone": customer_data.get('phone'),
+                "alt_phone": customer_data.get('alt_phone'),
+                "email": customer_data.get('email'),
+                "aadhaar_number": customer_data.get('aadhaar_number'),
+                "short_address": customer_data.get('short_address'), 
+                "long_address": customer_data.get('long_address'),   
+                "is_active": True
+            }
+            cust_response = supabase.table('customers').insert(cust_payload).execute()
+            if not cust_response.data: return {"ok": False, "error": "Failed to create customer"}
+            new_customer_id = cust_response.data[0]['id']
+
+            # 3. Insert Plans (Fetch actual duration for each)
+            import datetime
+            today = datetime.date.today()
+            final_subs = []
+
+            for sub in subscriptions_data:
+                # --- FETCH DURATION ---
+                duration_days = 30 # Default
+                plan_id = sub.get('plan_id')
+                if sub.get('plan_type') == 'cable':
+                    p = supabase.table('cable_plans').select('duration').eq('id', plan_id).single().execute()
+                    if p.data and p.data.get('duration'): duration_days = int(p.data['duration'])
+                else:
+                    p = supabase.table('internet_plans').select('duration').eq('id', plan_id).single().execute()
+                    if p.data and p.data.get('duration'): duration_days = int(p.data['duration'])
+                
+                end_date = today + datetime.timedelta(days=duration_days)
+
+                row = {
+                    "user_id": user_id,
+                    "customer_id": new_customer_id,
+                    "plan_name_cached": sub.get('plan_name', 'Unknown Plan'),
+                    "price": sub.get('price'),
+                    "duration": duration_days, # ✅ FIX: Saves real duration (e.g. 37)
+                    "status": "active",
+                    "activation_date": str(today),
+                    "current_billing_start_date": str(today),
+                    "current_billing_end_date": str(end_date),
+                    "current_amount": sub.get('price'), 
+                    "pending_amount": 0,
+                    "upcoming_amount": sub.get('price') 
+                }
+                if sub.get('plan_type') == 'cable': row['cable_plan_id'] = plan_id
+                else: row['internet_plan_id'] = plan_id
+                final_subs.append(row)
+
+            if final_subs: supabase.table('subscriptions').insert(final_subs).execute()
+            return {"ok": True, "data": "Success"}
+        except Exception as e:
+            return {"ok": False, "error": str(e)}
+
+    def register(self, data):
+        res = register_user(
+            data.get("name"),
+            data.get("email"),
+            data.get("password")
+        )
+        if not res["ok"]:
+            return res
+
+        otp = create_and_store_otp(data["email"], "register")
+        return {"ok": True, "otp_debug": otp.get("otp_debug")}
+
+    def login(self, data):
+        email = data.get("email")
+        res = login_user(email, data.get("password"))
+        if not res["ok"]:
+            return res
+
+        # ✅ FIXED: Fetch user ID to store in session
+        user_data = get_user_by_email(email)
+        user_id = user_data[0]['id'] if user_data else None
+
+        otp = create_and_store_otp(email, "login")
+        
+        return {
+            "ok": True, 
+            "otp_debug": otp.get("otp_debug"),
+            "user_id": user_id # Send ID to frontend
+        }
+
+    def sendReset(self, data):
+        email = data.get("email")
+        if not email:
+            return {"ok": False, "error": "Email is required"}
+
+        user = get_user_by_email(email)
+        if not user:
+            return {"ok": False, "error": "This Email ID is not registered"}
+
+        otp = create_and_store_otp(email, "reset")
+        return {"ok": True, "otp_debug": otp.get("otp_debug")}
+
+    def verifyOtp(self, payload):
+        email = payload.get("email")
+        result = verify_otp(
+            code=payload.get("code"),
+            email=email,
+            purpose=payload.get("purpose")
+        )
+
+        # ✅ FIXED: Return user_id on success so OTP page can store it if needed
+        if result["ok"]:
+            user_data = get_user_by_email(email)
+            if user_data:
+                result["user_id"] = user_data[0]['id']
+
+        print("DEBUG verifyOtp result:", result)
+        return result
+
+    def resetPassword(self, payload):
+        email = payload.get("email")
+        new_password = payload.get("newPassword")
+
+        if not email or not new_password:
+            return {"ok": False, "error": "Missing email or password"}
+
+        return reset_password_by_user(email, new_password)
+
+    def startGoogleLogin(self):
+        try:
+            start_google_oauth_flow()
+            return {"ok": True}
+        except Exception as e:
+            return {"ok": False, "error": str(e)}
+
+    def check_google_success(self):
+        if check_google_login_status():
+            user_id = get_google_user_id()
+            return {"ok": True, "user_id": user_id} # Return the ID!
+        return {"ok": False}
+
+    # -------------------------
+    # SUBSCRIPTION PLAN API
+    # -------------------------
+
+    def get_plans(self, payload):
+        user_id = payload.get("user_id")
+        plan_type = payload.get("type", "cable")
+        
+        table = "cable_plans" if plan_type == "cable" else "internet_plans"
+        
+        try:
+            # ✅ FIXED: Now supabase is imported, this will work
+            res = supabase.table(table).select("*").eq("user_id", user_id).execute()
+            return {"ok": True, "data": res.data}
+        except Exception as e:
+            return {"ok": False, "error": str(e)}
+
+    def add_plan(self, data):
+        user_id = data.get("user_id")
+        plan_type = data.get("type")
+        
+        payload = {
+            "user_id": user_id,
+            "name": data.get("name"),
+            "price": data.get("price"),
+            "duration": data.get("duration"),
+            "updated_at": datetime.utcnow().isoformat()
+        }
+
+        # Optional notes
+        if data.get("notes"):
+             payload["notes"] = data.get("notes")
+
+        if plan_type == "cable":
+            payload["num_channels"] = data.get("num_channels")
+            table = "cable_plans"
+        else:
+            payload["speed_mbps"] = data.get("speed_mbps")
+            table = "internet_plans"
+
+        try:
+            res = supabase.table(table).insert(payload).execute()
+            return {"ok": True, "data": res.data}
+        except Exception as e:
+            return {"ok": False, "error": str(e)}
+
+    def get_plan_details(self, payload):
+        plan_id = payload.get("id")
+        plan_type = payload.get("type")
+        table = "cable_plans" if plan_type == "cable" else "internet_plans"
+
+        try:
+            res = supabase.table(table).select("*").eq("id", plan_id).single().execute()
+            return {"ok": True, "data": res.data}
+        except Exception as e:
+            return {"ok": False, "error": str(e)}
+
+    def update_plan(self, data):
+        try:
+            plan_type = data.get("type")
+            plan_id = data.get("id")
+            
+            # Determine Tables
+            table = "cable_plans" if plan_type == "cable" else "internet_plans"
+
+            # Prepare Payload
+            payload = {
+                "name": data.get("name"), 
+                "price": data.get("price"),
+                "duration": data.get("duration"), 
+                "notes": data.get("notes"),
+                "updated_at": datetime.datetime.utcnow().isoformat()
+            }
+            
+            if plan_type == "cable": 
+                payload["num_channels"] = data.get("num_channels")
+            else: 
+                payload["speed_mbps"] = data.get("speed_mbps")
+            
+            # ✅ ONLY Update Master Table
+            # The Supabase Trigger we just created will handle the rest instantly!
+            supabase.table(table).update(payload).eq("id", plan_id).execute()
+
+            return {"ok": True}
+        except Exception as e: 
+            return {"ok": False, "error": str(e)}
+
+    def delete_plan(self, payload):
+        plan_id = payload.get("id")
+        plan_type = payload.get("type")
+        table = "cable_plans" if plan_type == "cable" else "internet_plans"
+
+        try:
+            supabase.table(table).delete().eq("id", plan_id).execute()
+            return {"ok": True}
+        except Exception as e:
+            return {"ok": False, "error": str(e)}
+
+
+
+customerinfo.js:
+
+/* frontend/js/customerinfo.js */
+loadLayout('customers');
+
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Elements ---
+    const toggleCable = document.getElementById('viewCable');
+    const toggleInternet = document.getElementById('viewInternet');
+    const planContainer = document.getElementById('planDetailsContainer');
+    const noPlanMsg = document.getElementById('noPlanMessage');
+    const planTabsContainer = document.getElementById('multiPlanTabs');
+
+    // Buttons
+    const btnEdit = document.getElementById('btnEdit');
+    const btnSubmit = document.getElementById('btnSubmit');
+    const btnCancel = document.getElementById('btnCancel');
+    const footerDefault = document.getElementById('footerDefault');
+    const footerEdit = document.getElementById('footerEdit');
+    const btnRemovePlan = document.getElementById('btnRemovePlan');
+    const btnToggleStatus = document.getElementById('btnToggleStatus'); 
+
+    // Modal Elements
+    const addModal = document.getElementById('addPlanModal');
+    const addModalGrid = document.getElementById('availablePlansGrid');
+    const closeAddModal = document.getElementById('btnCloseModal');
+    
+    const addConfirmSection = document.getElementById('addPlanConfirmSection');
+    const addConfirmText = document.getElementById('addPlanConfirmText');
+    const btnCancelAddPlan = document.getElementById('btnCancelAddPlan');
+    const btnConfirmAddPlan = document.getElementById('btnConfirmAddPlan');
+
+    // Remove Plan Modal Elements
+    const removeModal = document.getElementById('removePlanModal');
+    const removeModalPlanName = document.getElementById('removeModalPlanName');
+    const btnCancelRemove = document.getElementById('btnCancelRemove');
+    const btnConfirmRemove = document.getElementById('btnConfirmRemove');
+
+    // --- State ---
+    let customerProfile = {};
+    let subscriptions = [];
+    let currentView = null; 
+    let activeSubId = null; 
+    let isEditMode = false;
+    let selectedPlanToAdd = null;
+
+    // --- 1. Fetch Logic ---
+    async function fetchDetails(preserveState = false) {
+        const custId = sessionStorage.getItem('current_customer_id');
+        const userId = sessionStorage.getItem('user_id');
+
+        if (!custId || !userId) {
+            alert("No customer selected. Going back.");
+            window.location.href = 'customer.html';
+            return;
+        }
+
+        try {
+            const res = await window.pywebview.api.get_customer_details({ 
+                user_id: userId, 
+                customer_id: custId 
+            });
+
+            if (res.ok) {
+                customerProfile = res.data.profile;
+                subscriptions = res.data.subscriptions;
+                renderProfile();
+                
+                if (preserveState && currentView) {
+                    switchView(currentView, activeSubId);
+                } else {
+                    const hasCable = subscriptions.find(s => s.cable_plan_id);
+                    const hasNet = subscriptions.find(s => s.internet_plan_id);
+
+                    if (hasCable) switchView('cable');
+                    else if (hasNet) switchView('internet');
+                    else switchView('cable'); 
+                }
+            } else {
+                alert("Error fetching details: " + res.error);
+            }
+        } catch (err) {
+            alert("System Error: " + err);
+        }
+    }
+
+    // --- 2. Render Profile ---
+    function renderProfile() {
+        document.getElementById('infoName').value = customerProfile.name || '';
+        document.getElementById('infoPhone').value = customerProfile.phone || '';
+        document.getElementById('infoEmail').value = customerProfile.email || '-';
+        document.getElementById('infoAadhaar').value = customerProfile.aadhaar_number || '';
+        document.getElementById('infoAltPhone').value = customerProfile.alt_phone || '-'; 
+        document.getElementById('infoShortAddr').value = customerProfile.short_address || '-';
+        document.getElementById('infoLongAddr').value = customerProfile.long_address || '-';
+        
+        const seqId = customerProfile.customer_seq_id ? customerProfile.customer_seq_id.toString().padStart(5, '0') : '---';
+        document.getElementById('infoCustId').value = `#${seqId}`;
+        
+        document.getElementById('infoNotes').value = customerProfile.notes || '';
+    }
+
+    // --- 3. Toggle Logic ---
+    toggleCable.addEventListener('click', () => switchView('cable'));
+    toggleInternet.addEventListener('click', () => switchView('internet'));
+
+    function switchView(type, targetSubId = null) {
+        currentView = type;
+        
+        planTabsContainer.innerHTML = '';
+        planTabsContainer.classList.add('hidden');
+
+        if (type === 'cable') {
+            toggleCable.classList.add('active');
+            toggleInternet.classList.remove('active');
+            document.getElementById('planTitle').innerText = "Cable Plan Details";
+            document.getElementById('lblSpecific').innerText = "Setup Box ID No";
+        } else {
+            toggleInternet.classList.add('active');
+            toggleCable.classList.remove('active');
+            document.getElementById('planTitle').innerText = "Internet Plan Details";
+            document.getElementById('lblSpecific').innerText = "Plan Mbps";
+        }
+
+        const matchingSubs = subscriptions.filter(s => 
+            type === 'cable' ? s.cable_plan_id : s.internet_plan_id
+        );
+
+        const detailSections = planContainer.querySelectorAll('.plan-header-row, .form-grid, .payment-row');
+
+        if (matchingSubs.length > 0 || isEditMode) {
+            planContainer.classList.remove('hidden');
+            
+            if (matchingSubs.length === 0) {
+                noPlanMsg.classList.remove('hidden');
+            } else {
+                noPlanMsg.classList.add('hidden');
+            }
+
+            let planToShow = matchingSubs.length > 0 ? matchingSubs[0] : null;
+            if (targetSubId) {
+                const found = matchingSubs.find(s => s.id === targetSubId);
+                if (found) planToShow = found;
+            }
+
+            if (matchingSubs.length > 1 || isEditMode) {
+                planTabsContainer.classList.remove('hidden');
+
+                matchingSubs.forEach((sub, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'plan-tab-btn';
+                    const planName = sub.plan_name_cached || `${type === 'cable' ? 'Cable' : 'Net'} Plan ${index + 1}`;
+                    btn.innerText = planName;
+                    
+                    if (planToShow && sub.id === planToShow.id) btn.classList.add('active');
+
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.plan-tab-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        renderPlanDetails(sub);
+                    });
+                    planTabsContainer.appendChild(btn);
+                });
+
+                if (isEditMode) {
+                    const addBtn = document.createElement('button');
+                    addBtn.className = 'add-plan-btn'; 
+                    addBtn.innerHTML = `<span>+</span> Add Plan`;
+                    addBtn.addEventListener('click', openAddPlanModal);
+                    planTabsContainer.appendChild(addBtn);
+                }
+            }
+
+            if (planToShow) {
+                detailSections.forEach(el => el.classList.remove('hidden'));
+                renderPlanDetails(planToShow);
+            } else {
+                detailSections.forEach(el => el.classList.add('hidden'));
+                activeSubId = null;
+            }
+
+        } else {
+            planContainer.classList.add('hidden');
+            noPlanMsg.classList.remove('hidden');
+            activeSubId = null;
+        }
+    }
+
+    function renderPlanDetails(sub) {
+        activeSubId = sub.id; 
+
+        // 1. Fetch Data Directly from Subscription
+        let displayPrice = sub.price; 
+        let displayDuration = sub.duration ? `${sub.duration} Days` : "30 Days"; 
+        let displayName = sub.plan_name_cached || 'Unknown Plan';
+        
+        let specificInfo = '';
+
+        // 2. Handle Specifics
+        if (currentView === 'cable') {
+            specificInfo = sub.setup_box_id || ''; 
+        } 
+        else {
+            specificInfo = sub.plan_mbps || (sub.internet_plans ? `${sub.internet_plans.speed_mbps} Mbps` : '');
+        }
+
+        // 3. Update UI Fields
+        document.getElementById('pName').value = displayName;
+        document.getElementById('pPrice').value = displayPrice;       
+        document.getElementById('pDuration').value = displayDuration; 
+        
+        document.getElementById('pLastActive').value = sub.activation_date || '';
+        document.getElementById('pRenewal').value = sub.current_billing_end_date || '';
+        document.getElementById('pSpecificId').value = specificInfo;
+
+        // 4. Update Financials
+        document.getElementById('fPending').value = sub.pending_amount || 0;
+        document.getElementById('fCurrent').value = sub.current_amount || 0;
+        
+        // Initial set of upcoming (read from DB, do NOT calc yet)
+        document.getElementById('fUpcoming').value = sub.upcoming_amount || 0;
+
+        document.getElementById('fAdditional').value = sub.additional_charge || 0;
+        document.getElementById('fDiscount').value = sub.discount_amount || 0;
+        document.getElementById('fOther').value = sub.other_service_charges || 0;
+        document.getElementById('fAdvance').value = sub.advance_balance || 0;
+
+        // ✅ CALL CALCULATION to set totals (but not overwrite upcoming)
+        calculateTotals(); 
+        
+        // 5. Status & Buttons
+        const status = sub.status || 'inactive';
+        document.getElementById('pStatus').innerText = status.charAt(0).toUpperCase() + status.slice(1);
+        
+        if (status === 'active') {
+            btnToggleStatus.innerText = "Stop Plan";
+            btnToggleStatus.className = "btn-action btn-red";
+        } else {
+            btnToggleStatus.innerText = "Start Plan";
+            btnToggleStatus.className = "btn-action btn-green";
+        }
+    }
+
+    // ✅ SMART CALCULATION LOGIC (FIXED)
+    function calculateTotals() {
+        // 1. Get Base Values
+        const planPrice = parseFloat(document.getElementById('pPrice').value) || 0;
+        const pend = parseFloat(document.getElementById('fPending').value) || 0;
+        const curr = parseFloat(document.getElementById('fCurrent').value) || 0;
+        const other = parseFloat(document.getElementById('fOther').value) || 0;
+
+        // Inputs for Modifiers
+        const addInput = document.getElementById('fAdditional');
+        const discInput = document.getElementById('fDiscount');
+        const upcomingInput = document.getElementById('fUpcoming');
+
+        const additional = parseFloat(addInput.value) || 0;
+        const discount = parseFloat(discInput.value) || 0;
+
+        // 2. Determine "Upcoming Plan" Amount
+        let calculatedUpcoming = (planPrice + additional) - discount;
+        if (calculatedUpcoming < 0) calculatedUpcoming = 0;
+
+        let displayUpcoming = parseFloat(upcomingInput.value) || 0;
+
+        // ✅ LOGIC: 
+        // If the user is ACTIVELY TYPING in Add/Disc boxes -> Show Calculated Value.
+        // If the user is NOT typing (Page Load/Refresh) -> Keep the DB Value (preserves "Paid" status).
+        if (document.activeElement === addInput || document.activeElement === discInput) {
+            displayUpcoming = calculatedUpcoming;
+            upcomingInput.value = displayUpcoming;
+        }
+
+        // 3. Update Totals
+        document.getElementById('calcTotalCurrent').value = pend + curr + other;
+        document.getElementById('calcTotalUpcoming').value = pend + curr + other + displayUpcoming;
+    }
+
+    // ✅ UPDATED LISTENERS: Added 'fAdditional' and 'fDiscount' to trigger calculation
+    ['fPending', 'fCurrent', 'fUpcoming', 'fAdditional', 'fDiscount', 'fOther'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('input', calculateTotals);
+    });
+
+    // --- 4. START/STOP BUTTON LISTENER ---
+    if (btnToggleStatus) {
+        btnToggleStatus.addEventListener('click', async () => {
+            if (!activeSubId) return;
+
+            const currentStatus = document.getElementById('pStatus').innerText.toLowerCase();
+            const action = currentStatus === 'active' ? 'stop' : 'start';
+            
+            const confirmMsg = action === 'stop' 
+                ? "Stop this plan? It will become Inactive." 
+                : "Start this plan? It will reactivate from TODAY and recalculate validity.";
+
+            if (!confirm(confirmMsg)) return;
+
+            try {
+                const res = await window.pywebview.api.toggle_subscription_status({
+                    subscription_id: activeSubId,
+                    action: action
+                });
+
+                if (res.ok) {
+                    await fetchDetails(true); 
+                } else {
+                    alert("Error: " + res.error);
+                }
+            } catch (err) {
+                alert("System Error: " + err);
+            }
+        });
+    }
+
+    // --- 5. EDIT MODE LOGIC ---
+    const personalFields = ['infoName', 'infoPhone', 'infoAltPhone', 'infoEmail', 'infoAadhaar', 'infoShortAddr', 'infoLongAddr', 'infoNotes'];
+    const pencilFields = ['pSpecificId', 'fPending', 'fAdditional', 'fDiscount', 'fOther', 'fAdvance'];
+
+    if(btnEdit) {
+        btnEdit.addEventListener('click', () => {
+            isEditMode = true; 
+            
+            footerDefault.classList.add('hidden');
+            footerEdit.classList.remove('hidden');
+
+            if(btnRemovePlan) btnRemovePlan.classList.remove('hidden');
+
+            personalFields.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) { el.readOnly = false; el.classList.add('editable'); }
+            });
+
+            pencilFields.forEach(id => {
+                const el = document.getElementById(id);
+                if(id === 'pSpecificId' && currentView === 'internet') return; 
+                if(el) { el.readOnly = false; el.classList.add('editable-pencil'); }
+            });
+
+            const dateEl = document.getElementById('pLastActive');
+            dateEl.readOnly = false;
+            dateEl.classList.add('editable-date');
+            dateEl.addEventListener('change', updateRenewalDate);
+
+            switchView(currentView, activeSubId);
+        });
+    }
+
+    if(btnCancel) {
+        btnCancel.addEventListener('click', () => {
+            isEditMode = false;
+
+            footerEdit.classList.add('hidden');
+            footerDefault.classList.remove('hidden');
+
+            if(btnRemovePlan) btnRemovePlan.classList.add('hidden');
+
+            document.querySelectorAll('.editable, .editable-pencil, .editable-date').forEach(el => {
+                el.readOnly = true;
+                el.classList.remove('editable', 'editable-pencil', 'editable-date');
+            });
+
+            renderProfile();
+            
+            if(activeSubId) {
+                const exists = subscriptions.find(s => s.id === activeSubId);
+                if(exists) {
+                    renderPlanDetails(exists);
+                    switchView(currentView, activeSubId);
+                } else {
+                    switchView(currentView);
+                }
+            } else {
+                switchView(currentView);
+            }
+        });
+    }
+
+    function updateRenewalDate() {
+        const dateStr = document.getElementById('pLastActive').value;
+        if(!dateStr) return;
+        
+        const dateObj = new Date(dateStr);
+        if(isNaN(dateObj)) return;
+
+        let dur = 30;
+        const durText = document.getElementById('pDuration').value;
+        if (durText) {
+            const parsed = parseInt(durText);
+            if (!isNaN(parsed)) dur = parsed;
+        }
+
+        dateObj.setDate(dateObj.getDate() + dur);
+        
+        const yyyy = dateObj.getFullYear();
+        const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const dd = String(dateObj.getDate()).padStart(2, '0');
+        
+        document.getElementById('pRenewal').value = `${yyyy}-${mm}-${dd}`;
+    }
+
+    // --- 6. ADD PLAN MODAL LOGIC ---
+    if(closeAddModal) {
+        closeAddModal.addEventListener('click', () => addModal.classList.add('hidden'));
+    }
+
+    async function openAddPlanModal() {
+        const userId = sessionStorage.getItem('user_id');
+        const custId = sessionStorage.getItem('current_customer_id');
+
+        selectedPlanToAdd = null; 
+        addModal.classList.remove('hidden');
+        addConfirmSection.classList.add('hidden'); 
+        document.getElementById('modalTitle').innerText = `Add New ${currentView === 'cable' ? 'Cable' : 'Internet'} Plan`;
+        addModalGrid.innerHTML = '<p style="padding:20px; text-align:center;">Loading Plans...</p>';
+
+        try {
+            const res = await window.pywebview.api.get_available_plans({ 
+                user_id: userId, 
+                customer_id: custId,
+                type: currentView 
+            });
+
+            if (res.ok) {
+                renderAvailablePlans(res.data);
+            } else {
+                addModalGrid.innerHTML = `<p style="color:red; padding:20px;">Error: ${res.error}</p>`;
+            }
+        } catch (err) {
+            console.error(err);
+            addModalGrid.innerHTML = `<p style="color:red; padding:20px;">System Error.</p>`;
+        }
+    }
+
+    function renderAvailablePlans(plans) {
+        addModalGrid.innerHTML = '';
+        if (plans.length === 0) {
+            addModalGrid.innerHTML = '<p style="padding:20px; text-align:center;">No new plans available.</p>';
+            return;
+        }
+
+        plans.forEach(plan => {
+            const card = document.createElement('div');
+            card.className = 'selection-card'; 
+            
+            let name = plan.name;
+            if (currentView === 'internet' && !name) name = `${plan.speed_mbps} Mbps Plan`;
+
+            card.innerHTML = `<strong>${name}</strong><br><small>₹${plan.price}</small>`;
+            
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.selection-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+
+                selectedPlanToAdd = {
+                    planObj: plan,
+                    name: name
+                };
+
+                // ✅ NEW: Inject Inputs for Additional & Discount (THIS WAS MISSING)
+                addConfirmText.innerHTML = `
+                    <p style="margin-bottom:15px; font-size:15px;">Add "<strong>${name}</strong>" to this customer?</p>
+                    
+                    <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 15px;">
+                        <div style="text-align: left;">
+                            <label style="font-size: 12px; color: #666;">Add. Charge</label>
+                            <input type="number" id="newPlanAdd" class="form-input" value="0" style="padding: 5px; height: 35px;">
+                        </div>
+                        <div style="text-align: left;">
+                            <label style="font-size: 12px; color: #666;">Discount</label>
+                            <input type="number" id="newPlanDisc" class="form-input" value="0" style="padding: 5px; height: 35px;">
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; font-weight: bold; color: #2e7d32; margin-bottom: 10px;">
+                        Net Amount: ₹<span id="newPlanNet">${plan.price}</span>
+                    </div>
+                `;
+
+                addConfirmSection.classList.remove('hidden');
+
+                // ✅ Live Calculation in Modal
+                const iAdd = document.getElementById('newPlanAdd');
+                const iDisc = document.getElementById('newPlanDisc');
+                const iNet = document.getElementById('newPlanNet');
+
+                function updateModalTotal() {
+                    const base = parseFloat(plan.price) || 0;
+                    const add = parseFloat(iAdd.value) || 0;
+                    const disc = parseFloat(iDisc.value) || 0;
+                    let total = (base + add) - disc;
+                    if(total < 0) total = 0;
+                    iNet.innerText = total;
+                }
+
+                // Attach listeners to the new inputs
+                if(iAdd) iAdd.addEventListener('input', updateModalTotal);
+                if(iDisc) iDisc.addEventListener('input', updateModalTotal);
+            });
+
+            addModalGrid.appendChild(card);
+        });
+    }
+
+    if(btnCancelAddPlan) {
+        btnCancelAddPlan.addEventListener('click', () => {
+            document.querySelectorAll('.selection-card').forEach(c => c.classList.remove('selected'));
+            selectedPlanToAdd = null;
+            addConfirmSection.classList.add('hidden');
+        });
+    }
+
+    if(btnConfirmAddPlan) {
+        btnConfirmAddPlan.addEventListener('click', async () => {
+            if(!selectedPlanToAdd) return;
+
+            const custId = sessionStorage.getItem('current_customer_id');
+            const userId = sessionStorage.getItem('user_id');
+            const { planObj, name } = selectedPlanToAdd;
+
+            // ✅ 1. CAPTURE INPUT VALUES
+            // We grab the values you typed into the modal
+            const addInput = document.getElementById('newPlanAdd');
+            const discInput = document.getElementById('newPlanDisc');
+
+            const addCharge = addInput ? (parseFloat(addInput.value) || 0) : 0;
+            const discAmount = discInput ? (parseFloat(discInput.value) || 0) : 0;
+
+            try {
+                // ✅ 2. SEND TO PYTHON
+                const res = await window.pywebview.api.add_subscription_to_customer({
+                    user_id: userId,
+                    customer_id: custId,
+                    plan_id: planObj.id,
+                    type: currentView,
+                    plan_name: name,
+                    price: planObj.price,
+                    
+                    // Sending the extra charges
+                    additional_charge: addCharge,
+                    discount_amount: discAmount
+                });
+
+                if (res.ok) {
+                    alert("Plan Added Successfully!");
+                    addModal.classList.add('hidden');
+                    await fetchDetails(true); 
+                } else {
+                    alert("Error adding plan: " + res.error);
+                }
+            } catch (err) {
+                alert("Error: " + err);
+            }
+        });
+    }
+
+    // --- 7. SUBMIT LOGIC ---
+    if(btnSubmit) {
+        btnSubmit.addEventListener('click', async () => {
+            const custId = sessionStorage.getItem('current_customer_id');
+            const userId = sessionStorage.getItem('user_id');
+
+            btnSubmit.innerText = "Saving...";
+            btnSubmit.disabled = true;
+
+            // ✅ PREPARE SPECIFIC DATA
+            let subData = {
+                activation_date: document.getElementById('pLastActive').value,
+                renewal_date: document.getElementById('pRenewal').value,
+                
+                pending_amount: document.getElementById('fPending').value,
+                additional_charge: document.getElementById('fAdditional').value,
+                discount_amount: document.getElementById('fDiscount').value,
+                other_service_charges: document.getElementById('fOther').value,
+                advance_balance: document.getElementById('fAdvance').value,
+                
+                // Also send the calculated Upcoming Amount just in case needed
+                upcoming_amount: document.getElementById('fUpcoming').value 
+            };
+
+            // ✅ CONDITIONAL LOGIC: Send 'plan_mbps' OR 'setup_box_id'
+            if (currentView === 'internet') {
+                subData.plan_mbps = document.getElementById('pSpecificId').value;
+            } else {
+                subData.setup_box_id = document.getElementById('pSpecificId').value;
+            }
+
+            const payload = {
+                user_id: userId,
+                customer_id: custId,
+                subscription_id: activeSubId, 
+                
+                profile: {
+                    name: document.getElementById('infoName').value,
+                    phone: document.getElementById('infoPhone').value,
+                    alt_phone: document.getElementById('infoAltPhone').value,
+                    email: document.getElementById('infoEmail').value,
+                    aadhaar: document.getElementById('infoAadhaar').value,
+                    short_address: document.getElementById('infoShortAddr').value,
+                    long_address: document.getElementById('infoLongAddr').value,
+                    notes: document.getElementById('infoNotes').value
+                },
+                subscription: subData 
+            };
+
+            try {
+                const res = await window.pywebview.api.update_customer_info(payload);
+                
+                if(res.ok) {
+                    alert("Saved Successfully!");
+                    isEditMode = false;
+                    if(btnRemovePlan) btnRemovePlan.classList.add('hidden');
+                    await fetchDetails(true); 
+                    btnCancel.click(); 
+                } else {
+                    alert("Error saving: " + res.error);
+                }
+            } catch(e) {
+                alert("Error: " + e);
+            }
+            
+            btnSubmit.innerText = "Submit";
+            btnSubmit.disabled = false;
+        });
+    }
+
+    // --- 8. REMOVE PLAN LOGIC ---
+    if (btnRemovePlan) {
+        btnRemovePlan.addEventListener('click', () => {
+            if (!activeSubId) return;
+            
+            const planName = document.getElementById('pName').value || 'this plan';
+            if(removeModalPlanName) removeModalPlanName.innerText = planName;
+
+            removeModal.classList.remove('hidden');
+        });
+    }
+
+    if (btnCancelRemove) {
+        btnCancelRemove.addEventListener('click', () => {
+            removeModal.classList.add('hidden');
+        });
+    }
+
+    if (btnConfirmRemove) {
+        btnConfirmRemove.addEventListener('click', async () => {
+            if (!activeSubId) return;
+            const idToDelete = activeSubId; 
+            activeSubId = null;
+
+            try {
+                const res = await window.pywebview.api.remove_subscription({ 
+                    subscription_id: idToDelete 
+                });
+
+                if (res.ok) {
+                    removeModal.classList.add('hidden');
+                    await fetchDetails(true); 
+                } else {
+                    alert("Error removing plan: " + res.error);
+                }
+            } catch (err) {
+                alert("System Error: " + err);
+            }
+        });
+    }
+
+    // --- 9. PAYMENT LOGIC ---
+    const btnPay = document.getElementById('btnPay');
+    const payModal = document.getElementById('paymentPriorityModal');
+    const btnPayYes = document.getElementById('btnPayYes');
+    const btnPayNo = document.getElementById('btnPayNo');
+    const btnClosePayModal = document.getElementById('btnClosePayModal');
+
+    // 1. Click "Paid" Button -> Open Modal
+    if(btnPay) {
+        btnPay.addEventListener('click', () => {
+            const amount = parseFloat(document.getElementById('payAmount').value);
+            if (!amount || amount <= 0) {
+                alert("Please enter a valid amount.");
+                return;
+            }
+            if (!activeSubId) {
+                alert("No active subscription selected.");
+                return;
+            }
+            
+            // Show the modal
+            payModal.classList.remove('hidden');
+        });
+    }
+
+    // 2. Handle Modal Actions
+    if(btnClosePayModal) {
+        btnClosePayModal.addEventListener('click', () => payModal.classList.add('hidden'));
+    }
+
+    async function submitPayment(payOtherFirst) {
+        const amount = parseFloat(document.getElementById('payAmount').value);
+        const mode = document.getElementById('payMode').value;
+        const custId = sessionStorage.getItem('current_customer_id');
+        const userId = sessionStorage.getItem('user_id');
+
+        // Close modal immediately
+        payModal.classList.add('hidden');
+
+        try {
+            const res = await window.pywebview.api.process_payment({
+                user_id: userId,
+                customer_id: custId,
+                subscription_id: activeSubId,
+                amount: amount,
+                mode: mode,
+                pay_other_first: payOtherFirst // Boolean: True (Yes) or False (No)
+            });
+
+            if (res.ok) {
+                alert("Payment Successful!");
+                document.getElementById('payAmount').value = ""; // Clear input
+                await fetchDetails(true); // Refresh data
+            } else {
+                alert("Payment Error: " + res.error);
+            }
+        } catch (err) {
+            alert("System Error: " + err);
+        }
+    }
+
+    // 3. Attach Listeners to Yes/No Buttons
+    if(btnPayYes) {
+        btnPayYes.addEventListener('click', () => submitPayment(true));
+    }
+
+    if(btnPayNo) {
+        btnPayNo.addEventListener('click', () => submitPayment(false));
+    }
+
+    if (window.pywebview) {
+        fetchDetails();
+    } else {
+        window.addEventListener('pywebviewready', fetchDetails);
+    }
+});
