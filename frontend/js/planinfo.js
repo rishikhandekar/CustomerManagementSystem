@@ -217,7 +217,7 @@ async function initPlanInfo() {
             });
 
             if (delRes.ok) {
-                showToast("Plan Deleted Successfully.", 'success');
+                sessionStorage.setItem('pending_subscription_toast', 'Plan Deleted Successfully!|success');
                 window.location.href = 'subscription.html';
             } else {
                 // Hide confirm modal

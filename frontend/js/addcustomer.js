@@ -319,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await window.pywebview.api.create_customer_with_plans(payload);
 
             if (res.ok) {
-                showToast("Customer Added Successfully!", 'success');
+                sessionStorage.setItem('pending_customer_toast', 'Customer Added Successfully!|success');
                 window.location.href = "customer.html";
             } else {
                 showToast("Error: " + JSON.stringify(res.error), 'error');
