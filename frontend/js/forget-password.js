@@ -12,7 +12,7 @@ document.getElementById("resetForm").addEventListener("submit", async (e) => {
         const res = await window.pywebview.api.sendReset({ email });
 
         if (!res.ok) {
-            alert(res.error);
+            showToast(res.error, 'error');
             btnSend.disabled = false;
             btnSend.innerText = originalText;
             return;
@@ -24,7 +24,7 @@ document.getElementById("resetForm").addEventListener("submit", async (e) => {
         location.href = "otp.html";
 
     } catch (error) {
-        alert("System Error: " + error);
+        showToast("System Error: " + error, 'error');
         btnSend.disabled = false;
         btnSend.innerText = originalText;
     }

@@ -107,3 +107,54 @@
     color: #333;
 }
 
+/* ── Toast Notifications ─────────────────────────────────────── */
+.cms-toast {
+    pointer-events: auto;
+    min-width: 260px;
+    max-width: 400px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: "PoppinsLocal", "Poppins", sans-serif;
+    line-height: 1.5;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    word-break: break-word;
+}
+
+.cms-toast-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Error — red */
+.cms-toast-error {
+    background: #fff5f5;
+    color: #c62828;
+    border-left: 4px solid #c62828;
+}
+
+/* Success — green */
+.cms-toast-success {
+    background: #f0fff4;
+    color: #2e7d32;
+    border-left: 4px solid #2e7d32;
+}
+
+/* Info — blue */
+.cms-toast-info {
+    background: #eff6ff;
+    color: #1565c0;
+    border-left: 4px solid #1565c0;
+}
+
+/* Warning — amber */
+.cms-toast-warning {
+    background: #fffbeb;
+    color: #b45309;
+    border-left: 4px solid #f59e0b;
+}
+

@@ -45,7 +45,7 @@ document.getElementById("otpForm").addEventListener("submit", async (e) => {
         const purpose = sessionStorage.getItem("otp_purpose");
 
         if (!email || !purpose) {
-            alert("Missing OTP data. Please go back and try again.");
+            showToast("Missing OTP data. Please go back and try again.", 'error');
             btnVerify.disabled = false;
             btnVerify.innerText = originalText;
             return;
@@ -54,7 +54,7 @@ document.getElementById("otpForm").addEventListener("submit", async (e) => {
         const code = inputs.map(i => i.value).join("");
 
         if (code.length !== 6) {
-            alert("Please enter the 6-digit OTP");
+            showToast("Please enter the 6-digit OTP", 'warning');
             btnVerify.disabled = false;
             btnVerify.innerText = originalText;
             return;
@@ -63,7 +63,7 @@ document.getElementById("otpForm").addEventListener("submit", async (e) => {
         const res = await window.pywebview.api.verifyOtp({ email, code, purpose });
 
         if (!res || !res.ok) {
-            alert(res?.error || "OTP verification failed. Please check the code and try again.");
+            showToast(res?.error || "OTP verification failed. Please check the code and try again.", 'error');
             btnVerify.disabled = false;
             btnVerify.innerText = originalText;
             return;
@@ -91,7 +91,7 @@ document.getElementById("otpForm").addEventListener("submit", async (e) => {
         }
 
     } catch (error) {
-        alert("System Error: " + error);
+        showToast("System Error: " + error, 'error');
         btnVerify.disabled = false;
         btnVerify.innerText = originalText;
     }

@@ -48,14 +48,14 @@ document.getElementById("resetPwForm").addEventListener("submit", async (e) => {
     const confirm = document.getElementById("confirmPassword").value;
 
     if (newPassword !== confirm) {
-        alert("Passwords do not match");
+        showToast("Passwords do not match", 'warning');
         return;
     }
 
     // ✅ SECURITY FIX: Validate new password strength
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
     if (!passwordRegex.test(newPassword)) {
-        alert("Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character.");
+        showToast("Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character.", 'warning');
         return;
     }
 
@@ -66,11 +66,11 @@ document.getElementById("resetPwForm").addEventListener("submit", async (e) => {
     });
 
     if (!res.ok) {
-        alert(res.error);
+        showToast(res.error, 'error');
         return;
     }
 
-    alert("Password updated successfully!");
+    showToast("Password updated successfully!", 'success');
 
     sessionStorage.removeItem("otp_email");
 

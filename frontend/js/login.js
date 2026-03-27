@@ -13,7 +13,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         const res = await window.pywebview.api.login({ email, password });
 
         if (!res.ok) {
-            alert(res.error);
+            showToast(res.error, 'error');
             btnLogin.disabled = false;
             btnLogin.innerText = originalText;
             return;
@@ -59,7 +59,7 @@ document.getElementById("btnGoogle").addEventListener("click", async () => {
     const res = await window.pywebview.api.startGoogleLogin();
 
     if (!res.ok) {
-        alert(res.error || "Google login failed to start");
+        showToast(res.error || "Google login failed to start", 'error');
         resetGoogleButton();
         return;
     }
@@ -80,7 +80,7 @@ document.getElementById("btnGoogle").addEventListener("click", async () => {
         // ✅ TIMEOUT: Stop polling after 2 minutes
         if (elapsedSeconds >= TIMEOUT_SECONDS) {
             resetGoogleButton();
-            alert("Google login timed out. Please try again.");
+            showToast("Google login timed out. Please try again.", 'warning');
             return;
         }
 

@@ -61,7 +61,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
         // ✅ SECURITY FIX: Frontend Password Check with Lowercase included
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
         if (!passwordRegex.test(password)) {
-            alert("Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character.");
+            showToast("Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character.", 'warning');
             btnRegister.disabled = false;
             btnRegister.innerText = originalText;
             return; // Stops the form from submitting
@@ -70,7 +70,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
         const res = await window.pywebview.api.register({ name, email, password });
 
         if (!res.ok) {
-            alert(res.error);
+            showToast(res.error, 'error');
             btnRegister.disabled = false;
             btnRegister.innerText = originalText;
             return;
@@ -84,7 +84,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
         location.href = "otp.html";
 
     } catch (error) {
-        alert("System Error: " + error);
+        showToast("System Error: " + error, 'error');
         btnRegister.disabled = false;
         btnRegister.innerText = originalText;
     }
@@ -118,7 +118,7 @@ document.getElementById("btnGoogle").addEventListener("click", async () => {
     const res = await window.pywebview.api.startGoogleLogin();
 
     if (!res.ok) {
-        alert(res.error || "Google login failed to start");
+        showToast(res.error || "Google login failed to start", 'error');
         resetGoogleButton();
         return;
     }
@@ -138,7 +138,7 @@ document.getElementById("btnGoogle").addEventListener("click", async () => {
 
         if (elapsedSeconds >= TIMEOUT_SECONDS) {
             resetGoogleButton();
-            alert("Google login timed out. Please try again.");
+            showToast("Google login timed out. Please try again.", 'warning');
             return;
         }
 

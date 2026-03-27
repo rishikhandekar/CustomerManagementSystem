@@ -65,3 +65,41 @@ async function loadLayout(activePage) {
     `;
     document.body.appendChild(container);
 })();
+
+// ── showToast — works on EVERY page (self-creating container) ──────
+window.showToast = function(message, type = 'error', duration = 4000) {
+    // Ensure container exists (layout pages already have it; auth pages get it here)
+    let container = document.getElementById('toastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toastContainer';
+        container.style.cssText = `
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        `;
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `cms-toast cms-toast-${type}`;
+    toast.textContent = message;
+
+    container.appendChild(toast);
+
+    // Trigger fade-in on next frame
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => toast.classList.add('cms-toast-visible'));
+    });
+
+    // Auto-dismiss
+    setTimeout(() => {
+        toast.classList.remove('cms-toast-visible');
+        toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+    }, duration);
+};
