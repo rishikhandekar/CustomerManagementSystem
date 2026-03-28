@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderPlans(cablePlans, cableGrid, cableLimit, 'cable');
         } else {
             console.error("Error loading cable plans:", res.error);
+            showToast("Could not load cable plans. Please check your internet connection.", 'warning');
         }
     }
 
@@ -95,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderPlans(internetPlans, internetGrid, internetLimit, 'internet');
         } else {
             console.error("Error loading internet plans:", res.error);
+            showToast("Could not load internet plans. Please check your internet connection.", 'warning');
         }
     }
 

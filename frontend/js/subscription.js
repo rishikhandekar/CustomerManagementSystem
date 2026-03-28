@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch (error) {
             console.error("API Error:", error);
+            showToast("Could not load subscriptions. Please check your internet connection.", 'warning');
         }
         isLoading = false;
     }

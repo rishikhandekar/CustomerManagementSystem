@@ -62,50 +62,51 @@ document.addEventListener('DOMContentLoaded', () => {
         let errors = [];
         let successCount = 0;
 
-        // Save Cable Plan
-        if (checkCable.checked) {
-            const res = await window.pywebview.api.add_plan({
-                user_id: userId,
-                type: 'cable',
-                name: document.getElementById('cableName').value.trim(),
-                price: document.getElementById('cablePrice').value.trim(),
-                duration: document.getElementById('cableDuration').value.trim(),
-                num_channels: document.getElementById('cableChannels').value.trim()
-            });
+        try {
+            // Save Cable Plan
+            if (checkCable.checked) {
+                const res = await window.pywebview.api.add_plan({
+                    user_id: userId,
+                    type: 'cable',
+                    name: document.getElementById('cableName').value.trim(),
+                    price: document.getElementById('cablePrice').value.trim(),
+                    duration: document.getElementById('cableDuration').value.trim(),
+                    num_channels: document.getElementById('cableChannels').value.trim()
+                });
 
-            if (res.ok) successCount++;
-            else errors.push("Cable Error: " + res.error);
-        }
-
-        // Save Internet Plan
-        if (checkInternet.checked) {
-            const speedVal = document.getElementById('netSpeed').value.trim();
-            // If name is empty, auto-generate it like "100 Mbps Plan"
-            let nameVal = document.getElementById('netName').value.trim();
-            if (!nameVal) {
-                nameVal = `${speedVal} Mbps Plan`;
+                if (res.ok) successCount++;
+                else errors.push("Cable Error: " + res.error);
             }
 
-            const res = await window.pywebview.api.add_plan({
-                user_id: userId,
-                type: 'internet',
-                name: nameVal, // Sending generated or optional name
-                price: document.getElementById('netPrice').value.trim(),
-                duration: document.getElementById('netDuration').value.trim(),
-                speed_mbps: speedVal
-            });
+            // Save Internet Plan
+            if (checkInternet.checked) {
+                const speedVal = document.getElementById('netSpeed').value.trim();
+                let nameVal = document.getElementById('netName').value.trim();
+                if (!nameVal) { nameVal = `${speedVal} Mbps Plan`; }
 
-            if (res.ok) successCount++;
-            else errors.push("Internet Error: " + res.error);
-        }
+                const res = await window.pywebview.api.add_plan({
+                    user_id: userId,
+                    type: 'internet',
+                    name: nameVal,
+                    price: document.getElementById('netPrice').value.trim(),
+                    duration: document.getElementById('netDuration').value.trim(),
+                    speed_mbps: speedVal
+                });
 
-        // --- STEP 3: FINAL FEEDBACK ---
-        if (errors.length > 0) {
-            showToast("Failed to add plans:\n" + errors.join("\n"), 'error');
-        } else if (successCount > 0) {
-            // ✅ Save to memory and redirect instantly
-            sessionStorage.setItem('pending_subscription_toast', 'Plan(s) Added Successfully!|success');
-            window.location.href = 'subscription.html';
+                if (res.ok) successCount++;
+                else errors.push("Internet Error: " + res.error);
+            }
+
+            // --- STEP 3: FINAL FEEDBACK ---
+            if (errors.length > 0) {
+                showToast("Failed to add plans: " + errors.join(", "), 'error');
+            } else if (successCount > 0) {
+                sessionStorage.setItem('pending_subscription_toast', 'Plan(s) Added Successfully!|success');
+                window.location.href = 'subscription.html';
+            }
+
+        } catch (err) {
+            showToast("Could not connect. Please check your internet and try again.", 'error');
         }
     });
 });

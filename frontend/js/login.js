@@ -36,6 +36,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
     } catch (err) {
         console.error("Login process error:", err);
+        showToast("Could not connect. Please check your internet and try again.", 'error');
         btnLogin.disabled = false;
         btnLogin.innerText = originalText;
     }

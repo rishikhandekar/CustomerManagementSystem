@@ -52,6 +52,7 @@ async function fetchDeletedList() {
         }
     } catch (err) {
         console.error("System error:", err);
+        showToast("Could not load deleted customers. Please check your internet connection.", 'warning');
     }
 }
 

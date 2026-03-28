@@ -310,3 +310,24 @@ body {
 .cms-toast-success  { background: #f0fff4; color: #2e7d32; border-left: 4px solid #2e7d32; }
 .cms-toast-info     { background: #eff6ff; color: #1565c0; border-left: 4px solid #1565c0; }
 .cms-toast-warning  { background: #fffbeb; color: #b45309; border-left: 4px solid #f59e0b; }
+
+/* ── Offline Banner (auth pages) ────────────────────────────── */
+.offline-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 99998;
+    background: #b45309;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+}
+.offline-banner-visible { transform: translateY(0); }

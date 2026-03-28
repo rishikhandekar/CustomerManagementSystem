@@ -67,6 +67,7 @@ async function initPlanInfo() {
         }
     } catch (err) {
         console.error("Critical JS Error:", err);
+        showToast("Could not load plan details. Please check your internet connection.", 'warning');
     }
 
     // 3. Handle Edit / Submit

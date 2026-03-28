@@ -95,6 +95,7 @@ async function initProfile() {
         }
     } catch (err) {
         console.error("System Error: ", err);
+        showToast("Could not load profile. Please check your internet connection.", 'warning');
     }
 
     // 2. Edit / Save Profile Data Toggle

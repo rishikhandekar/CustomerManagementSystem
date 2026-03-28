@@ -103,3 +103,37 @@ window.showToast = function(message, type = 'error', duration = 4000) {
         toast.addEventListener('transitionend', () => toast.remove(), { once: true });
     }, duration);
 };
+
+// ── Network error message detector ───────────────────────────────────
+// The backend's friendly() already returns these strings when offline.
+// Use this helper in catch blocks to show a specific offline message.
+window.isNetworkError = function(msg) {
+    const m = (msg || '').toLowerCase();
+    return m.includes('connection') || m.includes('timeout') ||
+           m.includes('internet')   || m.includes('network') ||
+           m.includes('offline')    || m.includes('timed out');
+};
+
+// ── Offline Banner — shows/hides automatically ───────────────────────
+(function() {
+    const banner = document.createElement('div');
+    banner.id = 'offlineBanner';
+    banner.className = 'offline-banner';
+    banner.innerHTML = `
+        <span>&#9888;</span>
+        <span>No internet connection — some features may not work until you reconnect.</span>
+    `;
+    document.body.appendChild(banner);
+
+    function updateBanner() {
+        if (!navigator.onLine) {
+            banner.classList.add('offline-banner-visible');
+        } else {
+            banner.classList.remove('offline-banner-visible');
+        }
+    }
+
+    window.addEventListener('offline', updateBanner);
+    window.addEventListener('online',  updateBanner);
+    updateBanner(); // Check immediately on page load
+})();

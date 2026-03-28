@@ -1032,7 +1032,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         cycle_start_date: cStartDate
                     });
                     if (payRes.ok) currentCyclePayments = payRes.data || [];
-                } catch (e) { console.log("Current Payment fetch error", e); }
+                } catch (e) { console.log("Current Payment fetch error", e); showToast("Could not load payment data. Please check your connection.", 'warning'); }
             }
 
             // Setup Table Wrapper
@@ -1497,6 +1497,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.error(err);
             addModalGrid.innerHTML = `<p style="color:red; padding:20px;">System Error.</p>`;
+            showToast("Could not load available plans. Please check your internet connection.", 'warning');
         }
     }
 
@@ -2633,7 +2634,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     cycle_start_date: cStartDate
                 });
                 if (payRes.ok) currentCyclePayments = payRes.data || [];
-            } catch (e) { console.error("Archived Payment Fetch Error", e); }
+            } catch (e) { console.error("Archived Payment Fetch Error", e); showToast("Could not load archived payment data. Please check your connection.", 'warning'); }
         }
 
         // Render History

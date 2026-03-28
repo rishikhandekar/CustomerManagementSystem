@@ -107,6 +107,7 @@ async function fetchDashboardData(isInitial = false) {
         }
     } catch (err) {
         console.error("System error loading payments:", err);
+        showToast("Could not load payments. Please check your internet connection.", 'warning');
     }
     isLoading = false;
 }

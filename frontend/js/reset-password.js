@@ -61,9 +61,13 @@ document.getElementById("resetPwForm").addEventListener("submit", async (e) => {
 
     // resetPassword now calls supabase.auth.update_user() for the authenticated user
     // The user is already authenticated via OTP verification on the previous page
-    const res = await window.pywebview.api.resetPassword({
-        newPassword
-    });
+    let res;
+    try {
+        res = await window.pywebview.api.resetPassword({ newPassword });
+    } catch (err) {
+        showToast("Could not connect. Please check your internet and try again.", 'error');
+        return;
+    }
 
     if (!res.ok) {
         showToast(res.error, 'error');

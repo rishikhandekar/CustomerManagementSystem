@@ -381,6 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             console.error("API Connection Error:", error);
+            showToast("Could not load dashboard. Please check your internet connection.", 'warning');
         }
     }
 
@@ -440,6 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             console.error("Tracker API Error:", error);
+            showToast("Could not load tracker data. Please check your internet connection.", 'warning');
         }
     }
 
