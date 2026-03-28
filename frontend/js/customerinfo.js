@@ -214,6 +214,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (res.ok) {
                     showToast("WhatsApp bot started! Opening browser...", 'success');
+                    if (res.translation_failed) {
+                        setTimeout(() => {
+                            showToast("⚠️ Translation failed — message will be sent in English instead.", 'warning', 7000);
+                        }, 1500);
+                    }
                 } else {
                     showToast("Failed to send reminder: " + res.error, 'error');
                 }

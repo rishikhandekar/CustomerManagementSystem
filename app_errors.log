@@ -968,3 +968,1888 @@ Traceback (most recent call last):
     raise APIError(dict(json_obj))
 postgrest.exceptions.APIError: {'message': 'invalid input syntax for type numeric: ""', 'code': '22P02', 'hint': None, 'details': None}
 
+
+============================================================
+[2026-03-29 01:42:11]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2724, in get_customers
+    response = query.order('created_at', desc=True).range(start, end).execute()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:19]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 222, in get_dashboard_stats
+    .execute()
+     ^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:19]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 448, in get_daily_tracker_data
+    res = query.eq("current_billing_end_date", ren_str).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:19]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 448, in get_daily_tracker_data
+    res = query.eq("current_billing_end_date", ren_str).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:29]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 131, in get_payment_dashboard_data
+    .execute()
+     ^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:30]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 3031, in get_plans
+    res = query.order('created_at', desc=True).range(start, end).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:31]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2724, in get_customers
+    response = query.order('created_at', desc=True).range(start, end).execute()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:31]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 222, in get_dashboard_stats
+    .execute()
+     ^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:31]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 448, in get_daily_tracker_data
+    res = query.eq("current_billing_end_date", ren_str).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:31]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 448, in get_daily_tracker_data
+    res = query.eq("current_billing_end_date", ren_str).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:34]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 51, in get_admin_profile
+    res = db_module.supabase.table('users').select("*").eq("id", user_id).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:41]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 51, in get_admin_profile
+    res = db_module.supabase.table('users').select("*").eq("id", user_id).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:41]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 51, in get_admin_profile
+    res = db_module.supabase.table('users').select("*").eq("id", user_id).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:43]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 51, in get_admin_profile
+    res = db_module.supabase.table('users').select("*").eq("id", user_id).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:47]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 51, in get_admin_profile
+    res = db_module.supabase.table('users').select("*").eq("id", user_id).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:50]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 51, in get_admin_profile
+    res = db_module.supabase.table('users').select("*").eq("id", user_id).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:54]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2724, in get_customers
+    response = query.order('created_at', desc=True).range(start, end).execute()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:56]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 222, in get_dashboard_stats
+    .execute()
+     ^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:56]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 448, in get_daily_tracker_data
+    res = query.eq("current_billing_end_date", ren_str).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:56]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 448, in get_daily_tracker_data
+    res = query.eq("current_billing_end_date", ren_str).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:42:58]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 3031, in get_plans
+    res = query.order('created_at', desc=True).range(start, end).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:43:00]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 131, in get_payment_dashboard_data
+    .execute()
+     ^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:43:02]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2724, in get_customers
+    response = query.order('created_at', desc=True).range(start, end).execute()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:43:03]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 222, in get_dashboard_stats
+    .execute()
+     ^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:43:03]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 448, in get_daily_tracker_data
+    res = query.eq("current_billing_end_date", ren_str).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:43:03]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 448, in get_daily_tracker_data
+    res = query.eq("current_billing_end_date", ren_str).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:43:23]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 448, in get_daily_tracker_data
+    res = query.eq("current_billing_end_date", ren_str).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:43:23]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 222, in get_dashboard_stats
+    .execute()
+     ^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+
+============================================================
+[2026-03-29 01:43:23]
+Traceback (most recent call last):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 448, in get_daily_tracker_data
+    res = query.eq("current_billing_end_date", ren_str).execute()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\_sync\request_builder.py", line 47, in execute
+    r = self.request.send()
+        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\postgrest\base_request_builder.py", line 81, in send
+    return self.session.request(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 155, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\httpx\_transports\default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 11001] getaddrinfo failed
+

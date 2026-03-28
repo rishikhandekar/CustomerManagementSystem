@@ -2341,6 +2341,7 @@ class Api:
             plan_str = "cable & internet" if ("cable" in qr_types and "internet" in qr_types) else (qr_types[0] if qr_types else "subscription")
             follow_up_msg = f"Please pay your {plan_str} bill using the QR code(s) above and send a screenshot of your payment here."
             
+            translation_failed = False
             if target_lang != 'en':
                 try:
                     # Instantly translates BOTH messages
@@ -2348,16 +2349,21 @@ class Api:
                     follow_up_msg = GoogleTranslator(source='en', target=target_lang).translate(follow_up_msg)
                 except Exception as trans_err:
                     print(f"Translation failed, falling back to English: {trans_err}")
+                    log_error(trans_err, "GoogleTranslator rate limit or network error")
+                    translation_failed = True
 
             # 6. Trigger Selenium Bot in background — UI never freezes
-            import threading
             threading.Thread(
                 target=self._run_selenium_whatsapp,
                 args=(phones_to_try, msg, qr_types, follow_up_msg),
                 daemon=True
             ).start()
 
-            return {"ok": True, "message": "WhatsApp reminder is being sent in the background!"}
+            return {
+                "ok": True,
+                "message": "WhatsApp reminder is being sent in the background!",
+                "translation_failed": translation_failed
+            }
 
         except Exception as e:
             print("WhatsApp Error:", e)
