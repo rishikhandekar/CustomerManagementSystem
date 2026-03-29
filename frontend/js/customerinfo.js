@@ -213,7 +213,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (res.ok) {
-                    showToast("WhatsApp bot started! Opening browser...", 'success');
+                    // ✅ Show long warning only on the very first run
+                    if (!localStorage.getItem('browser_download_warned')) {
+                        showToast("Starting WhatsApp bot. This usually takes a few seconds, but may take up to 1 minute on the very first run to configure drivers...", 'info', 8000);
+                        localStorage.setItem('browser_download_warned', 'true');
+                    } else {
+                        showToast("WhatsApp bot started! Opening browser...", 'success');
+                    }
                     if (res.translation_failed) {
                         setTimeout(() => {
                             showToast("⚠️ Translation failed — message will be sent in English instead.", 'warning', 7000);

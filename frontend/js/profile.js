@@ -246,6 +246,12 @@ async function initProfile() {
         btn.innerHTML = '&#9203; Opening Browser...';
         btn.disabled = true;
 
+        // ✅ ADD THIS CHECK
+        if (!localStorage.getItem('browser_download_warned')) {
+            showToast("First time setup: Please wait up to 1 minute while background drivers are configured...", 'info', 8000);
+            localStorage.setItem('browser_download_warned', 'true');
+        }
+
         try {
             const res = await window.pywebview.api.link_whatsapp();
             if (res.ok) {
@@ -293,6 +299,12 @@ async function initProfile() {
 
         btn.innerHTML = '&#9203; Starting Bot...';
         btn.disabled = true;
+
+        // ✅ ADD THIS CHECK
+        if (!localStorage.getItem('browser_download_warned')) {
+            showToast("First time setup: Please wait up to 1 minute while background drivers are configured...", 'info', 8000);
+            localStorage.setItem('browser_download_warned', 'true');
+        }
 
         try {
             const res = await window.pywebview.api.force_run_daily_reminders();

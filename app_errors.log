@@ -2913,3 +2913,69 @@ Traceback (most recent call last):
 selenium.common.exceptions.InvalidSessionIdException: Message: Tried to run command without establishing a connection; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
 
 
+
+============================================================
+[2026-03-29 13:20:32]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2421, in _run_selenium_whatsapp
+    driver.get(url)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 466, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 446, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+	chromedriver!GetHandleVerifier [0x7ff67200ae35+14915]
+	chromedriver!GetHandleVerifier [0x7ff67200aea0+14980]
+	chromedriver!(No symbol) [0x7ff671d6d6e6]
+	chromedriver!(No symbol) [0x7ff671db83e3]
+	chromedriver!(No symbol) [0x7ff671defef2]
+	chromedriver!(No symbol) [0x7ff671dea171]
+	chromedriver!(No symbol) [0x7ff671de9423]
+	chromedriver!(No symbol) [0x7ff671d36315]
+	chromedriver!GetHandleVerifier [0x7ff672316da9+320889]
+	chromedriver!GetHandleVerifier [0x7ff67231133b+31ae1b]
+	chromedriver!GetHandleVerifier [0x7ff672333982+33d462]
+	chromedriver!GetHandleVerifier [0x7ff6720280a5+31b85]
+	chromedriver!GetHandleVerifier [0x7ff672030d8c+3a86c]
+	chromedriver!(No symbol) [0x7ff671d350aa]
+	chromedriver!GetHandleVerifier [0x7ff67246e728+478208]
+	KERNEL32!BaseThreadInitThunk [0x7ffbef4be8d7+17]
+	ntdll!RtlUserThreadStart [0x7ffbf042c48c+2c]
+
+
+
+============================================================
+[2026-03-29 13:20:32]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2421, in _run_selenium_whatsapp
+    driver.get(url)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 466, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 446, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+	chromedriver!GetHandleVerifier [0x7ff67200ae35+14915]
+	chromedriver!GetHandleVerifier [0x7ff67200aea0+14980]
+	chromedriver!(No symbol) [0x7ff671d6d6e6]
+	chromedriver!(No symbol) [0x7ff671db83e3]
+	chromedriver!(No symbol) [0x7ff671defef2]
+	chromedriver!(No symbol) [0x7ff671dea171]
+	chromedriver!(No symbol) [0x7ff671de9423]
+	chromedriver!(No symbol) [0x7ff671d36315]
+	chromedriver!GetHandleVerifier [0x7ff672316da9+320889]
+	chromedriver!GetHandleVerifier [0x7ff67231133b+31ae1b]
+	chromedriver!GetHandleVerifier [0x7ff672333982+33d462]
+	chromedriver!GetHandleVerifier [0x7ff6720280a5+31b85]
+	chromedriver!GetHandleVerifier [0x7ff672030d8c+3a86c]
+	chromedriver!(No symbol) [0x7ff671d350aa]
+	chromedriver!GetHandleVerifier [0x7ff67246e728+478208]
+	KERNEL32!BaseThreadInitThunk [0x7ffbef4be8d7+17]
+	ntdll!RtlUserThreadStart [0x7ffbf042c48c+2c]
+
+
