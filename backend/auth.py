@@ -1,11 +1,10 @@
 # backend/auth.py
 import re
+import time
 import threading
 import webbrowser
-import socket
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
-from datetime import datetime
 from . import database as db_module
 
 
@@ -267,7 +266,6 @@ class OAuthCallbackHandler(BaseHTTPRequestHandler):
 
 
 def start_server():
-    import time
     time.sleep(0.5)  # ✅ Let OS release port from any previous attempt
     server = None
     try:

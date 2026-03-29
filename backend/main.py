@@ -1,7 +1,8 @@
 # backend/main.py
 import webview
 from .error_handler import friendly, log_error
-from . import database as db_module  # ✅ FIXED: Added missing import
+from . import database as db_module
+from .database import set_auth_session
 from .auth import (
     register_user,
     login_user,
@@ -9,19 +10,25 @@ from .auth import (
     verify_supabase_otp,
     send_password_reset,
     reset_password_with_token,
-    get_user_by_email,
     start_google_oauth_flow,
     check_google_login_status,
     get_google_user_id,
     get_google_access_token,
-    get_google_refresh_token  # ✅ Added for auto-refresh
+    get_google_refresh_token
 )
-import datetime # Import full datetime for timedelta
+import datetime
 import pytz
+import pyperclip
+import random
+
+import re
 
 import threading
+import base64
+import shutil
 
 from deep_translator import GoogleTranslator
+import platform
 import os
 import time
 import urllib.parse
@@ -29,12 +36,19 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys 
 
 # Chrome imports
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 # Edge imports
 from selenium.webdriver.edge.options import Options as EdgeOptions
+
+# Firefox imports
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver import Firefox
+
+from selenium.webdriver.common.action_chains import ActionChains
 
 class Api:
     
@@ -456,7 +470,6 @@ class Api:
     # ✅ AUTOMATED BOT: START THE BACKGROUND CLOCK
     # ---------------------------------------------------------
     def __init__(self):
-        import threading
         self.active_user_id = None
 
         # Starts the silent background clock as soon as the app opens
@@ -501,8 +514,6 @@ class Api:
         return {"ok": True, "message": "Bot is already linked."}
     
     def get_secure_session_dir(self):
-        import platform
-        import os
         
         # Find the OS-protected AppData folder
         if platform.system() == "Windows":
@@ -644,7 +655,6 @@ class Api:
         auth_err = self._require_auth()
         if auth_err: return auth_err
         try:
-            import re
             sub_id = payload.get("subscription_id")
             history_id = payload.get("history_id")
             
@@ -2389,8 +2399,6 @@ class Api:
             except Exception:
                 # 3. FALLBACK: ATTEMPT FIREFOX
                 try:
-                    from selenium.webdriver.firefox.options import Options as FirefoxOptions
-                    from selenium.webdriver import Firefox
                     firefox_options = FirefoxOptions()
                     driver = Firefox(options=firefox_options)
                     print("Browser: Mozilla Firefox launched successfully.")
@@ -2407,9 +2415,6 @@ class Api:
 
         # 3. EXECUTE WHATSAPP ACTIONS (SMART FALLBACK LOOP)
         try:
-            from selenium.webdriver.common.keys import Keys 
-            
-            
             encoded_msg = urllib.parse.quote(message)
             message_sent_successfully = False
             
@@ -2475,9 +2480,6 @@ class Api:
                         if os.path.exists(qr_image_path):
                             print(f"{img_name} found! Simulating Paste (Ctrl+V)...")
                             try:
-                                from selenium.webdriver.common.action_chains import ActionChains
-                                import base64
-                                
                                 # ✅ 1. Read the image
                                 with open(qr_image_path, "rb") as f:
                                     b64_string = base64.b64encode(f.read()).decode('utf-8')
@@ -2553,7 +2555,6 @@ class Api:
                         time.sleep(0.5)
                         
                         # Type it out and hit Enter automatically
-                        from selenium.webdriver.common.action_chains import ActionChains
                         ActionChains(driver).send_keys(follow_up_msg).send_keys(Keys.ENTER).perform()
                         
                     except Exception as follow_err:
@@ -2867,8 +2868,6 @@ class Api:
         return send_password_reset(email)
 
     def verifyOtp(self, payload):
-        from .database import set_auth_session
-
         email = payload.get("email")
         code = payload.get("code")
         purpose = payload.get("purpose")
@@ -2927,7 +2926,6 @@ class Api:
             return {"ok": False, "error": "Missing new password"}
         
         # ✅ SECURITY FIX: Enforce strong passwords on reset
-        import re
         if len(new_password) < 8 or not re.search(r"\d", new_password) or not re.search(r"[A-Z]", new_password) or not re.search(r"[!@#$%^&*(),.?\":{}|<>]", new_password):
             return {
                 "ok": False, 
@@ -2951,7 +2949,6 @@ class Api:
             self.active_user_id = user_id
 
             if access_token:
-                from .database import set_auth_session
                 # ✅ Full session with refresh_token — same auto-refresh as email/password
                 refresh_token = get_google_refresh_token()
                 set_auth_session(access_token, refresh_token)
@@ -3682,7 +3679,6 @@ class Api:
 
             if automation_tasks:
                 try:
-                    import threading
                     threading.Thread(
                         target=self._run_automated_selenium_whatsapp_batch,
                         args=(automation_tasks,),
@@ -3714,14 +3710,11 @@ class Api:
                 print("Browser: Microsoft Edge launched successfully.")
             except Exception:
                 try:
-                    from selenium.webdriver.firefox.options import Options as FirefoxOptions
-                    from selenium.webdriver import Firefox
                     firefox_options = FirefoxOptions()
                     driver = Firefox(options=firefox_options)
                     print("Browser: Mozilla Firefox launched successfully.")
                 except Exception as e:
                     # No browser found — show clear message to user
-                    import webview
                     try:
                         if webview.windows:
                             webview.windows[0].evaluate_js(
@@ -3738,11 +3731,6 @@ class Api:
                     raise Exception(f"No browser found. Please install Chrome, Edge or Firefox: {e}")
 
         try:
-            
-            from selenium.webdriver.common.keys import Keys 
-            from selenium.webdriver.common.action_chains import ActionChains
-            import base64
-            
             failed_customers = [] # Tracker for failed reminders
             
             # PRE-LOAD WHATSAPP ONCE
@@ -3820,8 +3808,6 @@ class Api:
                             def send_text_message(text):
                                 if not text: return
                                 try:
-                                    import pyperclip
-                                    import random
                                     pyperclip.copy(text)
                                     time.sleep(random.uniform(1, 2))
                                     chat_box = WebDriverWait(driver, 15).until(
@@ -3904,7 +3890,6 @@ class Api:
                     continue 
             
             # ✅ TRIGGER POPUP ALERT IN THE APP WHEN FINISHED
-            import webview
             if failed_customers:
                 failed_names = ", ".join(failed_customers)
                 safe_names = failed_names.replace("'", "\\'") # Prevent JS errors
@@ -3989,10 +3974,7 @@ class Api:
             return {"ok": False, "error": friendly(e)}
         
     def unlink_whatsapp(self, payload=None):
-        """Securely deletes the WhatsApp session folder so the user is logged out."""
-        import shutil
-        import os
-        
+        """Securely deletes the WhatsApp session folder so the user is logged out."""        
         auth_err = self._require_auth()
         if auth_err: return auth_err
         
