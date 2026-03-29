@@ -2853,3 +2853,63 @@ Traceback (most recent call last):
     raise mapped_exc(message) from exc
 httpx.ConnectError: [Errno 11001] getaddrinfo failed
 
+
+============================================================
+[2026-03-29 12:06:33]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2441, in _run_selenium_whatsapp
+    driver.get(url)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 466, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 446, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: Tried to run command without establishing a connection; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+
+
+
+============================================================
+[2026-03-29 12:06:33]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2441, in _run_selenium_whatsapp
+    driver.get(url)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 466, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 446, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: Tried to run command without establishing a connection; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+
+
+
+============================================================
+[2026-03-29 12:21:51]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2442, in _run_selenium_whatsapp
+    driver.get(url)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 466, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 446, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: Tried to run command without establishing a connection; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+
+
+
+============================================================
+[2026-03-29 12:21:51]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 2442, in _run_selenium_whatsapp
+    driver.get(url)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 466, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 446, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: Tried to run command without establishing a connection; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+
+
