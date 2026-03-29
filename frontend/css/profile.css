@@ -358,3 +358,43 @@ body {
 .cms-alert-btn {
   min-width: 100px;
 }
+
+/* ── Daily Reminder Toggle Switch ───────────────────────────── */
+.reminder-toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 26px;
+    flex-shrink: 0;
+}
+.reminder-toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.reminder-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #cbd5e1;
+    border-radius: 26px;
+    transition: 0.3s;
+}
+.reminder-toggle-slider::before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: 0.3s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.reminder-toggle-switch input:checked + .reminder-toggle-slider {
+    background-color: #2e7d32;
+}
+.reminder-toggle-switch input:checked + .reminder-toggle-slider::before {
+    transform: translateX(22px);
+}

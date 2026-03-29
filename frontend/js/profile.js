@@ -59,6 +59,14 @@ async function initProfile() {
 
             // Security
             document.getElementById('authMethod').innerText = data.auth_method || 'Email/Password';
+
+            // Reminder toggle — load saved state from DB
+            const reminderToggle = document.getElementById('toggleDailyReminder');
+            const reminderStatusText = document.getElementById('reminderStatusText');
+            const reminderEnabled = data.auto_reminder_enabled !== false;
+            reminderToggle.checked = reminderEnabled;
+            reminderStatusText.textContent = reminderEnabled ? '✅ Daily reminders are active' : '🔕 Daily reminders are disabled';
+            reminderStatusText.style.color = reminderEnabled ? '#2e7d32' : '#c62828';
             
 
             // ✅ Lock ONLY text fields on initial load (Toggles remain active)
@@ -318,6 +326,33 @@ async function initProfile() {
         } finally {
             btn.innerHTML = originalText;
             btn.disabled = false;
+        }
+    });
+
+    // ── Daily Reminder Toggle ─────────────────────────────────
+    const reminderToggle = document.getElementById('toggleDailyReminder');
+    const reminderStatusText = document.getElementById('reminderStatusText');
+
+    reminderToggle.addEventListener('change', async () => {
+        const enabled = reminderToggle.checked;
+        try {
+            const res = await window.pywebview.api.set_reminder_status({ enabled });
+            if (res.ok) {
+                reminderStatusText.textContent = enabled
+                    ? '✅ Daily reminders are active'
+                    : '🔕 Daily reminders are disabled';
+                reminderStatusText.style.color = enabled ? '#2e7d32' : '#c62828';
+                showToast(
+                    enabled ? 'Daily reminders enabled ✅' : 'Daily reminders disabled 🔕',
+                    enabled ? 'success' : 'warning'
+                );
+            } else {
+                reminderToggle.checked = !enabled;
+                showToast('Failed to update: ' + res.error, 'error');
+            }
+        } catch (err) {
+            reminderToggle.checked = !enabled;
+            showToast('System Error: ' + err, 'error');
         }
     });
 }

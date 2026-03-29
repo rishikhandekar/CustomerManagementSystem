@@ -82,7 +82,8 @@ class Api:
                     "support_contact": user.get("support_contact", ""),
                     "gstin": user.get("gstin", ""),
                     "last_login": user.get("last_login", ""),
-                    "auth_method": auth_method # ✅ Uses the real saved method now
+                    "auth_method": auth_method,
+                    "auto_reminder_enabled": user.get("auto_reminder_enabled", True) # ✅ Uses the real saved method now
                 }
             }
         except Exception as e:
@@ -471,6 +472,7 @@ class Api:
     # ---------------------------------------------------------
     def __init__(self):
         self.active_user_id = None
+        self.auto_reminder_enabled = True
 
         # Starts the silent background clock as soon as the app opens
         self.auto_reminder_thread = threading.Thread(target=self._automated_reminder_loop, daemon=True)
@@ -482,6 +484,25 @@ class Api:
         if not self.active_user_id:
             return {"ok": False, "error": "Please log in and try again."}
         return None
+    
+    def get_reminder_status(self, payload=None):
+        auth_err = self._require_auth()
+        if auth_err: return auth_err
+        return {"ok": True, "enabled": self.auto_reminder_enabled}
+
+    def set_reminder_status(self, payload=None):
+        auth_err = self._require_auth()
+        if auth_err: return auth_err
+        enabled = payload.get("enabled", True) if isinstance(payload, dict) else True
+        self.auto_reminder_enabled = bool(enabled)
+        try:
+            db_module.supabase.table('users').update(
+                {"auto_reminder_enabled": self.auto_reminder_enabled}
+            ).eq("id", self.active_user_id).execute()
+            print(f"[Reminder] Daily reminder {'enabled' if enabled else 'disabled'} saved to DB.")
+        except Exception as e:
+            print(f"[Reminder] Could not save to DB: {e}")
+        return {"ok": True, "enabled": self.auto_reminder_enabled}
 
     def restore_session(self, payload):
         """
@@ -504,6 +525,12 @@ class Api:
                     # 4. We grab the true ID directly from the database, NOT the frontend
                     self.active_user_id = user_res.user.id
                     print(f"Secure session restored for user: {self.active_user_id}")
+                    try:
+                        _pref = db_module.supabase.table('users').select("auto_reminder_enabled").eq("id", self.active_user_id).execute()
+                        if _pref.data:
+                            self.auto_reminder_enabled = _pref.data[0].get("auto_reminder_enabled", True)
+                    except Exception:
+                        self.auto_reminder_enabled = True
                     return {"ok": True}
                 else:
                     return {"ok": False, "error": "Invalid token"}
@@ -613,11 +640,15 @@ class Api:
             now = datetime.datetime.now(tz)
             
             # Check if the time is EXACTLY 10:59 AM (Or your testing time)
-            if now.hour == 11 and now.minute == 3:
+            if now.hour == 11 and now.minute == 30:
                 current_date = now.date()
                 
                 # Make sure it only runs once per day locally
                 if last_run_date != current_date:
+                    if not self.auto_reminder_enabled:
+                        print(f"\n[{now.strftime('%I:%M %p')}] Skipped: Daily reminder is disabled by admin.")
+                        last_run_date = current_date
+                        continue
                     if self.active_user_id: # SECURE: Only run if someone is logged in
                         
                         # =========================================================
@@ -2893,6 +2924,13 @@ class Api:
 
             self.active_user_id = user_id
 
+            try:
+                _pref = db_module.supabase.table('users').select("auto_reminder_enabled").eq("id", self.active_user_id).execute()
+                if _pref.data:
+                    self.auto_reminder_enabled = _pref.data[0].get("auto_reminder_enabled", True)
+            except Exception:
+                self.auto_reminder_enabled = True
+
             # Update last_login and mark verified
             
             
@@ -2947,6 +2985,13 @@ class Api:
             access_token = get_google_access_token()
 
             self.active_user_id = user_id
+
+            try:
+                _pref = db_module.supabase.table('users').select("auto_reminder_enabled").eq("id", self.active_user_id).execute()
+                if _pref.data:
+                    self.auto_reminder_enabled = _pref.data[0].get("auto_reminder_enabled", True)
+            except Exception:
+                self.auto_reminder_enabled = True
 
             if access_token:
                 # ✅ Full session with refresh_token — same auto-refresh as email/password
