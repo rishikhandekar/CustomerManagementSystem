@@ -6,6 +6,7 @@ import webbrowser
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 from . import database as db_module
+from .error_handler import friendly
 
 
 def normalize_email(email: str) -> str:
@@ -64,7 +65,7 @@ def register_user(name, email, password):
         error_msg = str(e).lower()
         if "already registered" in error_msg or "already been registered" in error_msg or "duplicate" in error_msg:
             return {"ok": False, "error": "Email already registered"}
-        return {"ok": False, "error": str(e)}
+        return {"ok": False, "error": friendly(e)}
 
 
 # -------------------------
@@ -111,7 +112,7 @@ def login_user(email, password):
         error_msg = str(e).lower()
         if "invalid" in error_msg or "credentials" in error_msg:
             return {"ok": False, "error": "Invalid email or password"}
-        return {"ok": False, "error": str(e)}
+        return {"ok": False, "error": friendly(e)}
 
 
 def send_login_otp(email):
@@ -126,7 +127,7 @@ def send_login_otp(email):
         })
         return {"ok": True}
     except Exception as e:
-        return {"ok": False, "error": str(e)}
+        return {"ok": False, "error": friendly(e)}
 
 
 # -------------------------
@@ -172,7 +173,7 @@ def send_password_reset(email):
         # ✅ Return True so the JS moves to the OTP page
         return {"ok": True}
     except Exception as e:
-        return {"ok": False, "error": str(e)}
+        return {"ok": False, "error": friendly(e)}
 
 
 def reset_password_with_token(new_password):
@@ -181,7 +182,7 @@ def reset_password_with_token(new_password):
         db_module.supabase.auth.update_user({"password": new_password})
         return {"ok": True}
     except Exception as e:
-        return {"ok": False, "error": str(e)}
+        return {"ok": False, "error": friendly(e)}
 
 
 # -------------------------

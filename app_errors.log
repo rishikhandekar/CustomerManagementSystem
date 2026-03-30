@@ -4795,3 +4795,16 @@ Traceback (most recent call last):
     raise JavascriptException(result)
 webview.errors.JavascriptException: {'name': 'ReferenceError', 'stack': 'ReferenceError: showCMSAlert is not defined\n    at eval (eval at <anonymous> (:4:29), <anonymous>:1:1)\n    at <anonymous>:4:29', 'message': 'showCMSAlert is not defined'}
 
+
+============================================================
+[2026-03-30 17:29:52]
+Traceback (most recent call last):
+  File "C:\Users\rishi\Documents\CableMediaApp\backend\main.py", line 3720, in _run_automated_selenium_whatsapp_batch
+    webview.windows[0].evaluate_js("showCMSAlert('Reminders Status', 'All messages were sent successfully!');")
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\webview\window.py", line 49, in wrapper
+    return function(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rishi\AppData\Local\Programs\Python\Python312\Lib\site-packages\webview\window.py", line 503, in evaluate_js
+    raise JavascriptException(result)
+webview.errors.JavascriptException: {'name': 'ReferenceError', 'stack': 'ReferenceError: showCMSAlert is not defined\n    at eval (eval at <anonymous> (:4:29), <anonymous>:1:1)\n    at <anonymous>:4:29', 'message': 'showCMSAlert is not defined'}
+

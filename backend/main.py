@@ -115,96 +115,36 @@ class Api:
             user_id = self.active_user_id
             if not user_id: return {"ok": False, "error": "Missing User ID"}
 
-            # 1. Setup Pagination & Filters
-            page = 0
-            search_term = ""
-            search_type = "name"
-            plan_type = "cable"
+            # Read filters — identical to original
+            page          = 0
+            search_term   = ""
+            search_type   = "name"
+            plan_type     = "cable"
             status_filter = "pending"
 
             if isinstance(payload, dict):
-                page = int(payload.get("page", 0))
-                search_term = str(payload.get("search_term", "")).strip().lower()
-                search_type = payload.get("search_type", "name")
-                plan_type = payload.get("plan_type", "cable")
+                page          = int(payload.get("page", 0))
+                search_term   = str(payload.get("search_term", "")).strip().lower()
+                search_type   = payload.get("search_type", "name")
+                plan_type     = payload.get("plan_type", "cable")
                 status_filter = payload.get("status", "pending")
 
-            page_size = 20
-            start = page * page_size
-            end = start + page_size
+            # One RPC call — filtering, status categorisation, and pagination
+            # all happen in the database. Python receives only the 20 rows it needs.
+            result = db_module.supabase.rpc("get_payment_dashboard_data", {
+                "p_user_id":       user_id,
+                "p_plan_type":     plan_type,
+                "p_status_filter": status_filter,
+                "p_search_term":   search_term,
+                "p_search_type":   search_type,
+                "p_page":          page,
+            }).execute()
 
-            # 2. Fetch all non-deleted subscriptions
-            res = db_module.supabase.table('subscriptions')\
-                .select("*, customers(name, phone, customer_seq_id)")\
-                .eq("user_id", user_id)\
-                .neq("status", "deleted")\
-                .order('created_at', desc=True)\
-                .execute()
-                
-            all_data = res.data or []
-            filtered_data = []
+            data     = result.data or {}
+            rows     = data.get("rows", [])
+            has_more = data.get("has_more", False)
 
-            # 3. Apply Filters in Python (For complex Status logic & Search)
-            for sub in all_data:
-                cust = sub.get("customers") or {}
-
-                # A. Plan Type Filter (Cable vs Internet)
-                is_cable = bool(sub.get("cable_plan_id"))
-                if plan_type == 'cable' and not is_cable: continue
-                if plan_type == 'internet' and is_cable: continue
-
-                # B. Search Filter
-                if search_term:
-                    matches = False
-                    if search_type == 'name':
-                        matches = search_term in str(cust.get("name", "")).lower()
-                    elif search_type == 'phone':
-                        matches = search_term in str(cust.get("phone", ""))
-                    elif search_type == 'id':
-                        seqId = str(cust.get("customer_seq_id", "")).zfill(4)
-                        matches = search_term in seqId
-                    if not matches:
-                        continue
-
-                # C. Status Filter Logic (Pending/Cleared/Advance/Free)
-                pending_amt = float(sub.get("pending_amount") or 0)
-                current_amt = float(sub.get("current_amount") or 0)
-                osc = float(sub.get("other_service_charges") or 0)
-                advance = float(sub.get("advance_balance") or 0)
-                upcoming = float(sub.get("upcoming_amount") or 0)
-
-                price = float(sub.get("price") or 0)
-                add_charge = float(sub.get("additional_charge") or 0)
-                discount = float(sub.get("discount_amount") or 0)
-
-                is_free = (price + add_charge - discount) <= 0
-                total_due = pending_amt + current_amt + osc
-
-                plan_category = ""
-                if total_due > 0:
-                    plan_category = 'pending'
-                elif is_free and osc == 0:
-                    plan_category = 'free'
-                elif advance > 0 or upcoming <= 0:
-                    plan_category = 'advance'
-                else:
-                    plan_category = 'cleared'
-
-                if plan_category != status_filter:
-                    continue
-
-                filtered_data.append(sub)
-
-            # 4. Paginate safely to 20 items max (Even while searching)
-            total_count = len(filtered_data)
-            has_more = end < total_count
-            paged_data = filtered_data[start:end]
-
-            return {
-                "ok": True, 
-                "data": paged_data, 
-                "has_more": has_more
-            }
+            return {"ok": True, "data": rows, "has_more": has_more}
 
         except Exception as e:
             return {"ok": False, "error": friendly(e)}
@@ -212,206 +152,26 @@ class Api:
     def get_dashboard_stats(self, payload):
         auth_err = self._require_auth()
         if auth_err: return auth_err
-        try:            
-            # Handle if the frontend sends a string or an object
+        try:
             user_id = self.active_user_id
+            now_ist = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
 
-            # --- 0. GET USER NAME ---
-            user_name = "Admin"
-            try:
-                user_res = db_module.supabase.table('users').select("name").eq("id", user_id).single().execute()
-                if user_res.data and user_res.data.get("name"):
-                    user_name = user_res.data.get("name")
-            except Exception:
-                pass # Fallback to Admin if name isn't found
+            result = db_module.supabase.rpc('get_dashboard_stats', {
+                'p_user_id': user_id,
+                'p_now':     now_ist.isoformat()
+            }).execute()
 
-            # --- 1. CALCULATE TOTAL PENDING DUES (Live from subscriptions) ---
-            subs_res = db_module.supabase.table('subscriptions') \
-                .select("pending_amount, current_amount, other_service_charges, cable_plan_id, internet_plan_id") \
-                .eq("user_id", user_id) \
-                .neq("status", "deleted") \
-                .execute()
-            subs_data = subs_res.data if subs_res.data else []
+            data = result.data
+            if not data:
+                return {"ok": False, "error": "No data returned"}
 
-            pending = {"both": 0, "cable": 0, "net": 0}
+            # Fix defaulters key name to match frontend expectation
+            if data.get('action_cards', {}).get('defaulters'):
+                for d in data['action_cards']['defaulters']:
+                    d['total_pending_all_current'] = d.pop('total_pending', 0)
 
-            for s in subs_data:
-                due = float(s.get("pending_amount") or 0) + \
-                      float(s.get("current_amount") or 0) + \
-                      float(s.get("other_service_charges") or 0)
-                pending["both"] += due
-                if s.get("cable_plan_id"):
-                    pending["cable"] += due
-                if s.get("internet_plan_id"):
-                    pending["net"] += due
+            return {"ok": True, "data": data}
 
-            # --- 2. CALCULATE TOTAL COLLECTED (THIS MONTH) ---
-            now = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
-            first_day_of_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0).isoformat()
-
-            # Join with subscriptions to categorize payments into Cable or Net
-            payments_res = db_module.supabase.table('payments').select("amount, mode, subscriptions(cable_plan_id, internet_plan_id)").eq("user_id", user_id).gte("created_at", first_day_of_month).execute()
-            payments = payments_res.data if payments_res.data else []
-
-            collected = {
-                "both":  {"total": 0, "cash": 0, "upi": 0, "net": 0, "cheque": 0},
-                "cable": {"total": 0, "cash": 0, "upi": 0, "net": 0, "cheque": 0},
-                "net":   {"total": 0, "cash": 0, "upi": 0, "net": 0, "cheque": 0}
-            }
-
-            def add_to_scoreboard(category, amount, payment_mode):
-                collected[category]["total"] += amount
-                if "cash" in payment_mode: collected[category]["cash"] += amount
-                elif "upi" in payment_mode: collected[category]["upi"] += amount
-                elif "net" in payment_mode or "bank" in payment_mode or "online" in payment_mode: collected[category]["net"] += amount
-                elif "cheque" in payment_mode: collected[category]["cheque"] += amount
-
-            for p in payments:
-                amt = float(p.get("amount", 0))
-                mode = str(p.get("mode", "")).lower()
-
-                # Add to Grand Total
-                add_to_scoreboard("both", amt, mode)
-                
-                # Check subscription to separate into Cable or Net
-                sub = p.get("subscriptions") or {}
-                if sub.get("cable_plan_id"):
-                    add_to_scoreboard("cable", amt, mode)
-                if sub.get("internet_plan_id"):
-                    add_to_scoreboard("net", amt, mode)
-
-            # --- 3. CALCULATE CUSTOMER STATUS (ACTIVE vs INACTIVE) ---
-            cust_status_res = db_module.supabase.table('customers').select("id, subscriptions(status)").eq("user_id", user_id).execute()
-            active_customers = 0
-            inactive_customers = 0
-            
-            if cust_status_res.data:
-                for c in cust_status_res.data:
-                    subs = c.get("subscriptions", [])
-                    # Rule: If AT LEAST ONE plan is active, customer is Active. Else, Inactive.
-                    if any(s.get("status") == "active" for s in subs):
-                        active_customers += 1
-                    else:
-                        inactive_customers += 1
-
-            # --- 4. CALCULATE 12-MONTH REVENUE TRENDS (CY & FY) ---
-            now_year = now.year
-            now_month = now.month
-            
-            # Setup Start Dates
-            tz = pytz.timezone('Asia/Kolkata')
-            cy_start = datetime.datetime(now_year, 1, 1, tzinfo=tz).isoformat()
-            fy_start_year = now_year - 1 if now_month < 4 else now_year
-            fy_start = datetime.datetime(fy_start_year, 4, 1, tzinfo=tz).isoformat()
-            
-            # Fetch payments from the earliest required date
-            earliest_start = min(cy_start, fy_start)
-            trend_res = db_module.supabase.table('payments').select("amount, created_at, subscriptions(cable_plan_id, internet_plan_id)").eq("user_id", user_id).gte("created_at", earliest_start).execute()
-            trend_payments = trend_res.data if trend_res.data else []
-            
-            revenue_cy = {"both": [0]*12, "cable": [0]*12, "net": [0]*12}
-            revenue_fy = {"both": [0]*12, "cable": [0]*12, "net": [0]*12}
-            
-            for p in trend_payments:
-                amt = float(p.get("amount", 0))
-                
-                # Safely parse date
-                created_str = p.get("created_at", "")
-                if created_str.endswith('Z'):
-                    created_str = created_str[:-1] + '+00:00'
-                p_date = datetime.datetime.fromisoformat(created_str)
-                
-                sub = p.get("subscriptions") or {}
-                is_cable = bool(sub.get("cable_plan_id"))
-                is_net = bool(sub.get("internet_plan_id"))
-                
-                # --- Calendar Year Logic (Jan - Dec) ---
-                if p_date.year == now_year:
-                    month_idx = p_date.month - 1 # Jan=0, Dec=11
-                    revenue_cy["both"][month_idx] += amt
-                    if is_cable: revenue_cy["cable"][month_idx] += amt
-                    if is_net: revenue_cy["net"][month_idx] += amt
-                    
-                # --- Financial Year Logic (Apr - Mar) ---
-                if (p_date.year == fy_start_year and p_date.month >= 4) or (p_date.year == fy_start_year + 1 and p_date.month < 4):
-                    # Map Apr=0, May=1 ... Mar=11
-                    fy_month_idx = p_date.month - 4 if p_date.month >= 4 else p_date.month + 8
-                    revenue_fy["both"][fy_month_idx] += amt
-                    if is_cable: revenue_fy["cable"][fy_month_idx] += amt
-                    if is_net: revenue_fy["net"][fy_month_idx] += amt
-
-            # --- 5. CALCULATE TOP 5 DEFAULTERS (Live from subscriptions) ---
-            defaulters_raw = db_module.supabase.table('subscriptions') \
-                .select("customer_id, pending_amount, current_amount, other_service_charges, customers(id, name, phone)") \
-                .eq("user_id", user_id) \
-                .neq("status", "deleted") \
-                .execute()
-
-            cust_totals = {}
-            for s in (defaulters_raw.data or []):
-                cust = s.get("customers") or {}
-                cid  = cust.get("id")
-                if not cid:
-                    continue
-                due = float(s.get("pending_amount") or 0) + \
-                      float(s.get("current_amount") or 0) + \
-                      float(s.get("other_service_charges") or 0)
-                if cid not in cust_totals:
-                    cust_totals[cid] = {
-                        "id": cid,
-                        "name": cust.get("name", ""),
-                        "phone": cust.get("phone", ""),
-                        "total_pending_all_current": 0
-                    }
-                cust_totals[cid]["total_pending_all_current"] += due
-
-            top_defaulters = sorted(
-                [v for v in cust_totals.values() if v["total_pending_all_current"] > 0],
-                key=lambda x: x["total_pending_all_current"],
-                reverse=True
-            )[:5]
-
-            # --- 6. CALCULATE PLANS EXPIRING SOON (NEXT 7 DAYS) ---
-            today_date = now.date()
-            seven_days_date = today_date + datetime.timedelta(days=6)
-
-            subs_res = db_module.supabase.table('subscriptions').select("current_billing_end_date, cable_plan_id, internet_plan_id").eq("user_id", user_id).eq("status", "active").execute()
-            
-            expiring_counts = {"both": 0, "cable": 0, "net": 0}
-            if subs_res.data:
-                for sub in subs_res.data:
-                    end_date_str = sub.get("current_billing_end_date")
-                    if end_date_str:
-                        try:
-                            end_date = datetime.date.fromisoformat(str(end_date_str).split('T')[0])
-                            
-                            if today_date <= end_date <= seven_days_date:
-                                expiring_counts["both"] += 1
-                                if sub.get("cable_plan_id"): expiring_counts["cable"] += 1
-                                if sub.get("internet_plan_id"): expiring_counts["net"] += 1
-                        except (ValueError, TypeError):
-                            pass
-
-            # Format the Date Range string (e.g., "15 Oct - 22 Oct")
-            date_range_str = f"{today_date.strftime('%d %b')} - {seven_days_date.strftime('%d %b')}"
-
-            return {
-                "ok": True, 
-                "data": {
-                    "user_name": user_name, # ✅ Sends the name to the frontend
-                    "collected": collected,
-                    "pending": pending,
-                    "charts": {
-                        "customers": { "active": active_customers, "inactive": inactive_customers },
-                        "revenue": { "cy": revenue_cy, "fy": revenue_fy }
-                    },
-                    "action_cards": {
-                        "defaulters": top_defaulters,
-                        "expiring": expiring_counts,
-                        "expiring_dates": date_range_str
-                    }
-                }
-            }
         except Exception as e:
             return {"ok": False, "error": friendly(e)}
         
@@ -1797,7 +1557,7 @@ class Api:
                 # ✅ CRITICAL FIX: Use TIMESTAMP here (was str(today))
                 "current_billing_start_date": now_iso, 
                 
-                "current_billing_end_date": str(end_date),
+                "current_billing_end_date": end_date.strftime("%Y-%m-%d"),
                 "current_amount": final_amount,
                 "upcoming_amount": final_amount,
                 "additional_charge": additional,
@@ -2253,6 +2013,22 @@ class Api:
             c_subs = [s for s in subs if s.get('cable_plan_id')]
             i_subs = [s for s in subs if s.get('internet_plan_id')]
 
+            # ✅ Pre-fetch ALL history rows in ONE query — eliminates N+1 inside build_manual_section
+            all_sub_ids = [s['id'] for s in subs]
+            history_map = {}
+            if all_sub_ids:
+                hist_bulk = db_module.supabase.table('subscription_history') \
+                    .select("*") \
+                    .in_("subscription_id", all_sub_ids) \
+                    .in_("status", ["unpaid", "partial"]) \
+                    .order("start_date", desc=False) \
+                    .execute().data or []
+                for h in hist_bulk:
+                    sid = h['subscription_id']
+                    if sid not in history_map:
+                        history_map[sid] = []
+                    history_map[sid].append(h)
+
             # 3. Format Dates Helper
             def fmt_date(d_str):
                 if not d_str or d_str == '-': return ""
@@ -2283,7 +2059,7 @@ class Api:
                     plan_type = "cable" if sub.get('cable_plan_id') else "internet"
                     plan_name = sub.get('plan_name_cached') or f"{plan_type.title()} Plan"
                     
-                    history = db_module.supabase.table('subscription_history').select("*").eq("subscription_id", s_id).in_("status", ["unpaid", "partial"]).order("start_date", desc=False).execute().data or []
+                    history = history_map.get(s_id, [])
 
                     # Extract Exact Values
                     osc = float(sub.get('other_service_charges') or 0)
@@ -2858,7 +2634,7 @@ class Api:
                     "status": "active",
                     "activation_date": str(today),
                     "current_billing_start_date": self._get_ist_now(),
-                    "current_billing_end_date": str(end_date),
+                    "current_billing_end_date": end_date.strftime("%Y-%m-%d"),
                     
                     # ✅ FIX: Save the calculated net amount
                     "current_amount": final_amount, 
@@ -3228,74 +3004,45 @@ class Api:
     def delete_plan(self, payload):
         auth_err = self._require_auth()
         if auth_err: return auth_err
-        plan_id = payload.get("id")
+        plan_id  = payload.get("id")
         plan_type = payload.get("type")
-        table = "cable_plans" if plan_type == "cable" else "internet_plans"
-        plan_col = "cable_plan_id" if plan_type == "cable" else "internet_plan_id"
+        table    = "cable_plans"    if plan_type == "cable" else "internet_plans"
+        plan_col = "cable_plan_id"  if plan_type == "cable" else "internet_plan_id"
 
         try:
-            # 1. Check if any ACTIVE or INACTIVE subscriptions still use this plan
+            # ── Guard: block if any active/inactive subscriptions use this plan ──
             active_subs = db_module.supabase.table('subscriptions') \
-                .select("id") \
-                .eq(plan_col, plan_id) \
-                .in_("status", ["active", "inactive"]) \
-                .execute()
+                .select("id").eq(plan_col, plan_id) \
+                .in_("status", ["active", "inactive"]).execute()
 
             if active_subs.data and len(active_subs.data) > 0:
                 count = len(active_subs.data)
                 return {
                     "ok": False,
-                    "error": f"Cannot delete this plan. {count} customer(s) are currently using it. Please remove their plan first."
+                    "error": f"Cannot delete this plan. {count} customer(s) are currently "
+                            f"using it. Please remove their plan first."
                 }
 
-            # 2. Clean up soft-deleted subscriptions linked to this plan
+            # ── Collect IDs for soft-deleted subscriptions linked to this plan ──
             deleted_subs = db_module.supabase.table('subscriptions') \
-                .select("id") \
-                .eq(plan_col, plan_id) \
-                .eq("status", "deleted") \
-                .execute()
+                .select("id").eq(plan_col, plan_id).eq("status", "deleted").execute()
+            sub_ids = [s['id'] for s in (deleted_subs.data or [])]
 
-            if deleted_subs.data:
-                sub_ids = [sub['id'] for sub in deleted_subs.data]
-
-                # Get all history IDs for all deleted subscriptions in ONE query
+            hist_ids = []
+            if sub_ids:
                 hist_res = db_module.supabase.table('subscription_history') \
-                    .select("id") \
-                    .in_("subscription_id", sub_ids) \
-                    .execute()
+                    .select("id").in_("subscription_id", sub_ids).execute()
+                hist_ids = [h['id'] for h in (hist_res.data or [])]
 
-                # Delete payment_allocations for all history rows in ONE query
-                if hist_res.data:
-                    hist_ids = [h['id'] for h in hist_res.data]
-                    db_module.supabase.table('payment_allocations') \
-                        .delete() \
-                        .in_("history_id", hist_ids) \
-                        .execute()
+            # ── ONE atomic RPC call — all deletes or nothing ──────────────
+            db_module.supabase.rpc("delete_plan_safe", {
+                "p_plan_id":    plan_id,
+                "p_plan_table": table,
+                "p_plan_col":   plan_col,
+                "p_sub_ids":    sub_ids,
+                "p_hist_ids":   hist_ids,
+            }).execute()
 
-                # Delete all related records in ONE query each
-                db_module.supabase.table('subscription_history') \
-                    .delete() \
-                    .in_("subscription_id", sub_ids) \
-                    .execute()
-
-                db_module.supabase.table('advance_logs') \
-                    .delete() \
-                    .in_("subscription_id", sub_ids) \
-                    .execute()
-
-                db_module.supabase.table('payments') \
-                    .delete() \
-                    .in_("subscription_id", sub_ids) \
-                    .execute()
-
-                db_module.supabase.table('subscriptions') \
-                    .delete() \
-                    .eq(plan_col, plan_id) \
-                    .eq("status", "deleted") \
-                    .execute()
-
-            # 3. Now safely delete the plan itself
-            db_module.supabase.table(table).delete().eq("id", plan_id).execute()
             return {"ok": True}
 
         except Exception as e:
@@ -3984,49 +3731,47 @@ class Api:
     def delete_customer(self, payload):
         auth_err = self._require_auth()
         if auth_err: return auth_err
-        user_id = self.active_user_id
+        user_id     = self.active_user_id
         customer_id = payload.get("customer_id")
 
         try:
-            # 1. Fetch details including alt_phone BEFORE deleting
-            cust_res = db_module.supabase.table('customers').select("*").eq("id", customer_id).eq("user_id", user_id).single().execute()
-            
-            if cust_res.data:
-                cust = cust_res.data
-                # 2. Save info to deleted_customers table including alt_phone
-                deleted_payload = {
-                    "user_id": user_id,
-                    "customer_seq_id": cust.get("customer_seq_id"),
-                    "name": cust.get("name"),
-                    "phone": cust.get("phone"),
-                    "alt_phone": cust.get("alt_phone"), # ✅ Added this line
-                    "short_address": cust.get("short_address") 
-                }
-                db_module.supabase.table('deleted_customers').insert(deleted_payload).execute()
+            # ── Read customer details before any writes ───────────────────
+            cust_res = db_module.supabase.table('customers') \
+                .select("*").eq("id", customer_id).eq("user_id", user_id) \
+                .single().execute()
 
-            # 3. Delete all linked records in correct order (deepest first)
-            subs_res = db_module.supabase.table('subscriptions').select("id").eq("user_id", user_id).eq("customer_id", customer_id).execute()
-            if subs_res.data:
-                sub_ids = [sub['id'] for sub in subs_res.data]
+            if not cust_res.data:
+                return {"ok": False, "error": "Customer not found"}
 
-                # Get ALL history IDs for ALL subscriptions in ONE query
-                hist_res = db_module.supabase.table('subscription_history').select("id").in_("subscription_id", sub_ids).execute()
+            cust = cust_res.data
 
-                # Delete ALL payment_allocations in ONE query
-                if hist_res.data:
-                    hist_ids = [h['id'] for h in hist_res.data]
-                    db_module.supabase.table('payment_allocations').delete().in_("history_id", hist_ids).execute()
+            # ── Collect all IDs Python needs to pass to the RPC ──────────
+            subs_res = db_module.supabase.table('subscriptions') \
+                .select("id").eq("user_id", user_id).eq("customer_id", customer_id) \
+                .execute()
+            sub_ids = [s['id'] for s in (subs_res.data or [])]
 
-                # Delete ALL remaining records in ONE query each
-                db_module.supabase.table('subscription_history').delete().in_("subscription_id", sub_ids).execute()
-                db_module.supabase.table('advance_logs').delete().in_("subscription_id", sub_ids).execute()
-                db_module.supabase.table('payments').delete().in_("subscription_id", sub_ids).execute()
+            hist_ids = []
+            if sub_ids:
+                hist_res = db_module.supabase.table('subscription_history') \
+                    .select("id").in_("subscription_id", sub_ids).execute()
+                hist_ids = [h['id'] for h in (hist_res.data or [])]
 
-            # 4. Permanently delete subscriptions and customer
-            db_module.supabase.table('subscriptions').delete().eq("customer_id", customer_id).execute()
-            db_module.supabase.table('customers').delete().eq("id", customer_id).execute()
+            # ── ONE atomic RPC call — all deletes + archive or nothing ────
+            db_module.supabase.rpc("delete_customer_safe", {
+                "p_customer_id":   customer_id,
+                "p_user_id":       user_id,
+                "p_sub_ids":       sub_ids,
+                "p_hist_ids":      hist_ids,
+                "p_cust_seq_id":   cust.get("customer_seq_id"),
+                "p_name":          cust.get("name") or "",
+                "p_phone":         cust.get("phone") or "",
+                "p_alt_phone":     cust.get("alt_phone") or "",
+                "p_short_address": cust.get("short_address") or "",
+            }).execute()
 
             return {"ok": True}
+
         except Exception as e:
             return {"ok": False, "error": friendly(e)}
 
