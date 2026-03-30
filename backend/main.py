@@ -838,224 +838,261 @@ class Api:
         auth_err = self._require_auth()
         if auth_err: return auth_err
         try:
-            sub_id = payload.get("subscription_id")
+            sub_id      = payload.get("subscription_id")
             customer_id = payload.get("customer_id")
-            strategy = payload.get("strategy") 
+            strategy    = payload.get("strategy")
 
-            if not sub_id: return {"ok": False, "error": "System Error: Missing Subscription ID."}
+            if not sub_id:      return {"ok": False, "error": "System Error: Missing Subscription ID."}
             if not customer_id: return {"ok": False, "error": "System Error: Missing Customer ID."}
 
             sub_res = db_module.supabase.table('subscriptions').select("*").eq("id", sub_id).single().execute()
             if not sub_res.data: return {"ok": False, "error": "Subscription not found"}
-            
-            source_sub = sub_res.data
+
+            source_sub  = sub_res.data
             source_name = source_sub.get('plan_name_cached') or "Unknown Plan"
-            advance = float(source_sub.get('advance_balance') or 0)
-            
+            advance     = float(source_sub.get('advance_balance') or 0)
+
             if advance <= 0:
                 return {"ok": False, "error": "No Advance Balance available."}
 
             remaining = advance
 
+            # ── Collectors: Python builds, RPC writes atomically ──────────────
+            sub_updates  = {}   # {str(plan_id): {sub_id, new_pending?, new_current?, ...}}
+            hist_updates = []   # [{id(bigint), new_paid, new_status}]
+            advance_logs = []   # [{sub_id, amount, reason, cycle_label, related_plan_id}]
+
+            tz      = pytz.timezone('Asia/Kolkata')
+            now_iso = datetime.datetime.now(tz).isoformat()
+
+            # Helper: append to advance_logs list
+            def log(sid, amt, reason, cycle_label="", related_plan_id=""):
+                advance_logs.append({
+                    "sub_id":          str(sid),
+                    "amount":          float(amt),
+                    "reason":          str(reason),
+                    "cycle_label":     str(cycle_label)     if cycle_label     else "",
+                    "related_plan_id": str(related_plan_id) if related_plan_id else ""
+                })
+
+            # Helper: record a subscription amount update
+            def record_sub_update(plan_id, new_p, new_c, new_o, new_u=None):
+                key   = str(plan_id)
+                entry = sub_updates.setdefault(key, {"sub_id": key})
+                if new_p is not None: entry["new_pending"]  = str(new_p)
+                if new_c is not None: entry["new_current"]  = str(new_c)
+                if new_o is not None: entry["new_other"]    = str(new_o)
+                if new_u is not None: entry["new_upcoming"] = str(new_u)
+
+            # Helper: calculate how advance is distributed across pending/current/osc
+            # (identical logic to original)
             def calculate_distribution(plan_row, rem_amount, priority_mode):
-                p = float(plan_row.get('pending_amount') or 0)
-                c = float(plan_row.get('current_amount') or 0)
+                p = float(plan_row.get('pending_amount')        or 0)
+                c = float(plan_row.get('current_amount')        or 0)
                 o = float(plan_row.get('other_service_charges') or 0)
-                
+
                 pay_p, pay_c, pay_o = 0, 0, 0
-                
+
                 if priority_mode == 'osc_first': order = [('o', o), ('p', p), ('c', c)]
-                else: order = [('p', p), ('c', c), ('o', o)]
+                else:                            order = [('p', p), ('c', c), ('o', o)]
 
                 for type_code, amount in order:
                     if rem_amount <= 0: break
                     if amount > 0:
-                        deduct = min(rem_amount, amount)
+                        deduct      = min(rem_amount, amount)
                         rem_amount -= deduct
-                        if type_code == 'p': pay_p += deduct
+                        if   type_code == 'p': pay_p += deduct
                         elif type_code == 'c': pay_c += deduct
                         elif type_code == 'o': pay_o += deduct
-                
+
                 return pay_p, pay_c, pay_o, rem_amount
 
-            # 🔴 PART 1: DELETED PLANS LOGIC
+            # Helper: handle pending-debt history rows for a plan (identical logic)
+            def process_pending_hist(plan_id, pay_p, is_source, current_cycle_tag, source_or_plan_name):
+                nonlocal remaining
+                if pay_p <= 0:
+                    return
+                hist_res = db_module.supabase.table('subscription_history') \
+                    .select("*") \
+                    .eq("subscription_id", plan_id) \
+                    .neq("status", "cleared") \
+                    .order("start_date", desc=False) \
+                    .execute()
+                temp_p = pay_p
+                for h_row in (hist_res.data or []):
+                    if temp_p <= 0: break
+                    due = float(h_row.get('bill_amount') or 0) - float(h_row.get('paid_amount') or 0)
+                    if due > 0:
+                        chunk    = min(temp_p, due)
+                        temp_p  -= chunk
+                        new_paid = float(h_row.get('paid_amount') or 0) + chunk
+                        new_stat = 'cleared' if new_paid >= float(h_row.get('bill_amount') or 0) else 'partial'
+                        hist_updates.append({
+                            "id":         int(h_row['id']),
+                            "new_paid":   float(new_paid),
+                            "new_status": new_stat
+                        })
+                        reason = "Adj: Pending" if is_source else f"Received from {source_name} (Pending)"
+                        log(plan_id, chunk if is_source else chunk,
+                            reason,
+                            cycle_label=h_row.get('start_date') or "",
+                            related_plan_id="" if is_source else sub_id)
+
+                if temp_p > 0:
+                    reason = "Adj: Pending" if is_source else f"Received from {source_name} (Pending)"
+                    log(plan_id, temp_p, reason,
+                        cycle_label=current_cycle_tag or "",
+                        related_plan_id="" if is_source else sub_id)
+
+            # ── PART 1: DELETED PLANS ────────────────────────────────────────
             if str(strategy).startswith('deleted_'):
-                target_plans = []
-                priority_mode = 'plan_first' 
+                target_plans  = []
+                priority_mode = 'plan_first'
 
                 if strategy == 'deleted_single_adjust':
                     target_plans = [source_sub]
+
                 elif strategy in ['deleted_multi_priority_osc', 'deleted_multi_priority_plan']:
                     priority_mode = 'osc_first' if 'osc' in strategy else 'plan_first'
-                    all_del_res = db_module.supabase.table('subscriptions').select("*").eq("customer_id", customer_id).eq("status", "deleted").order('deleted_at', desc=True).execute()
-                    all_deleted = all_del_res.data or []
-                    target_plans = [p for p in all_deleted if str(p.get('id')) == str(sub_id)] + [p for p in all_deleted if str(p.get('id')) != str(sub_id)]
+                    all_del_res = db_module.supabase.table('subscriptions') \
+                        .select("*").eq("customer_id", customer_id) \
+                        .eq("status", "deleted") \
+                        .order('deleted_at', desc=True).execute()
+                    all_deleted  = all_del_res.data or []
+                    target_plans = (
+                        [p for p in all_deleted if str(p.get('id')) == str(sub_id)] +
+                        [p for p in all_deleted if str(p.get('id')) != str(sub_id)]
+                    )
 
                 for plan in target_plans:
                     if remaining <= 0: break
-                    plan_id = plan.get('id')
-                    is_source = (str(plan_id) == str(sub_id))
+                    plan_id           = plan.get('id')
+                    is_source         = (str(plan_id) == str(sub_id))
                     current_cycle_tag = plan.get('current_billing_start_date')
 
                     pay_p, pay_c, pay_o, remaining = calculate_distribution(plan, remaining, priority_mode)
                     total_spent = pay_p + pay_c + pay_o
 
                     if total_spent > 0:
-                        db_module.supabase.table('subscriptions').update({
-                            "pending_amount": float(plan.get('pending_amount') or 0) - pay_p,
-                            "current_amount": float(plan.get('current_amount') or 0) - pay_c,
-                            "other_service_charges": float(plan.get('other_service_charges') or 0) - pay_o
-                        }).eq("id", plan_id).execute()
+                        record_sub_update(
+                            plan_id,
+                            float(plan.get('pending_amount')        or 0) - pay_p,
+                            float(plan.get('current_amount')        or 0) - pay_c,
+                            float(plan.get('other_service_charges') or 0) - pay_o
+                        )
 
                         if not is_source:
-                            self._log_advance(sub_id, customer_id, -total_spent, f"Transfer to {plan.get('plan_name_cached')}", related_id=plan_id, cycle_label="TRANSFER_OUT")
+                            log(sub_id, -total_spent,
+                                f"Transfer to {plan.get('plan_name_cached')}",
+                                cycle_label="TRANSFER_OUT",
+                                related_plan_id=plan_id)
 
-                        if pay_p > 0:
-                            hist_res = db_module.supabase.table('subscription_history').select("*").eq("subscription_id", plan_id).neq("status", "cleared").order("start_date", desc=False).execute()
-                            temp_p = pay_p
-                            for h_row in (hist_res.data or []):
-                                if temp_p <= 0: break
-                                due = float(h_row.get('bill_amount') or 0) - float(h_row.get('paid_amount') or 0)
-                                if due > 0:
-                                    chunk = min(temp_p, due)
-                                    temp_p -= chunk
-                                    
-                                    new_paid = float(h_row.get('paid_amount') or 0) + chunk
-                                    new_stat = 'cleared' if new_paid >= float(h_row.get('bill_amount') or 0) else 'partial'
-
-                                    db_module.supabase.table('subscription_history').update({
-                                        "paid_amount": new_paid, "status": new_stat
-                                    }).eq("id", h_row.get('id')).execute()
-                                    
-                                    self._log_advance(plan_id, customer_id, chunk, f"Adj: Pending" if is_source else f"Received from {source_name} (Pending)", related_id=None if is_source else sub_id, cycle_label=h_row.get('start_date'))
-                            
-                            if temp_p > 0:
-                                self._log_advance(plan_id, customer_id, temp_p, f"Adj: Pending" if is_source else f"Received from {source_name} (Pending)", related_id=None if is_source else sub_id, cycle_label=current_cycle_tag)
+                        process_pending_hist(plan_id, pay_p, is_source, current_cycle_tag, source_name)
 
                         if pay_c > 0:
-                            self._log_advance(plan_id, customer_id, pay_c, f"Adj: Current Plan" if is_source else f"Received from {source_name} (Current)", related_id=None if is_source else sub_id, cycle_label=current_cycle_tag)
+                            reason = "Adj: Current Plan" if is_source else f"Received from {source_name} (Current)"
+                            log(plan_id, pay_c, reason,
+                                cycle_label=current_cycle_tag or "",
+                                related_plan_id="" if is_source else sub_id)
                         if pay_o > 0:
-                            self._log_advance(plan_id, customer_id, pay_o, f"Adj: Other Charges" if is_source else f"Received from {source_name} (Other Charges)", related_id=None if is_source else sub_id, cycle_label=current_cycle_tag)
+                            reason = "Adj: Other Charges" if is_source else f"Received from {source_name} (Other Charges)"
+                            log(plan_id, pay_o, reason,
+                                cycle_label=current_cycle_tag or "",
+                                related_plan_id="" if is_source else sub_id)
 
-            # 🟢 PART 2: ACTIVE PLANS LOGIC
+            # ── PART 2: ACTIVE PLANS ────────────────────────────────────────
             else:
                 if strategy == 'single_other':
-                    # ✅ FIX: Prioritize Pending -> Current -> OSC 
                     pay_p, pay_c, pay_o, remaining = calculate_distribution(source_sub, remaining, 'plan_first')
-                    total_spent = pay_p + pay_c + pay_o
+                    total_spent       = pay_p + pay_c + pay_o
+                    current_cycle_tag = source_sub.get('current_billing_start_date')
 
                     if total_spent > 0:
-                        db_module.supabase.table('subscriptions').update({
-                            "pending_amount": float(source_sub.get('pending_amount') or 0) - pay_p,
-                            "current_amount": float(source_sub.get('current_amount') or 0) - pay_c,
-                            "other_service_charges": float(source_sub.get('other_service_charges') or 0) - pay_o
-                        }).eq("id", sub_id).execute()
-
-                        current_cycle_tag = source_sub.get('current_billing_start_date')
-
-                        if pay_p > 0:
-                            hist_res = db_module.supabase.table('subscription_history').select("*").eq("subscription_id", sub_id).neq("status", "cleared").order("start_date", desc=False).execute()
-                            temp_p = pay_p
-                            for h_row in (hist_res.data or []):
-                                if temp_p <= 0: break
-                                due = float(h_row.get('bill_amount') or 0) - float(h_row.get('paid_amount') or 0)
-                                if due > 0:
-                                    chunk = min(temp_p, due)
-                                    temp_p -= chunk
-                                    
-                                    new_paid = float(h_row.get('paid_amount') or 0) + chunk
-                                    new_stat = 'cleared' if new_paid >= float(h_row.get('bill_amount') or 0) else 'partial'
-                                    
-                                    db_module.supabase.table('subscription_history').update({
-                                        "paid_amount": new_paid, 
-                                        "status": new_stat
-                                    }).eq("id", h_row.get('id')).execute()
-                                    
-                                    self._log_advance(sub_id, customer_id, -chunk, "Adj: Pending", cycle_label=h_row.get('start_date'))
-                                    
-                            if temp_p > 0:
-                                self._log_advance(sub_id, customer_id, -temp_p, "Adj: Pending", cycle_label=current_cycle_tag)
-
-                        if pay_c > 0:
-                            self._log_advance(sub_id, customer_id, -pay_c, "Adj: Current Plan", cycle_label=current_cycle_tag)
-                        if pay_o > 0:
-                            self._log_advance(sub_id, customer_id, -pay_o, "Adj: Other Charges", cycle_label=current_cycle_tag)
+                        record_sub_update(
+                            sub_id,
+                            float(source_sub.get('pending_amount')        or 0) - pay_p,
+                            float(source_sub.get('current_amount')        or 0) - pay_c,
+                            float(source_sub.get('other_service_charges') or 0) - pay_o
+                        )
+                        process_pending_hist(sub_id, pay_p, True, current_cycle_tag, source_name)
+                        if pay_c > 0: log(sub_id, -pay_c, "Adj: Current Plan", cycle_label=current_cycle_tag or "")
+                        if pay_o > 0: log(sub_id, -pay_o, "Adj: Other Charges", cycle_label=current_cycle_tag or "")
 
                 elif strategy == 'single_upcoming':
                     upcoming = float(source_sub.get('upcoming_amount') or 0)
                     if upcoming > 0:
-                        deduct = min(remaining, upcoming); remaining -= deduct
-                        db_module.supabase.table('subscriptions').update({"upcoming_amount": upcoming - deduct}).eq("id", sub_id).execute()
-                        self._log_advance(sub_id, customer_id, -deduct, "Adj: Upcoming Plan", cycle_label='UPCOMING')
+                        deduct     = min(remaining, upcoming)
+                        remaining -= deduct
+                        record_sub_update(sub_id, None, None, None, new_u=upcoming - deduct)
+                        log(sub_id, -deduct, "Adj: Upcoming Plan", cycle_label="UPCOMING")
 
                 elif 'multi' in strategy:
-                    is_cable = True if source_sub.get('cable_plan_id') else False
-                    siblings_res = db_module.supabase.table('subscriptions').select("*").eq("customer_id", customer_id).neq("status", "deleted").neq("id", sub_id).execute()
-                    all_siblings = siblings_res.data or []
-                    same = [s for s in all_siblings if (True if s.get('cable_plan_id') else False) == is_cable]
-                    diff = [s for s in all_siblings if (True if s.get('cable_plan_id') else False) != is_cable]
-                    all_plans = same + diff
-                    
-                    priority_other = True if strategy == 'multi_partial_other' else False
+                    is_cable      = True if source_sub.get('cable_plan_id') else False
+                    siblings_res  = db_module.supabase.table('subscriptions') \
+                        .select("*").eq("customer_id", customer_id) \
+                        .neq("status", "deleted").neq("id", sub_id).execute()
+                    all_siblings  = siblings_res.data or []
+                    same          = [s for s in all_siblings if (True if s.get('cable_plan_id') else False) == is_cable]
+                    diff          = [s for s in all_siblings if (True if s.get('cable_plan_id') else False) != is_cable]
+                    all_plans     = same + diff
+                    priority_other = (strategy == 'multi_partial_other')
 
                     for plan in all_plans:
                         if remaining <= 0: break
                         calc_mode = 'osc_first' if priority_other else 'plan_first'
-                        
                         pay_p, pay_c, pay_o, remaining = calculate_distribution(plan, remaining, calc_mode)
                         total_spent = pay_p + pay_c + pay_o
-                        
+
                         if total_spent > 0:
-                            plan_id = plan.get('id')
-                            db_module.supabase.table('subscriptions').update({
-                                "pending_amount": float(plan.get('pending_amount') or 0) - pay_p,
-                                "current_amount": float(plan.get('current_amount') or 0) - pay_c,
-                                "other_service_charges": float(plan.get('other_service_charges') or 0) - pay_o
-                            }).eq("id", plan_id).execute()
-                            
-                            self._log_advance(sub_id, customer_id, -total_spent, f"Transfer to {plan.get('plan_name_cached')}", related_id=plan_id, cycle_label="TRANSFER_OUT")
-
-                            if pay_p > 0:
-                                hist_res = db_module.supabase.table('subscription_history').select("*").eq("subscription_id", plan_id).neq("status", "cleared").order("start_date", desc=False).execute()
-                                temp_p = pay_p
-                                for h_row in (hist_res.data or []):
-                                    if temp_p <= 0: break
-                                    due = float(h_row.get('bill_amount') or 0) - float(h_row.get('paid_amount') or 0)
-                                    if due > 0:
-                                        chunk = min(temp_p, due)
-                                        temp_p -= chunk
-                                        
-                                        # ✅ FULLY FIXED: Dynamic status calculation
-                                        new_paid = float(h_row.get('paid_amount') or 0) + chunk
-                                        new_stat = 'cleared' if new_paid >= float(h_row.get('bill_amount') or 0) else 'partial'
-                                        
-                                        db_module.supabase.table('subscription_history').update({
-                                            "paid_amount": new_paid, 
-                                            "status": new_stat
-                                        }).eq("id", h_row.get('id')).execute()
-                                        
-                                        self._log_advance(plan_id, customer_id, chunk, f"Received from {source_name} (Pending)", related_id=sub_id, cycle_label=h_row.get('start_date'))
-                                
-                                if temp_p > 0:
-                                    self._log_advance(plan_id, customer_id, temp_p, f"Received from {source_name} (Pending)", related_id=sub_id, cycle_label=plan.get('current_billing_start_date'))
-
+                            plan_id           = plan.get('id')
+                            current_cycle_tag = plan.get('current_billing_start_date')
+                            record_sub_update(
+                                plan_id,
+                                float(plan.get('pending_amount')        or 0) - pay_p,
+                                float(plan.get('current_amount')        or 0) - pay_c,
+                                float(plan.get('other_service_charges') or 0) - pay_o
+                            )
+                            log(sub_id, -total_spent,
+                                f"Transfer to {plan.get('plan_name_cached')}",
+                                cycle_label="TRANSFER_OUT",
+                                related_plan_id=plan_id)
+                            process_pending_hist(plan_id, pay_p, False, current_cycle_tag, source_name)
                             if pay_c > 0:
-                                self._log_advance(plan_id, customer_id, pay_c, f"Received from {source_name}", related_id=sub_id, cycle_label=plan.get('current_billing_start_date'))
+                                log(plan_id, pay_c, f"Received from {source_name}",
+                                    cycle_label=current_cycle_tag or "", related_plan_id=sub_id)
                             if pay_o > 0:
-                                self._log_advance(plan_id, customer_id, pay_o, f"Received from {source_name} (Other Charges)", related_id=sub_id, cycle_label=plan.get('current_billing_start_date'))
+                                log(plan_id, pay_o, f"Received from {source_name} (Other Charges)",
+                                    cycle_label=current_cycle_tag or "", related_plan_id=sub_id)
 
                     if strategy == 'multi_excess_all' and remaining > 0:
                         for plan in all_plans:
                             if remaining <= 0: break
                             u = float(plan.get('upcoming_amount') or 0)
                             if u > 0:
-                                d = min(remaining, u); remaining -= d
-                                db_module.supabase.table('subscriptions').update({"upcoming_amount": u - d}).eq("id", plan.get('id')).execute()
-                                self._log_advance(sub_id, customer_id, -d, f"Adj Upcoming {plan.get('plan_name_cached')}", related_id=plan.get('id'), cycle_label='TRANSFER_OUT')
-                                self._log_advance(plan.get('id'), customer_id, d, f"Received from {source_name} (Upcoming)", related_id=sub_id, cycle_label='UPCOMING')
+                                d          = min(remaining, u)
+                                remaining -= d
+                                record_sub_update(plan.get('id'), None, None, None, new_u=u - d)
+                                log(sub_id, -d,
+                                    f"Adj Upcoming {plan.get('plan_name_cached')}",
+                                    cycle_label="TRANSFER_OUT",
+                                    related_plan_id=plan.get('id'))
+                                log(plan.get('id'), d,
+                                    f"Received from {source_name} (Upcoming)",
+                                    cycle_label="UPCOMING",
+                                    related_plan_id=sub_id)
 
-            # FINAL: Update Advance Balance
-            db_module.supabase.table('subscriptions').update({"advance_balance": remaining}).eq("id", sub_id).execute()
+            # ── ONE atomic RPC call — ALL writes or NOTHING ──────────────────
+            db_module.supabase.rpc("adjust_advance_safe", {
+                "p_sub_id":       sub_id,
+                "p_user_id":      self.active_user_id,
+                "p_customer_id":  customer_id,
+                "p_timestamp":    now_iso,
+                "p_new_advance":  remaining,
+                "p_sub_updates":  list(sub_updates.values()),
+                "p_hist_updates": hist_updates,
+                "p_advance_logs": advance_logs
+            }).execute()
+
             self.sync_customer_totals({"customer_id": customer_id})
             return {"ok": True}
 
