@@ -111,3 +111,102 @@ document.getElementById("btnGoogle").addEventListener("click", async () => {
         }
     }, 1000);
 });
+
+// ==========================================
+// --- ON STARTUP: CHECK FOR MANDATORY UPDATES ---
+// ==========================================
+async function enforceMandatoryUpdate() {
+    try {
+        const res = await window.pywebview.api.check_for_updates();
+        
+        if (res.ok && res.update_available) {
+            // 1. Show the un-closable modal
+            document.getElementById('updateOverlay').style.display = 'flex';
+            document.getElementById('updateNewVersion').innerText = res.latest;
+
+            // 2. Parse the Release Notes from GitHub
+            const notesList = document.getElementById('updateNotesList');
+            notesList.innerHTML = ''; 
+            
+            if (res.notes) {
+                // Split the notes by line breaks and remove markdown bullet points
+                const lines = res.notes.split('\n');
+                lines.forEach(line => {
+                    let cleanLine = line.replace(/^- /, '').replace(/^\* /, '').trim();
+                    if (cleanLine) {
+                        let li = document.createElement('li');
+                        li.innerText = cleanLine;
+                        notesList.appendChild(li);
+                    }
+                });
+            } else {
+                notesList.innerHTML = '<li>General bug fixes and security improvements.</li>';
+            }
+
+            // 3. Make the download button trigger the background download!
+            const btnDownload = document.getElementById('btnDownloadUpdate');
+            
+            btnDownload.onclick = async () => {
+                if (!res.download_url) {
+                    showToast("No .exe file found on GitHub to download!", "error");
+                    return;
+                }
+
+                // Hide the old text, show the progress bar
+                btnDownload.disabled = true;
+                btnDownload.innerHTML = "Initializing Download...";
+                document.getElementById('updateProgressContainer').style.display = 'block';
+                const progressText = document.getElementById('updateProgressText');
+                progressText.style.display = 'block';
+
+                // Tell Python to start downloading
+                const startRes = await window.pywebview.api.start_download(res.download_url);
+                
+                if (!startRes.ok) {
+                    showToast(startRes.error, "error");
+                    btnDownload.innerHTML = "Download Failed";
+                    return;
+                }
+
+                // Start checking the progress every 500ms
+                const progressInterval = setInterval(async () => {
+                    const statusRes = await window.pywebview.api.get_download_progress();
+                    
+                    if (statusRes.status === "downloading") {
+                        document.getElementById('updateProgressBar').style.width = statusRes.progress + "%";
+                        progressText.innerText = `Downloading: ${statusRes.progress}%`;
+                        btnDownload.innerHTML = "Downloading... Please wait.";
+                    } 
+                    else if (statusRes.status === "done") {
+                        clearInterval(progressInterval);
+                        document.getElementById('updateProgressBar').style.width = "100%";
+                        progressText.innerText = `Download Complete!`;
+                        btnDownload.innerHTML = "Installing & Restarting... 🚀";
+                        btnDownload.style.backgroundColor = "#16a34a"; // Turn green
+                        
+                        // Wait 1 second so they see it hit 100%, then trigger the magic restart script!
+                        setTimeout(() => {
+                            window.pywebview.api.apply_update_and_restart();
+                        }, 1000);
+                    }
+                    else if (statusRes.status.startsWith("error")) {
+                        clearInterval(progressInterval);
+                        showToast("Download failed: " + statusRes.status, "error");
+                        btnDownload.innerHTML = "Download Failed";
+                    }
+                }, 500);
+            };
+        }
+    } catch (err) {
+        console.error("Silent fail on update check (no internet):", err);
+        // If they have no internet, we just let them log in normally. 
+        // The API will block them later anyway if offline.
+    }
+}
+
+// ✅ Wait for PyWebView to inject Python, then run the update check!
+window.addEventListener('pywebviewready', () => {
+    setTimeout(() => {
+        enforceMandatoryUpdate();
+    }, 300); // 300ms delay ensures Python is fully loaded before asking
+});

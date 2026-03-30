@@ -21,6 +21,105 @@ window.showCMSAlert = showCMSAlert;
 
 // ─────────────────────────────────────────────────────────────
 
+// ── QR Upload Handler ─────────────────────────────────────────
+async function handleQRUpload(event, qrType) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const previewId  = `preview${qrType.charAt(0).toUpperCase() + qrType.slice(1)}QR`;
+    const statusId   = `status${qrType.charAt(0).toUpperCase() + qrType.slice(1)}QR`;
+    const holderId   = `placeholder${qrType.charAt(0).toUpperCase() + qrType.slice(1)}QR`;
+
+    // Replace capital B in Both
+    const previewEl  = document.getElementById(
+        qrType === 'both' ? 'previewBothQR' :
+        qrType === 'cable' ? 'previewCableQR' : 'previewInternetQR'
+    );
+    const statusEl   = document.getElementById(
+        qrType === 'both' ? 'statusBothQR' :
+        qrType === 'cable' ? 'statusCableQR' : 'statusInternetQR'
+    );
+    const holderEl   = document.getElementById(
+        qrType === 'both' ? 'placeholderBothQR' :
+        qrType === 'cable' ? 'placeholderCableQR' : 'placeholderInternetQR'
+    );
+
+    // Show local preview immediately
+    const reader = new FileReader();
+    reader.onload = e => {
+        previewEl.src = e.target.result;
+        previewEl.style.display = 'block';
+        if (holderEl) holderEl.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+
+    // Upload to backend
+    statusEl.textContent = 'Uploading...';
+    statusEl.className   = 'qr-status uploading';
+
+    try {
+        const b64 = await new Promise((resolve, reject) => {
+            const r = new FileReader();
+            r.onload  = () => resolve(r.result);
+            r.onerror = reject;
+            r.readAsDataURL(file);
+        });
+
+        const res = await window.pywebview.api.upload_qr_code({
+            qr_type:    qrType,
+            image_b64:  b64
+        });
+
+        if (res.ok) {
+            statusEl.textContent = '✓ Saved';
+            statusEl.className   = 'qr-status saved';
+            showToast(`${qrType.charAt(0).toUpperCase() + qrType.slice(1)} QR saved!`, 'success');
+        } else {
+            statusEl.textContent = 'Error';
+            statusEl.className   = 'qr-status error';
+            showToast('Upload failed: ' + res.error, 'error');
+        }
+    } catch (err) {
+        statusEl.textContent = 'Error';
+        statusEl.className   = 'qr-status error';
+        showToast('Upload error: ' + err, 'error');
+    }
+}
+
+// ── Load existing QR previews from Supabase ───────────────────
+async function loadExistingQRs() {
+    try {
+        const res = await window.pywebview.api.get_qr_urls();
+        if (!res.ok) return;
+
+        const map = {
+            cable:    { preview: 'previewCableQR',    holder: 'placeholderCableQR',    status: 'statusCableQR'    },
+            internet: { preview: 'previewInternetQR', holder: 'placeholderInternetQR', status: 'statusInternetQR' },
+            both:     { preview: 'previewBothQR',     holder: 'placeholderBothQR',     status: 'statusBothQR'     },
+        };
+
+        for (const [type, ids] of Object.entries(map)) {
+            const url = res.urls[type];
+            if (url) {
+                const preview = document.getElementById(ids.preview);
+                const holder  = document.getElementById(ids.holder);
+                const status  = document.getElementById(ids.status);
+                if (preview) {
+                    preview.src          = url + '?t=' + Date.now(); // cache bust
+                    preview.style.display = 'block';
+                }
+                if (holder) holder.style.display = 'none';
+                if (status) {
+                    status.textContent = '✓ Saved';
+                    status.className   = 'qr-status saved';
+                }
+            }
+        }
+    } catch (e) {
+        console.log('Could not load QR previews:', e);
+    }
+}
+
 loadLayout('');
 
 // ✅ Wrap everything in an initialization function
@@ -106,6 +205,9 @@ async function initProfile() {
         showToast("Could not load profile. Please check your internet connection.", 'warning');
     }
 
+    // Load existing QR code previews
+    loadExistingQRs();
+
     // 2. Edit / Save Profile Data Toggle
     // ✅ FIX: Removed toggles so they are always interactive
     const editableFields = ['profName', 'profPhone', 'bizName', 'bizContact', 'bizGst', 'bizAddress'];
@@ -184,7 +286,7 @@ async function initProfile() {
             btnSave.disabled = false;
         }
     });
-
+    
     // ✅ NEW: CANCEL BUTTON LOGIC
     document.getElementById('btnCancelEdit').addEventListener('click', () => {
         const btnSave = document.getElementById('btnSaveProfile');
@@ -328,6 +430,138 @@ async function initProfile() {
             btn.disabled = false;
         }
     });
+
+    // --- APP VERSION & UPDATES ---
+    const btnCheckUpdates = document.getElementById('btnCheckUpdates');
+    
+    // 1. On page load, ask Python what version we are currently running
+    try {
+        const updateCheck = await window.pywebview.api.check_for_updates();
+        if (updateCheck && updateCheck.current) {
+            document.getElementById('appVersionDisplay').innerText = updateCheck.current;
+        }
+    } catch (e) {
+        console.error("Could not load current version on startup");
+    }
+
+    // 2. Handle the "Check for Updates" button click
+    if (btnCheckUpdates) {
+        let isCheckingUpdate = false;
+
+        btnCheckUpdates.addEventListener('click', async () => {
+            if (isCheckingUpdate) return; // Prevent double-clicks
+            
+            isCheckingUpdate = true;
+            const originalText = btnCheckUpdates.innerHTML;
+            btnCheckUpdates.innerHTML = "Checking...";
+            btnCheckUpdates.disabled = true;
+
+            try {
+                // Ask Python to check GitHub
+                const res = await window.pywebview.api.check_for_updates();
+
+                if (res.ok) {
+                    if (res.update_available) {
+                        // 1. Revert the original profile button so it doesn't stay stuck on "Checking..."
+                        btnCheckUpdates.innerHTML = "Check for Updates";
+                        btnCheckUpdates.disabled = false;
+
+                        // 2. Show the un-closable modal
+                        document.getElementById('updateOverlayProfile').style.display = 'flex';
+                        document.getElementById('updateNewVersionProfile').innerText = res.latest;
+
+                        // 3. Parse the Release Notes from GitHub
+                        const notesList = document.getElementById('updateNotesListProfile');
+                        notesList.innerHTML = ''; 
+                        if (res.notes) {
+                            const lines = res.notes.split('\n');
+                            lines.forEach(line => {
+                                let cleanLine = line.replace(/^- /, '').replace(/^\* /, '').trim();
+                                if (cleanLine) {
+                                    let li = document.createElement('li');
+                                    li.innerText = cleanLine;
+                                    notesList.appendChild(li);
+                                }
+                            });
+                        } else {
+                            notesList.innerHTML = '<li>General bug fixes and security improvements.</li>';
+                        }
+
+                        // 4. Handle the Download logic inside the modal!
+                        const btnDownloadModal = document.getElementById('btnDownloadUpdateProfile');
+                        
+                        btnDownloadModal.onclick = async () => {
+                            if (!res.download_url) {
+                                showToast("No .exe file found on GitHub to download!", "error");
+                                return;
+                            }
+
+                            // Show progress UI
+                            btnDownloadModal.disabled = true;
+                            btnDownloadModal.innerHTML = "Initializing Download...";
+                            document.getElementById('updateProgressContainerProfile').style.display = 'block';
+                            const progressText = document.getElementById('updateProgressTextProfile');
+                            progressText.style.display = 'block';
+
+                            // Tell Python to start downloading
+                            const startRes = await window.pywebview.api.start_download(res.download_url);
+                            
+                            if (!startRes.ok) {
+                                showToast(startRes.error, "error");
+                                btnDownloadModal.innerHTML = "Download Failed";
+                                return;
+                            }
+
+                            // Start polling every 500ms
+                            const progressInterval = setInterval(async () => {
+                                const statusRes = await window.pywebview.api.get_download_progress();
+                                
+                                if (statusRes.status === "downloading") {
+                                    document.getElementById('updateProgressBarProfile').style.width = statusRes.progress + "%";
+                                    progressText.innerText = `Downloading: ${statusRes.progress}%`;
+                                    btnDownloadModal.innerHTML = "Downloading... Please wait.";
+                                } 
+                                else if (statusRes.status === "done") {
+                                    clearInterval(progressInterval);
+                                    document.getElementById('updateProgressBarProfile').style.width = "100%";
+                                    progressText.innerText = `Download Complete!`;
+                                    btnDownloadModal.innerHTML = "Installing & Restarting... 🚀";
+                                    btnDownloadModal.style.backgroundColor = "#16a34a"; // Turn green
+                                    
+                                    // Trigger the magic restart script!
+                                    setTimeout(() => {
+                                        window.pywebview.api.apply_update_and_restart();
+                                    }, 1000);
+                                }
+                                else if (statusRes.status.startsWith("error")) {
+                                    clearInterval(progressInterval);
+                                    showToast("Download failed: " + statusRes.status, "error");
+                                    btnDownloadModal.innerHTML = "Download Failed";
+                                }
+                            }, 500);
+                        };
+                    } else {
+                        // No updates needed
+                        showToast(`You are on the latest version! (${res.current})`, 'success');
+                        btnCheckUpdates.innerHTML = "Up to date ✅";
+                    }
+                } else {
+                    showToast(res.error, 'error');
+                    btnCheckUpdates.innerHTML = originalText;
+                }
+
+            } catch (err) {
+                showToast('System Error: ' + err, 'error');
+                btnCheckUpdates.innerHTML = originalText;
+            } finally {
+                isCheckingUpdate = false;
+                // Only re-enable the button if an update ISN'T available
+                if (btnCheckUpdates.innerHTML !== "Download Update" && btnCheckUpdates.innerHTML !== "Up to date ✅") {
+                    btnCheckUpdates.disabled = false;
+                }
+            }
+        });
+    }
 
     // ── Daily Reminder Toggle ─────────────────────────────────
     const reminderToggle = document.getElementById('toggleDailyReminder');

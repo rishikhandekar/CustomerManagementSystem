@@ -94,6 +94,33 @@
             </div>
           </div>
 
+          <!-- WhatsApp Automation Card -->
+          <div class="card">
+            <div class="card-header">
+              <h3>WhatsApp Automation</h3>
+            </div>
+            <div class="card-body">
+              <div class="action-row">
+                <div>
+                  <strong style="color: #111; font-size: 14px; display: block;">WhatsApp Connection</strong>
+                  <span style="color: #64748b; font-size: 12px;">Manage your linked WhatsApp session</span>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                  <button id="btnLinkWhatsApp" class="btn-action btn-green">Reconnect / Link</button>
+                  <button id="btnUnlinkWhatsApp" class="btn-action btn-red">Unlink</button>
+                </div>
+              </div>
+              <hr class="dashboard-divider">
+              <div class="action-row">
+                <div>
+                  <strong style="color: #111; font-size: 14px; display: block;">Send Auto Reminder</strong>
+                  <span style="color: #64748b; font-size: 12px;">Manually trigger today's due/overdue reminders</span>
+                </div>
+                <button id="btnForceReminders" class="btn-dashboard-blue">Send Auto Reminder</button>
+              </div>
+            </div>
+          </div>
+
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 30px;">
@@ -123,38 +150,84 @@
                 <label>Business Address</label>
                 <textarea id="bizAddress" class="dashboard-textarea" placeholder="Full office address"></textarea>
               </div>
+              
+              <!-- ── Payment QR Codes ──────────────────────── -->
+              <div style="margin-top: 8px;">
+                <label style="font-size:12px; font-weight:600; color:#475569;
+                              text-transform:uppercase; display:block; margin-bottom:12px;">
+                  Payment QR Codes
+                </label>
+
+                <!-- Row 1: Cable-only + Internet-only side by side -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+
+                  <!-- Cable Only QR -->
+                  <div class="qr-upload-box" onclick="document.getElementById('fileCableQR').click()">
+                    <input type="file" id="fileCableQR" accept="image/*" style="display:none"
+                           onchange="handleQRUpload(event,'cable')">
+                    <img id="previewCableQR" class="qr-preview-img" style="display:none">
+                    <div id="placeholderCableQR" class="qr-placeholder">
+                      <span class="qr-plus">+</span>
+                      <span class="qr-label-text">Cable Only Customers</span>
+                    </div>
+                    <span class="qr-type-badge">Cable Only</span>
+                    <div id="statusCableQR" class="qr-status"></div>
+                  </div>
+
+                  <!-- Internet Only QR -->
+                  <div class="qr-upload-box" onclick="document.getElementById('fileInternetQR').click()">
+                    <input type="file" id="fileInternetQR" accept="image/*" style="display:none"
+                           onchange="handleQRUpload(event,'internet')">
+                    <img id="previewInternetQR" class="qr-preview-img" style="display:none">
+                    <div id="placeholderInternetQR" class="qr-placeholder">
+                      <span class="qr-plus">+</span>
+                      <span class="qr-label-text">Internet Only Customers</span>
+                    </div>
+                    <span class="qr-type-badge">Internet Only</span>
+                    <div id="statusInternetQR" class="qr-status"></div>
+                  </div>
+
+                </div>
+
+                <!-- Row 2: Both Plans QR — full width -->
+                <div class="qr-upload-box qr-upload-box--wide"
+                     onclick="document.getElementById('fileBothQR').click()">
+                  <input type="file" id="fileBothQR" accept="image/*" style="display:none"
+                         onchange="handleQRUpload(event,'both')">
+                  <img id="previewBothQR" class="qr-preview-img" style="display:none">
+                  <div id="placeholderBothQR" class="qr-placeholder">
+                    <span class="qr-plus">+</span>
+                    <span class="qr-label-text">Cable + Internet Customers</span>
+                  </div>
+                  <span class="qr-type-badge">Both Plans</span>
+                  <div id="statusBothQR" class="qr-status"></div>
+                </div>
+
+                <p style="font-size:11px; color:#94a3b8; margin-top:8px; text-align:center;">
+                  Click any box to upload. Images are saved to the cloud automatically.
+                </p>
+              </div>
+              <!-- ── End QR Codes ─────────────────────────── -->
             </div>
           </div>
-
-          <!-- WhatsApp Automation Card -->
+          
           <div class="card">
             <div class="card-header">
-              <h3>WhatsApp Automation</h3>
+              <h3>App Version & Updates</h3>
             </div>
             <div class="card-body">
               <div class="action-row">
                 <div>
-                  <strong style="color: #111; font-size: 14px; display: block;">WhatsApp Connection</strong>
-                  <span style="color: #64748b; font-size: 12px;">Manage your linked WhatsApp session</span>
+                  <strong style="color: #111; font-size: 14px; display: block;">Current Version: <span id="appVersionDisplay" style="color: #2563eb;">v1.0.0</span></strong>
+                  <span style="color: #64748b; font-size: 12px;">Keep your system up to date for the latest features and security patches.</span>
                 </div>
-                <div style="display: flex; gap: 10px;">
-                  <button id="btnLinkWhatsApp" class="btn-action btn-green">Reconnect / Link</button>
-                  <button id="btnUnlinkWhatsApp" class="btn-action btn-red">Unlink</button>
-                </div>
-              </div>
-              <hr class="dashboard-divider">
-              <div class="action-row">
-                <div>
-                  <strong style="color: #111; font-size: 14px; display: block;">Send Auto Reminder</strong>
-                  <span style="color: #64748b; font-size: 12px;">Manually trigger today's due/overdue reminders</span>
-                </div>
-                <button id="btnForceReminders" class="btn-dashboard-blue">Send Auto Reminder</button>
+                <button id="btnCheckUpdates" class="btn-action btn-green">Check For Updates</button>
               </div>
             </div>
           </div>
 
           <div class="save-wrapper">
-            <button id="btnCancelEdit" class="btn-dashboard-outline" style="display: none;">Cancel</button>
+            <button id="btnCancelEdit" class="btn-action btn-red" style="display: none;">Cancel</button>
             <button id="btnSaveProfile" class="btn-dashboard-primary">Edit Profile</button>
           </div>
 
@@ -169,6 +242,32 @@
       <h3 id="cmsAlertTitle" class="cms-alert-title"></h3>
       <p id="cmsAlertMessage" class="cms-alert-message"></p>
       <button id="cmsAlertOk" class="btn-dashboard-primary cms-alert-btn">OK</button>
+    </div>
+  </div>
+
+  <div id="updateOverlayProfile" class="update-overlay" style="display: none;">
+    <div class="update-box">
+      <div class="update-header">
+        <h2>🚀 Update Available</h2>
+        <p>Version <span id="updateNewVersionProfile" style="color: #2563eb; font-weight: 600;"></span> is ready to install.</p>
+      </div>
+      
+      <div class="update-notes-container">
+        <h4 style="margin: 0 0 10px; color: #111;">What's New:</h4>
+        <ul id="updateNotesListProfile" class="update-notes-list">
+          </ul>
+      </div>
+
+      <div class="update-footer">
+        <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">You must install this update to continue.</p>
+        
+        <div id="updateProgressContainerProfile" style="display: none; width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; margin-bottom: 12px; overflow: hidden;">
+          <div id="updateProgressBarProfile" style="width: 0%; height: 100%; background: #2563eb; transition: width 0.3s ease;"></div>
+        </div>
+        <p id="updateProgressTextProfile" style="display: none; font-size: 12px; color: #111; margin-bottom: 12px; font-weight: 600;">Downloading: 0%</p>
+
+        <button id="btnDownloadUpdateProfile" class="btn-dashboard-primary" style="width: 100%; padding: 10px; border-radius: 6px; border: none; cursor: pointer; color: white;">Download & Install Update</button>
+      </div>
     </div>
   </div>
 

@@ -26,6 +26,12 @@ import re
 import threading
 import base64
 import shutil
+import urllib.request
+import json
+import webbrowser
+from .version import __version__
+import sys
+import subprocess
 
 from deep_translator import GoogleTranslator
 import platform
@@ -51,6 +57,101 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.common.action_chains import ActionChains
 
 class Api:
+
+    def upload_qr_code(self, payload):
+        """
+        Receives a base64-encoded image from the frontend and uploads it
+        to Supabase Storage under qr-codes/{user_id}/{qr_type}_qr.png
+        qr_type: 'cable', 'internet', or 'both'
+        """
+        auth_err = self._require_auth()
+        if auth_err: return auth_err
+        try:
+            import base64
+
+            qr_type  = payload.get("qr_type")   # 'cable', 'internet', 'both'
+            b64_data = payload.get("image_b64")  # data:image/png;base64,....
+
+            if qr_type not in ("cable", "internet", "both"):
+                return {"ok": False, "error": "Invalid QR type."}
+            if not b64_data:
+                return {"ok": False, "error": "No image data received."}
+
+            # Strip the data URL prefix if present
+            if "," in b64_data:
+                b64_data = b64_data.split(",", 1)[1]
+
+            image_bytes = base64.b64decode(b64_data)
+            user_id     = self.active_user_id
+            file_path   = f"{user_id}/{qr_type}_qr.png"
+
+            # Upload to Supabase Storage (upsert = overwrite if already exists)
+            db_module.supabase.storage.from_("qr-codes").upload(
+                path=file_path,
+                file=image_bytes,
+                file_options={"content-type": "image/png", "upsert": "true"}
+            )
+
+            # Get the public URL so the frontend can preview it
+            public_url = db_module.supabase.storage.from_("qr-codes").get_public_url(file_path)
+
+            return {"ok": True, "url": public_url}
+
+        except Exception as e:
+            return {"ok": False, "error": friendly(e)}
+
+
+    def get_qr_urls(self, payload=None):
+        """
+        Returns the public URLs for all three QR codes for the current user.
+        Returns None for any that haven't been uploaded yet.
+        """
+        auth_err = self._require_auth()
+        if auth_err: return auth_err
+        try:
+            user_id = self.active_user_id
+            urls    = {}
+
+            for qr_type in ("cable", "internet", "both"):
+                file_path = f"{user_id}/{qr_type}_qr.png"
+                try:
+                    # Check if file actually exists by listing
+                    files = db_module.supabase.storage.from_("qr-codes").list(user_id)
+                    exists = any(f.get("name") == f"{qr_type}_qr.png" for f in (files or []))
+                    if exists:
+                        urls[qr_type] = db_module.supabase.storage.from_("qr-codes").get_public_url(file_path)
+                    else:
+                        urls[qr_type] = None
+                except Exception:
+                    urls[qr_type] = None
+
+            return {"ok": True, "urls": urls}
+
+        except Exception as e:
+            return {"ok": False, "error": friendly(e)}
+
+
+    def _download_qr_to_temp(self, qr_type):
+        """
+        Downloads the QR image from Supabase Storage to a local temp file.
+        Returns the local file path, or None if not uploaded.
+        qr_type: 'cable', 'internet', or 'both'
+        """
+        import tempfile
+        try:
+            user_id   = self.active_user_id
+            file_path = f"{user_id}/{qr_type}_qr.png"
+            data      = db_module.supabase.storage.from_("qr-codes").download(file_path)
+            if not data:
+                return None
+            # Write to a named temp file that persists until we delete it
+            tmp = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
+            tmp.write(data)
+            tmp.flush()
+            tmp.close()
+            return tmp.name
+        except Exception:
+            return None
     
     def get_admin_profile(self, payload):
         """Fetch the logged-in admin's profile data."""
@@ -233,6 +334,11 @@ class Api:
     def __init__(self):
         self.active_user_id = None
         self.auto_reminder_enabled = True
+
+        # --- NEW: AUTO UPDATER VARIABLES ---
+        self.download_progress = 0
+        self.download_status = "idle"
+        self.new_file_path = ""
 
         # Starts the silent background clock as soon as the app opens
         self.auto_reminder_thread = threading.Thread(target=self._automated_reminder_loop, daemon=True)
@@ -2303,9 +2409,71 @@ class Api:
                     # ---------------------------------------------------------
                     if isinstance(plan_types_list, str): plan_types_list = [plan_types_list]
 
-                    for p_type in plan_types_list:
-                        img_name = "cable_qr.png" if p_type == "cable" else "internet_qr.png"
-                        qr_image_path = os.path.abspath(os.path.join(os.getcwd(), img_name))
+                    # ── QR Selection logic ─────────────────────────────────
+                    # If customer has BOTH cable and internet, use the combined QR.
+                    # If combined QR not uploaded, fall back to sending both separately.
+                    has_both = ("cable" in plan_types_list and "internet" in plan_types_list)
+
+                    if has_both:
+                        both_path = self._download_qr_to_temp("both")
+                        if both_path:
+                            qr_paths_to_send = [("both_qr.png", both_path)]
+                        else:
+                            # Fall back: send cable then internet separately
+                            qr_paths_to_send = []
+                            for pt in plan_types_list:
+                                p = self._download_qr_to_temp(pt)
+                                if p:
+                                    qr_paths_to_send.append((f"{pt}_qr.png", p))
+                    else:
+                        qr_paths_to_send = []
+                        for pt in plan_types_list:
+                            p = self._download_qr_to_temp(pt)
+                            if p:
+                                qr_paths_to_send.append((f"{pt}_qr.png", p))
+
+                    import tempfile as _tmp_mod
+                    temp_files_to_clean = [path for _, path in qr_paths_to_send]
+
+                    for img_name, qr_image_path in qr_paths_to_send:
+                        if os.path.exists(qr_image_path):
+                            print(f"{img_name} ready! Simulating Paste...")
+                            try:
+                                with open(qr_image_path, "rb") as f:
+                                    b64_string = base64.b64encode(f.read()).decode('utf-8')
+
+                                chat_box_xpath = '//footer//div[@contenteditable="true"] | //div[@title="Type a message"]'
+                                chat_box = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, chat_box_xpath)))
+
+                                js_paste = """
+                                var b64Data = arguments[0]; var filename = arguments[1]; var targetBox = arguments[2];
+                                var byteString = atob(b64Data); var ab = new ArrayBuffer(byteString.length); var ia = new Uint8Array(ab);
+                                for (var i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+                                var blob = new Blob([ab], { type: 'image/png' }); var file = new File([blob], filename, { type: 'image/png' });
+                                var dataTransfer = new DataTransfer(); dataTransfer.items.add(file);
+                                var pasteEvent = new ClipboardEvent('paste', { bubbles: true, cancelable: true, clipboardData: dataTransfer });
+                                targetBox.focus(); targetBox.dispatchEvent(pasteEvent);
+                                """
+                                driver.execute_script(js_paste, b64_string, img_name, chat_box)
+
+                                preview_send_xpath = '//span[@data-icon="send"] | //div[@aria-label="Send"]'
+                                preview_send_btn = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.XPATH, preview_send_xpath)))
+                                time.sleep(5)
+                                try:
+                                    driver.execute_script("arguments[0].click();", preview_send_btn)
+                                except Exception:
+                                    driver.switch_to.active_element.send_keys(Keys.ENTER)
+                                time.sleep(5)
+
+                            except Exception as img_err:
+                                print(f"Warning: Could not simulate Paste: {img_err}")
+                        else:
+                            print(f"No QR found at {qr_image_path}. Skipping.")
+
+                    # Clean up temp files
+                    for tf in temp_files_to_clean:
+                        try: os.unlink(tf)
+                        except Exception: pass
                         
                         if os.path.exists(qr_image_path):
                             print(f"{img_name} found! Simulating Paste (Ctrl+V)...")
@@ -3650,9 +3818,63 @@ class Api:
                                 send_text_message(summary_message)
 
                             # MULTI-QR LOOP
-                            for p_type in plan_types_list:
-                                img_name = "cable_qr.png" if p_type == "cable" else "internet_qr.png"
-                                qr_image_path = os.path.abspath(os.path.join(os.getcwd(), img_name))
+                            # ── QR Selection (same logic as manual path) ──
+                            has_both = ("cable" in plan_types_list and "internet" in plan_types_list)
+
+                            if has_both:
+                                both_path = self._download_qr_to_temp("both")
+                                if both_path:
+                                    auto_qr_paths = [("both_qr.png", both_path)]
+                                else:
+                                    auto_qr_paths = []
+                                    for pt in plan_types_list:
+                                        p = self._download_qr_to_temp(pt)
+                                        if p: auto_qr_paths.append((f"{pt}_qr.png", p))
+                            else:
+                                auto_qr_paths = []
+                                for pt in plan_types_list:
+                                    p = self._download_qr_to_temp(pt)
+                                    if p: auto_qr_paths.append((f"{pt}_qr.png", p))
+
+                            auto_temp_files = [path for _, path in auto_qr_paths]
+
+                            for img_name, qr_image_path in auto_qr_paths:
+                                if os.path.exists(qr_image_path):
+                                    try:
+                                        with open(qr_image_path, "rb") as f:
+                                            b64_string = base64.b64encode(f.read()).decode('utf-8')
+
+                                        chat_box = WebDriverWait(driver, 15).until(
+                                            EC.presence_of_element_located((By.XPATH, chat_box_xpath))
+                                        )
+
+                                        js_paste = """
+                                        var b64Data = arguments[0]; var filename = arguments[1]; var targetBox = arguments[2];
+                                        var byteString = atob(b64Data); var ab = new ArrayBuffer(byteString.length); var ia = new Uint8Array(ab);
+                                        for (var i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+                                        var blob = new Blob([ab], { type: 'image/png' }); var file = new File([blob], filename, { type: 'image/png' });
+                                        var dataTransfer = new DataTransfer(); dataTransfer.items.add(file);
+                                        var pasteEvent = new ClipboardEvent('paste', { bubbles: true, cancelable: true, clipboardData: dataTransfer });
+                                        targetBox.focus(); targetBox.dispatchEvent(pasteEvent);
+                                        """
+                                        driver.execute_script(js_paste, b64_string, img_name, chat_box)
+
+                                        preview_send_xpath = '//span[@data-icon="send"] | //div[@aria-label="Send"]'
+                                        preview_send_btn = WebDriverWait(driver, 15).until(
+                                            EC.presence_of_element_located((By.XPATH, preview_send_xpath))
+                                        )
+                                        time.sleep(5)
+                                        try: driver.execute_script("arguments[0].click();", preview_send_btn)
+                                        except Exception: driver.switch_to.active_element.send_keys(Keys.ENTER)
+                                        time.sleep(5)
+
+                                    except Exception as img_err:
+                                        print(f"Warning: Could not paste QR: {img_err}")
+
+                            # Clean up temp files
+                            for tf in auto_temp_files:
+                                try: os.unlink(tf)
+                                except Exception: pass
 
                                 if os.path.exists(qr_image_path):
                                     try:
@@ -3774,6 +3996,97 @@ class Api:
 
         except Exception as e:
             return {"ok": False, "error": friendly(e)}
+    
+    def check_for_updates(self):
+        """Checks the GitHub repo for a newer version release."""
+        GITHUB_REPO = "rishikhandekar/CustomerManagementSystem" 
+        url = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest"
+
+        try:
+            req = urllib.request.Request(url, headers={'User-Agent': 'CMS-Desktop-App'})
+            with urllib.request.urlopen(req, timeout=5) as response:
+                data = json.loads(response.read().decode())
+                
+                latest_version = data.get("tag_name", __version__)
+                
+                # IMPORTANT: Find the .exe file from the GitHub assets!
+                download_url = ""
+                for asset in data.get("assets", []):
+                    if asset.get("name", "").endswith(".exe"):
+                        download_url = asset.get("browser_download_url")
+                        break
+
+                if latest_version > __version__:
+                    return {
+                        "ok": True,
+                        "update_available": True,
+                        "current": __version__,
+                        "latest": latest_version,
+                        "download_url": download_url, # Send direct file link to frontend
+                        "notes": data.get("body", "Bug fixes and performance improvements.")
+                    }
+                else:
+                    return {"ok": True, "update_available": False, "current": __version__}
+
+        except Exception as e:
+            return {"ok": False, "error": "Could not connect to update server."}
+
+    # --- NEW: BACKGROUND DOWNLOADER & RESTART LOGIC ---
+    def start_download(self, url):
+        if not url:
+            return {"ok": False, "error": "No .exe file found on GitHub Release!"}
+            
+        self.download_progress = 0
+        self.download_status = "downloading"
+        threading.Thread(target=self._download_worker, args=(url,), daemon=True).start()
+        return {"ok": True}
+
+    def _download_worker(self, url):
+        try:
+            # Download it to the user's Downloads folder temporarily
+            downloads_folder = os.path.join(os.path.expanduser('~'), 'Downloads')
+            self.new_file_path = os.path.join(downloads_folder, 'CMS_Update_Temp.exe')
+
+            def reporthook(blocknum, blocksize, totalsize):
+                if totalsize > 0:
+                    percent = int((blocknum * blocksize * 100) / totalsize)
+                    self.download_progress = min(percent, 100)
+
+            urllib.request.urlretrieve(url, self.new_file_path, reporthook)
+            self.download_status = "done"
+        except Exception as e:
+            self.download_status = f"error: {str(e)}"
+
+    def get_download_progress(self):
+        return {
+            "progress": self.download_progress,
+            "status": self.download_status
+        }
+
+    def apply_update_and_restart(self):
+        """The Magic Script that replaces the .exe while the app is closed"""
+        current_exe = sys.executable 
+        new_exe = self.new_file_path 
+
+        # If you are testing in Python (not a compiled .exe yet)
+        if not getattr(sys, 'frozen', False):
+            os.startfile(new_exe)
+            os._exit(0)
+
+        # If it IS a compiled .exe, build the invisible replacement script
+        bat_path = os.path.join(os.path.dirname(current_exe), "updater.bat")
+        bat_content = f"""@echo off
+timeout /t 2 /nobreak > NUL
+move /y "{new_exe}" "{current_exe}"
+start "" "{current_exe}"
+del "%~f0"
+"""
+        with open(bat_path, "w") as f:
+            f.write(bat_content)
+
+        # Launch the invisible script and kill the current app immediately
+        subprocess.Popen(bat_path, creationflags=subprocess.CREATE_NO_WINDOW)
+        os._exit(0)
 
     def get_deleted_customers(self, payload):
         auth_err = self._require_auth()
