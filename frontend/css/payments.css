@@ -1,21 +1,12 @@
 /* frontend/css/payments.css */
 @import url('subscription.css'); /* Automatically pull all layout, table, and button styles */
 
-/* Small Overrides specifically for the Payments Table */
-.plan-table th:nth-child(2),
-.plan-table td:nth-child(2) {
-    text-align: left; /* Plan column should be left-aligned */
-}
-
-/* Keep the typewriter font for Phone No and ID to make it easy to read */
-.plan-table td:nth-child(3), 
-.plan-table td:nth-child(4) {
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: 600;
+/* ✅ FIX 1: Force fixed layout so your column percentages (25%, 20%, etc.) actually work perfectly */
+.plan-table {
+    table-layout: fixed !important;
 }
 
 /* --- Custom Colors for Status Tabs --- */
-
 /* Pending -> Red */
 #tabPending.active {
     background-color: #d32f2f !important;
