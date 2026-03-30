@@ -1172,20 +1172,6 @@ class Api:
                 'p_timestamp':          now_iso
             }).execute()
 
-            # ✅ Mark history rows as transferred — done AFTER RPC succeeds
-            # If RPC failed, we never reach this line so history stays unchanged
-            hist_res = db_module.supabase.table('subscription_history')\
-                .select("id")\
-                .eq("subscription_id", source_id)\
-                .in_("status", ["unpaid", "partial"])\
-                .execute()
-            if hist_res.data:
-                hist_ids = [h['id'] for h in hist_res.data]
-                db_module.supabase.table('subscription_history')\
-                    .update({"status": "transferred"})\
-                    .in_("id", hist_ids)\
-                    .execute()
-
             self.sync_customer_totals({"customer_id": customer_id})
             return {"ok": True}
         except Exception as e:
@@ -3109,7 +3095,7 @@ class Api:
     def add_plan(self, data):
         auth_err = self._require_auth()
         if auth_err: return auth_err
-        user_id = data.get("user_id")
+        user_id = self.active_user_id
         plan_type = data.get("type")
         
         payload = {

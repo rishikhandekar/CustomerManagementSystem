@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Save Cable Plan
             if (checkCable.checked) {
                 const res = await window.pywebview.api.add_plan({
-                    user_id: userId,
                     type: 'cable',
                     name: document.getElementById('cableName').value.trim(),
                     price: document.getElementById('cablePrice').value.trim(),
@@ -85,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!nameVal) { nameVal = `${speedVal} Mbps Plan`; }
 
                 const res = await window.pywebview.api.add_plan({
-                    user_id: userId,
                     type: 'internet',
                     name: nameVal,
                     price: document.getElementById('netPrice').value.trim(),
