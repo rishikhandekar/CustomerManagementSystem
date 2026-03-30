@@ -4016,7 +4016,8 @@ class Api:
                         download_url = asset.get("browser_download_url")
                         break
 
-                if latest_version > __version__:
+                def parse_v(v): return [int(x) for x in v.lstrip('v').split('.')]
+                if parse_v(latest_version) > parse_v(__version__):
                     return {
                         "ok": True,
                         "update_available": True,
