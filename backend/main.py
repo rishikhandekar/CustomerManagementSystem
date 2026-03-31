@@ -46,13 +46,14 @@ from selenium.webdriver.common.keys import Keys
 
 # Chrome imports
 from selenium.webdriver.chrome.options import Options as ChromeOptions
-
-# Edge imports
 from selenium.webdriver.edge.options import Options as EdgeOptions
-
-# Firefox imports
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver import Firefox
+
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.edge.service import Service as EdgeService
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from subprocess import CREATE_NO_WINDOW
 
 from selenium.webdriver.common.action_chains import ActionChains
 
@@ -434,17 +435,33 @@ class Api:
             try:
                 chrome_options = ChromeOptions()
                 chrome_options.add_argument(f"user-data-dir={session_dir}")
-                driver = webdriver.Chrome(options=chrome_options)
+                service = ChromeService()
+                service.creation_flags = CREATE_NO_WINDOW
+                driver = webdriver.Chrome(options=chrome_options, service=service)
                 print("[link_whatsapp] Chrome opened for QR scan.")
+                
             except Exception:
+                # 2. ATTEMPT EDGE
                 try:
                     edge_options = EdgeOptions()
                     edge_options.add_argument(f"user-data-dir={session_dir}")
-                    driver = webdriver.Edge(options=edge_options)
+                    service = EdgeService()
+                    service.creation_flags = CREATE_NO_WINDOW
+                    driver = webdriver.Edge(options=edge_options, service=service)
                     print("[link_whatsapp] Edge opened for QR scan.")
-                except Exception as e:
-                    print(f"[link_whatsapp] Could not open any browser: {e}")
-                    return
+                    
+                except Exception:
+                    # 3. ATTEMPT FIREFOX
+                    try:
+                        firefox_options = FirefoxOptions()
+                        service = FirefoxService()
+                        service.creation_flags = CREATE_NO_WINDOW
+                        driver = Firefox(options=firefox_options, service=service)
+                        print("[link_whatsapp] Mozilla Firefox opened for QR scan.")
+                        
+                    except Exception as e:
+                        print(f"[link_whatsapp] Could not open any browser: {e}")
+                        return
 
             try:
                 driver.get("https://web.whatsapp.com")
@@ -2321,7 +2338,9 @@ class Api:
         try:
             chrome_options = ChromeOptions()
             chrome_options.add_argument(f"user-data-dir={session_dir}")
-            driver = webdriver.Chrome(options=chrome_options)
+            service = ChromeService()
+            service.creation_flags = CREATE_NO_WINDOW
+            driver = webdriver.Chrome(options=chrome_options, service=service)
             print("Browser: Google Chrome launched successfully.")
 
         except Exception:
@@ -2329,14 +2348,18 @@ class Api:
             try:
                 edge_options = EdgeOptions()
                 edge_options.add_argument(f"user-data-dir={session_dir}")
-                driver = webdriver.Edge(options=edge_options)
+                service = EdgeService()
+                service.creation_flags = CREATE_NO_WINDOW
+                driver = webdriver.Edge(options=edge_options, service=service)
                 print("Browser: Microsoft Edge launched successfully.")
 
             except Exception:
                 # 3. FALLBACK: ATTEMPT FIREFOX
                 try:
                     firefox_options = FirefoxOptions()
-                    driver = Firefox(options=firefox_options)
+                    service = FirefoxService()
+                    service.creation_flags = CREATE_NO_WINDOW
+                    driver = Firefox(options=firefox_options, service=service)
                     print("Browser: Mozilla Firefox launched successfully.")
 
                 except Exception as e:
@@ -3683,18 +3706,24 @@ class Api:
         try:
             chrome_options = ChromeOptions()
             chrome_options.add_argument(f"user-data-dir={session_dir}")
-            driver = webdriver.Chrome(options=chrome_options)
+            service = ChromeService()
+            service.creation_flags = CREATE_NO_WINDOW
+            driver = webdriver.Chrome(options=chrome_options, service=service)
             print("Browser: Google Chrome launched successfully.")
         except Exception:
             try:
                 edge_options = EdgeOptions()
                 edge_options.add_argument(f"user-data-dir={session_dir}")
-                driver = webdriver.Edge(options=edge_options)
+                service = EdgeService()
+                service.creation_flags = CREATE_NO_WINDOW
+                driver = webdriver.Edge(options=edge_options, service=service)
                 print("Browser: Microsoft Edge launched successfully.")
             except Exception:
                 try:
                     firefox_options = FirefoxOptions()
-                    driver = Firefox(options=firefox_options)
+                    service = FirefoxService()
+                    service.creation_flags = CREATE_NO_WINDOW
+                    driver = Firefox(options=firefox_options, service=service)
                     print("Browser: Mozilla Firefox launched successfully.")
                 except Exception as e:
                     # No browser found — show clear message to user
