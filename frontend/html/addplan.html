@@ -21,13 +21,19 @@
             </div>
 
             <div class="form-card">
-                <div style="margin-bottom: 20px;">
-                    <label style="margin-right: 20px;">
-                        <input type="checkbox" id="checkCable"> Cable
-                    </label>
-                    <label>
-                        <input type="checkbox" id="checkInternet"> Internet
-                    </label>
+                <div class="subscription-toggles" style="margin-bottom: 25px;">
+                    <div class="sub-toggle" id="toggleCable">
+                        <div class="toggle-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        </div>
+                        <span>Cable</span>
+                    </div>
+                    <div class="sub-toggle" id="toggleInternet">
+                        <div class="toggle-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        </div>
+                        <span>Internet</span>
+                    </div>
                 </div>
 
                 <div id="formCable" style="display:none; border-bottom:1px solid #eee; padding-bottom:20px; margin-bottom:20px;">

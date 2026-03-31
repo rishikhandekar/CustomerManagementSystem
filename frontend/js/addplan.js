@@ -2,17 +2,20 @@
 loadLayout('subscriptions');
 
 document.addEventListener('DOMContentLoaded', () => {
-    const checkCable = document.getElementById('checkCable');
-    const checkInternet = document.getElementById('checkInternet');
+    const toggleCable = document.getElementById('toggleCable');
+    const toggleInternet = document.getElementById('toggleInternet');
     const formCable = document.getElementById('formCable');
     const formInternet = document.getElementById('formInternet');
 
     // 1. Toggle Visibility
-    checkCable.addEventListener('change', () => {
-        formCable.style.display = checkCable.checked ? 'block' : 'none';
+    toggleCable.addEventListener('click', () => {
+        toggleCable.classList.toggle('active');
+        formCable.style.display = toggleCable.classList.contains('active') ? 'block' : 'none';
     });
-    checkInternet.addEventListener('change', () => {
-        formInternet.style.display = checkInternet.checked ? 'block' : 'none';
+
+    toggleInternet.addEventListener('click', () => {
+        toggleInternet.classList.toggle('active');
+        formInternet.style.display = toggleInternet.classList.contains('active') ? 'block' : 'none';
     });
 
     // 2. Submit Logic
@@ -26,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // B. Check Selection
-        if (!checkCable.checked && !checkInternet.checked) {
+        if (!toggleCable.classList.contains('active') && !toggleInternet.classList.contains('active')) {
             showToast("Please select at least one Subscription Type.", 'warning');
             return;
         }
@@ -34,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- STEP 1: VALIDATION (Check EVERYTHING before saving anything) ---
         
         // Validate Cable inputs if checked
-        if (checkCable.checked) {
+        if (toggleCable.classList.contains('active')) {
             const name = document.getElementById('cableName').value.trim();
             const price = document.getElementById('cablePrice').value.trim();
             const duration = document.getElementById('cableDuration').value.trim();
@@ -46,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Validate Internet inputs if checked
-        if (checkInternet.checked) {
+        if (toggleInternet.classList.contains('active')) {
             const speed = document.getElementById('netSpeed').value.trim();
             const price = document.getElementById('netPrice').value.trim();
             const duration = document.getElementById('netDuration').value.trim();
@@ -64,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // Save Cable Plan
-            if (checkCable.checked) {
+            if (toggleCable.classList.contains('active')) {
                 const res = await window.pywebview.api.add_plan({
                     type: 'cable',
                     name: document.getElementById('cableName').value.trim(),
@@ -78,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Save Internet Plan
-            if (checkInternet.checked) {
+            if (toggleInternet.classList.contains('active')) {
                 const speedVal = document.getElementById('netSpeed').value.trim();
                 let nameVal = document.getElementById('netName').value.trim();
                 if (!nameVal) { nameVal = `${speedVal} Mbps Plan`; }
