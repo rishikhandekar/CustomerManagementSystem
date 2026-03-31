@@ -1,22 +1,57 @@
-import webview
-from pathlib import Path
-from backend.main import Api
+import sys
+import os
+import ctypes
+import traceback
 
-def main():
-    api = Api()
-
-    html_path = Path("frontend/html/login.html").resolve()
-
-    webview.create_window(
-        title="CMS",
-        url=html_path.as_uri(),
-        width=1100,
-        height=750,
-        resizable=True,
-        js_api=api
+# ── Windows taskbar icon fix ───────────────────────────────────────
+try:
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
+        "CustomerManagementSystem.CMS"
     )
+except Exception:
+    pass
 
-    webview.start(debug=False)
+# ── Path resolver — works both in Python and compiled .exe ────────
+def resource_path(relative):
+    """Get absolute path to resource. Works for dev and PyInstaller."""
+    if getattr(sys, 'frozen', False):
+        # Running as compiled .exe — files are in sys._MEIPASS
+        base = sys._MEIPASS
+    else:
+        # Running as python run.py — files are next to run.py
+        base = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base, relative)
+# ──────────────────────────────────────────────────────────────────
 
-if __name__ == "__main__":
-    main()
+try:
+    import webview
+    from pathlib import Path
+    from backend.main import Api
+
+    def main():
+        api = Api()
+
+        html_path = resource_path(os.path.join("frontend", "html", "login.html"))
+        icon_path  = resource_path("CMS.ico")
+
+        webview.create_window(
+            title="Customer Management System",
+            url=Path(html_path).as_uri(),
+            width=1100,
+            height=750,
+            resizable=True,
+            js_api=api
+        )
+
+        webview.start(
+            debug=False,
+            icon=icon_path if os.path.exists(icon_path) else None
+        )
+
+    if __name__ == "__main__":
+        main()
+
+except Exception as e:
+    print("STARTUP ERROR:", e)
+    traceback.print_exc()
+    input("Press Enter to close...")

@@ -9,8 +9,8 @@ env_path = Path(__file__).resolve().parents[1] / ".env"
 if env_path.exists():
     load_dotenv(env_path)
 
-SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+SUPABASE_URL = "https://pwgjvxkpagchmnlsxbmv.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3Z2p2eGtwYWdjaG1ubHN4Ym12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMwNDI0MTEsImV4cCI6MjA3ODYxODQxMX0.dMF8YINsu9BI6xbvtyJL572mAzBkWEI189pzHFbxtag"
 
 if not SUPABASE_URL or not SUPABASE_KEY:
     raise RuntimeError("Set SUPABASE_URL and SUPABASE_KEY in .env")
@@ -32,7 +32,7 @@ def set_auth_session(access_token: str, refresh_token: str = None):
     """
     try:
         if refresh_token:
-            # ✅ Full session with auto-refresh capability
+            # Full session with auto-refresh capability
             supabase.auth.set_session(access_token, refresh_token)
         else:
             # Fallback — no auto-refresh but works

@@ -4,10 +4,17 @@ import traceback
 import datetime
 
 # Log file sits in the project root, next to run.py
-_LOG_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    "app_errors.log"
-)
+import sys as _sys
+
+def _get_log_path():
+    if getattr(_sys, 'frozen', False):
+        # Running as .exe — write log next to the .exe file
+        return os.path.join(os.path.dirname(_sys.executable), "app_errors.log")
+    else:
+        # Running as python — write in project root
+        return os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "app_errors.log")
+
+_LOG_PATH = _get_log_path()
 
 # ── Known business error keywords → friendly messages ────────────────────────
 # These are things that CAN happen in normal use and should guide the admin.
