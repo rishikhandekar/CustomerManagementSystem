@@ -2,19 +2,33 @@ import sys
 import os
 import ctypes
 import traceback
+import subprocess
 
-# ── 1. SINGLE INSTANCE CHECK (Add this here) ───────────────────────
-# This looks for an already open window with your exact title
+# ── 1. THE PYINSTALLER WINDOWED CRASH FIX (SAFE VERSION) ───────────
+if sys.platform == "win32":
+    # We patch only the initialization, keeping Popen as a Class so asyncio doesn't break!
+    _original_popen_init = subprocess.Popen.__init__
+    
+    def _patched_popen_init(self, *args, **kwargs):
+        kwargs['creationflags'] = subprocess.CREATE_NO_WINDOW | kwargs.get('creationflags', 0)
+        _original_popen_init(self, *args, **kwargs)
+        
+    subprocess.Popen.__init__ = _patched_popen_init
+
+# Prevents crash if something tries to print to the missing terminal
+if sys.stdout is None: sys.stdout = open(os.devnull, "w")
+if sys.stderr is None: sys.stderr = open(os.devnull, "w")
+# ──────────────────────────────────────────────────────────────────
+
+# ── 2. SINGLE INSTANCE CHECK ──────────────────────────────────────
 hwnd = ctypes.windll.user32.FindWindowW(None, "Customer Management System")
 if hwnd:
-    # If found, bring the existing window to the front
     ctypes.windll.user32.ShowWindow(hwnd, 9) 
     ctypes.windll.user32.SetForegroundWindow(hwnd)
-    # Exit this new process so only one window stays open
     sys.exit(0)
 # ──────────────────────────────────────────────────────────────────
 
-# ── Windows taskbar icon fix ───────────────────────────────────────
+# ── 3. Windows taskbar icon fix ───────────────────────────────────
 try:
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
         "CustomerManagementSystem.CMS"
@@ -22,14 +36,11 @@ try:
 except Exception:
     pass
 
-# ── Path resolver — works both in Python and compiled .exe ────────
+# ── 4. Path resolver ──────────────────────────────────────────────
 def resource_path(relative):
-    """Get absolute path to resource. Works for dev and PyInstaller."""
     if getattr(sys, 'frozen', False):
-        # Running as compiled .exe — files are in sys._MEIPASS
         base = sys._MEIPASS
     else:
-        # Running as python run.py — files are next to run.py
         base = os.path.dirname(os.path.abspath(__file__))
     return os.path.join(base, relative)
 # ──────────────────────────────────────────────────────────────────
@@ -63,6 +74,11 @@ try:
         main()
 
 except Exception as e:
-    print("STARTUP ERROR:", e)
-    traceback.print_exc()
-    input("Press Enter to close...")
+    # We cannot use print() or input() because there is no terminal!
+    # Force Windows to pop up a native error box instead.
+    error_details = traceback.format_exc()
+    error_msg = f"A critical error occurred:\n\n{str(e)}\n\n{error_details}"
+    
+    # 0x10 creates a window with the red Error "X" icon
+    ctypes.windll.user32.MessageBoxW(0, error_msg, "Startup Error", 0x10)
+    sys.exit(1)

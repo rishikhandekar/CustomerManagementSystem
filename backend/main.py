@@ -28,7 +28,6 @@ import base64
 import shutil
 import urllib.request
 import json
-import webbrowser
 from .version import __version__
 import sys
 import subprocess
@@ -408,7 +407,6 @@ class Api:
         return {"ok": True, "message": "Bot is already linked."}
     
     def get_secure_session_dir(self):
-        
         # Find the OS-protected AppData folder
         if platform.system() == "Windows":
             base_dir = os.environ.get("APPDATA", os.path.expanduser("~"))
@@ -417,12 +415,21 @@ class Api:
         else: # Linux
             base_dir = os.path.expanduser("~/.config")
             
-        # Create a hidden folder specifically for your app
         app_dir = os.path.join(base_dir, "CableMediaApp")
         os.makedirs(app_dir, exist_ok=True)
+        session_dir = os.path.join(app_dir, "WhatsApp_Session")
         
-        # Return the secure WhatsApp session path
-        return os.path.join(app_dir, "WhatsApp_Session")
+        # If Chrome crashed previously, it leaves a lock file that breaks future launches.
+        # This automatically deletes the lock file before Selenium tries to open.
+        lock_file = os.path.join(session_dir, "SingletonLock")
+        if os.path.exists(lock_file):
+            try:
+                os.remove(lock_file)
+                print("Cleared residual Chrome lock file.")
+            except Exception:
+                pass 
+                
+        return session_dir
 
     def link_whatsapp(self, payload=None):
         auth_err = self._require_auth()
@@ -434,17 +441,32 @@ class Api:
             driver = None
             try:
                 chrome_options = ChromeOptions()
-                chrome_options.add_argument(f"user-data-dir={session_dir}")
+                chrome_options.add_argument(f"--user-data-dir={session_dir}")
+                chrome_options.add_argument("--no-sandbox")
+                chrome_options.add_argument("--disable-dev-shm-usage")
+                chrome_options.add_argument("--disable-gpu")
+                
                 service = ChromeService()
                 service.creation_flags = CREATE_NO_WINDOW
                 driver = webdriver.Chrome(options=chrome_options, service=service)
                 print("[link_whatsapp] Chrome opened for QR scan.")
                 
-            except Exception:
+            except Exception as e:
+                friendly_error = friendly(e).replace("'", "\\'")
+                try:
+                    if webview.windows:
+                        webview.windows[0].evaluate_js(f"showCMSAlert('Browser Notice', '{friendly_error} Trying Edge...');")
+                except:
+                    pass
+                
                 # 2. ATTEMPT EDGE
                 try:
                     edge_options = EdgeOptions()
-                    edge_options.add_argument(f"user-data-dir={session_dir}")
+                    edge_options.add_argument(f"--user-data-dir={session_dir}")
+                    edge_options.add_argument("--no-sandbox")
+                    edge_options.add_argument("--disable-dev-shm-usage")
+                    edge_options.add_argument("--disable-gpu")
+                    
                     service = EdgeService()
                     service.creation_flags = CREATE_NO_WINDOW
                     driver = webdriver.Edge(options=edge_options, service=service)
@@ -454,6 +476,12 @@ class Api:
                     # 3. ATTEMPT FIREFOX
                     try:
                         firefox_options = FirefoxOptions()
+                        
+                        # 🌟 THE FIX: Give Firefox its own dedicated save folder
+                        ff_session_dir = f"{session_dir}_FF"
+                        firefox_options.add_argument("-profile")
+                        firefox_options.add_argument(ff_session_dir)
+                        
                         service = FirefoxService()
                         service.creation_flags = CREATE_NO_WINDOW
                         driver = Firefox(options=firefox_options, service=service)
@@ -2335,9 +2363,14 @@ class Api:
         driver = None
 
         # 1. ATTEMPT TO LAUNCH CHROME FIRST
+        # 1. ATTEMPT TO LAUNCH CHROME FIRST
         try:
             chrome_options = ChromeOptions()
-            chrome_options.add_argument(f"user-data-dir={session_dir}")
+            chrome_options.add_argument(f"--user-data-dir={session_dir}")
+            chrome_options.add_argument("--no-sandbox")
+            chrome_options.add_argument("--disable-dev-shm-usage")
+            chrome_options.add_argument("--disable-gpu")
+            
             service = ChromeService()
             service.creation_flags = CREATE_NO_WINDOW
             driver = webdriver.Chrome(options=chrome_options, service=service)
@@ -2347,7 +2380,11 @@ class Api:
             # 2. FALLBACK: ATTEMPT EDGE
             try:
                 edge_options = EdgeOptions()
-                edge_options.add_argument(f"user-data-dir={session_dir}")
+                edge_options.add_argument(f"--user-data-dir={session_dir}")
+                edge_options.add_argument("--no-sandbox")
+                edge_options.add_argument("--disable-dev-shm-usage")
+                edge_options.add_argument("--disable-gpu")
+                
                 service = EdgeService()
                 service.creation_flags = CREATE_NO_WINDOW
                 driver = webdriver.Edge(options=edge_options, service=service)
@@ -2357,6 +2394,11 @@ class Api:
                 # 3. FALLBACK: ATTEMPT FIREFOX
                 try:
                     firefox_options = FirefoxOptions()
+                    
+                    ff_session_dir = f"{session_dir}_FF"
+                    firefox_options.add_argument("-profile")
+                    firefox_options.add_argument(ff_session_dir)
+                    
                     service = FirefoxService()
                     service.creation_flags = CREATE_NO_WINDOW
                     driver = Firefox(options=firefox_options, service=service)
@@ -3705,7 +3747,11 @@ class Api:
 
         try:
             chrome_options = ChromeOptions()
-            chrome_options.add_argument(f"user-data-dir={session_dir}")
+            chrome_options.add_argument(f"--user-data-dir={session_dir}")
+            chrome_options.add_argument("--no-sandbox")
+            chrome_options.add_argument("--disable-dev-shm-usage")
+            chrome_options.add_argument("--disable-gpu")
+            
             service = ChromeService()
             service.creation_flags = CREATE_NO_WINDOW
             driver = webdriver.Chrome(options=chrome_options, service=service)
@@ -3713,7 +3759,11 @@ class Api:
         except Exception:
             try:
                 edge_options = EdgeOptions()
-                edge_options.add_argument(f"user-data-dir={session_dir}")
+                edge_options.add_argument(f"--user-data-dir={session_dir}")
+                edge_options.add_argument("--no-sandbox")
+                edge_options.add_argument("--disable-dev-shm-usage")
+                edge_options.add_argument("--disable-gpu")
+                
                 service = EdgeService()
                 service.creation_flags = CREATE_NO_WINDOW
                 driver = webdriver.Edge(options=edge_options, service=service)
@@ -3721,6 +3771,11 @@ class Api:
             except Exception:
                 try:
                     firefox_options = FirefoxOptions()
+                    
+                    ff_session_dir = f"{session_dir}_FF"
+                    firefox_options.add_argument("-profile")
+                    firefox_options.add_argument(ff_session_dir)
+                    
                     service = FirefoxService()
                     service.creation_flags = CREATE_NO_WINDOW
                     driver = Firefox(options=firefox_options, service=service)
