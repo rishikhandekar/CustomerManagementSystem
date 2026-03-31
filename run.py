@@ -3,6 +3,17 @@ import os
 import ctypes
 import traceback
 
+# ── 1. SINGLE INSTANCE CHECK (Add this here) ───────────────────────
+# This looks for an already open window with your exact title
+hwnd = ctypes.windll.user32.FindWindowW(None, "Customer Management System")
+if hwnd:
+    # If found, bring the existing window to the front
+    ctypes.windll.user32.ShowWindow(hwnd, 9) 
+    ctypes.windll.user32.SetForegroundWindow(hwnd)
+    # Exit this new process so only one window stays open
+    sys.exit(0)
+# ──────────────────────────────────────────────────────────────────
+
 # ── Windows taskbar icon fix ───────────────────────────────────────
 try:
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(

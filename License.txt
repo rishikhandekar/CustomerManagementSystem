@@ -1,0 +1,459 @@
+================================================================================
+         END USER LICENSE AGREEMENT (EULA)
+         Customer Management System (CMS)
+         Version 1.0.0
+         Effective Date: April 1, 2026
+================================================================================
+
+IMPORTANT — PLEASE READ THIS AGREEMENT CAREFULLY BEFORE INSTALLING, COPYING,
+ACTIVATING, OR OTHERWISE USING THIS SOFTWARE.
+
+This End User License Agreement ("Agreement" or "EULA") is a legally binding
+contract between you, the individual or business entity installing or using this
+software ("Licensee" or "Operator"), and Rishi Mahendra Khandekar ("Licensor",
+"Developer"), the sole author and owner of the Customer Management System.
+
+By installing, launching, copying, or using the Software in any manner, you
+acknowledge that you have read, understood, and agree to be fully bound by all
+terms and conditions of this Agreement. If you do not agree to these terms, do
+not install or use the Software and immediately delete all copies in your
+possession.
+
+================================================================================
+1. DEFINITIONS
+================================================================================
+
+  a. "Software" refers to the Customer Management System (CMS) desktop 
+     application, including all associated files, user interface designs, 
+     backend scripts, database schemas, configuration files, update
+     mechanisms, and any future versions or patches provided to you.
+
+  b. "Licensor" refers to Rishi Mahendra Khandekar, the sole developer and
+     intellectual property owner of the Software.
+
+  c. "Licensee" or "Operator" refers to the individual or registered business
+     entity that has obtained and is using the Software.
+
+  d. "Customer Data" refers to all data entered by the Licensee into the
+     Software, including but not limited to customer names, phone numbers,
+     addresses, Aadhaar numbers, subscription records, billing histories,
+     advance balances, and payment records.
+
+  e. "Cloud Database" refers to the third-party hosted PostgreSQL database
+     service (Supabase) used by the Software to store and retrieve Customer Data.
+
+  f. "Automated Features" refers to the WhatsApp reminder bot, the daily
+     scheduler, and any automated communication tools built into the Software.
+
+  g. "Update" refers to any new version, patch, or enhancement to the Software
+     released by the Licensor.
+
+================================================================================
+2. GRANT OF LICENSE
+================================================================================
+
+Subject to full compliance with this Agreement, the Licensor grants you a
+limited, personal, non-exclusive, non-transferable, revocable license to:
+
+  a. Install and use the Software on authorized devices owned and operated by 
+     your registered business entity, provided all such devices are used 
+     exclusively by authorized personnel of your business.
+
+  b. Access and use all features of the Software, including subscription
+     management, billing, WhatsApp reminders, customer records, payment tracking,
+     dashboard analytics, and automated reporting features, solely for your
+     internal business operations.
+
+  c. Receive Updates made available by the Licensor during the active license
+     period, subject to the terms of this Agreement.
+
+This license is granted per business entity. It may not be shared, sub-licensed,
+or used across unaffiliated organizations, franchises, or third-party operators 
+without separate written authorization from the Licensor.
+
+================================================================================
+3. SCOPE OF USE
+================================================================================
+
+The Software is designed specifically for use by independent cable TV and
+internet service operators to manage their subscriber base, billing cycles,
+payment collections, and renewal reminders.
+
+  a. Permitted Use: You may use the Software for managing your own customers,
+     subscriptions, and payments within your own business operations.
+
+  b. Multi-Device Use: You may install the Software on multiple devices under 
+     the same business account. All devices logged into your account will share 
+     access to the same cloud database and customer records simultaneously.
+
+  c. Data Entry: You are responsible for the accuracy, completeness, and legality
+     of all Customer Data entered into the Software.
+
+  d. WhatsApp Automation: The Automated Features use Selenium-based browser
+     automation to send WhatsApp messages via WhatsApp Web. You are solely
+     responsible for ensuring that your use of WhatsApp automation complies with
+     WhatsApp's Terms of Service and all applicable laws. The Licensor makes no
+     warranty as to the continued availability of WhatsApp Web automation and
+     accepts no liability for any account restrictions imposed by WhatsApp.
+
+================================================================================
+4. DATA STORAGE, OWNERSHIP, AND PRIVACY
+================================================================================
+
+  a. Data Ownership: You retain full and exclusive ownership of all Customer Data
+     you enter into the Software. The Licensor does not claim any ownership
+     rights over your business data.
+
+  b. Cloud Database: The Software stores your data in a cloud-hosted database
+     provided by Supabase (https://supabase.com). By using the Software, you
+     acknowledge that your data is processed and stored on Supabase's
+     infrastructure, subject to Supabase's own Terms of Service and Privacy
+     Policy.
+
+  c. Data Access by Licensor: The Licensor does not access, read, sell, or share
+     your Customer Data under any circumstances, except as may be required by
+     law or as necessary to provide direct technical support at your explicit
+     request.
+
+  d. Row-Level Security: The Software is built with Row-Level Security (RLS)
+     policies at the database level, ensuring that data entered by one Operator
+     is strictly isolated from data entered by any other Operator.
+
+  e. Aadhaar and Sensitive Information: If you choose to store Aadhaar numbers
+     or other government-issued identification details of your customers, you are
+     solely responsible for compliance with the Aadhaar (Targeted Delivery of
+     Financial and Other Subsidies, Benefits and Services) Act, 2016, and all
+     other applicable Indian laws governing the collection and storage of
+     personally identifiable information (PII).
+
+  f. Backup Responsibility: While the cloud database provider maintains its own
+     infrastructure-level backups, the Licensor provides no independent backup
+     guarantee. You are strongly advised to maintain your own offline records or
+     exports of critical business data. The Licensor shall not be liable for any
+     data loss arising from database provider outages, accidental deletion, or
+     any other cause.
+
+  g. Data Deletion Upon Termination: Upon termination of this license, your
+     Customer Data will remain in the cloud database for a period of 30 days,
+     after which the Licensor reserves the right to permanently delete it. It is
+     your responsibility to export or back up your data before termination.
+
+================================================================================
+5. CONNECTIVITY AND SERVICE AVAILABILITY
+================================================================================
+
+  a. Internet Requirement: The Software requires an active internet connection to
+     function. Core features including customer lookup, payment recording,
+     subscription management, and WhatsApp reminders will not be available
+     without connectivity.
+
+  b. Third-Party Services: The Software relies on the following third-party
+     services, each subject to their own availability and terms:
+       — Supabase (Cloud Database)
+       — WhatsApp Web (Automated Reminders via Selenium)
+       — Google OAuth (Optional Login Method)
+       — GitHub (Automatic Update Delivery)
+
+  c. Service Interruptions: The Licensor is not responsible for any business
+     loss, inability to access Customer Data, missed reminders, or operational
+     disruption caused by:
+       — Internet connectivity failures at your premises
+       — Supabase database outages or maintenance windows
+       — WhatsApp service changes or restrictions
+       — Google service interruptions
+       — Power failures or hardware issues on your device
+
+  d. Updates and Version Enforcement: The Software includes an automatic update
+     notification system. When a new version is released, you will be shown a
+     mandatory update prompt that cannot be dismissed. You must install the
+     update to continue using the Software. The Licensor may, at its discretion,
+     block access to older versions for security or compatibility reasons.
+
+================================================================================
+6. RESTRICTIONS
+================================================================================
+
+You may NOT, under any circumstances:
+
+  a. Reverse engineer, decompile, disassemble, decrypt, or attempt to derive the
+     source code, database schema, API keys, authentication credentials, or any
+     other proprietary component of the Software.
+
+  b. Modify, adapt, translate, port, or create derivative works of the Software,
+     in whole or in part.
+
+  c. Sell, resell, rent, lease, lend, sublicense, transfer, or distribute the
+     Software or any license rights therein to any third party, including to
+     other cable operators, franchises, or local businesses.
+
+  d. Use the Software to provide services to third-party businesses or customers
+     other than your own direct subscriber base without prior written consent
+     from the Licensor.
+
+  e. Attempt to bypass, circumvent, or disable any licensing mechanism, database
+     access control, Row-Level Security policy, or authentication system within
+     the Software.
+
+  f. Use the Software in any manner that violates applicable local, national, or
+     international law, including but not limited to laws governing telecom
+     operations, customer data privacy, and electronic communications.
+
+  g. Remove, alter, or obscure any copyright notices, trademarks, watermarks, or
+     proprietary legends displayed within the Software or its documentation.
+
+  h. Use automated tools to scrape, extract, or mass-export Customer Data from
+     the cloud database outside of the Software's built-in features.
+
+  i. Share your login credentials, API keys, or database access with any
+     individual or entity outside your registered business without the Licensor's
+     written permission.
+
+================================================================================
+7. INTELLECTUAL PROPERTY AND OWNERSHIP
+================================================================================
+
+  a. The Software is licensed, not sold. This Agreement does not transfer title
+     to or ownership of the Software to you. The Licensor retains all title,
+     copyrights, trade secrets, patents, trademarks, and all other intellectual
+     property rights in and to the Software, including without limitation:
+       — All source code (Python backend, JavaScript frontend)
+       — All UI/UX designs, layouts, and visual elements
+       — All database schemas, RPC functions, and stored procedures
+       — All icons, graphics, logos, and branding elements
+       — All documentation, help content, and release notes
+
+  b. Any feedback, suggestions, or ideas you provide to the Licensor regarding
+     the Software may be used by the Licensor without restriction or compensation
+     to you.
+
+  c. The name "Customer Management System", the CMS logo, and associated branding
+     are the exclusive property of Rishi Mahendra Khandekar. You may not use them
+     in any marketing material, website, or communication without prior written
+     consent.
+
+================================================================================
+8. PAYMENT AND LICENSING FEES
+================================================================================
+
+  a. Initial License: Where a license fee has been agreed upon between you and
+     the Licensor, such fee must be paid in full before the Software is activated
+     for your business.
+
+  b. Subscription / Renewal: If the license is subject to periodic renewal, it
+     is your responsibility to renew before expiry to avoid service interruption.
+
+  c. No Refunds: All license fees are non-refundable once the Software has been
+     activated and used, except where required by applicable law.
+
+  d. Free Tier: Where the Software is provided at no charge (free tier), the
+     Licensor reserves the right to introduce fees, restrict features, or
+     discontinue free access at any time with reasonable prior notice.
+
+================================================================================
+9. PRIVACY AND CUSTOMER DATA COMPLIANCE
+================================================================================
+
+You acknowledge that by using the Software to store customer information
+(including names, phone numbers, addresses, and Aadhaar IDs), you are acting
+as a data controller or data fiduciary under applicable Indian law. You agree to:
+
+  a. Obtain appropriate consent from your customers before collecting and storing
+     their personally identifiable information in the Software.
+
+  b. Use Customer Data only for the purpose of managing your legitimate cable TV
+     and internet subscription business.
+
+  c. Not use Customer Data for unsolicited marketing, spam, or any purpose beyond
+     subscription management and billing reminders.
+
+  d. Comply with the Information Technology Act, 2000, the Information Technology
+     (Amendment) Act, 2008, the Digital Personal Data Protection Act, 2023, and
+     all other applicable Indian regulations governing personal data.
+
+  e. The Licensor shall not be held liable for any regulatory penalties, fines,
+     or legal action arising from your failure to comply with applicable data
+     protection laws.
+
+================================================================================
+10. DISCLAIMER OF WARRANTIES
+================================================================================
+
+THE SOFTWARE, INCLUDING ALL AUTOMATED FEATURES, CLOUD DATABASE CONNECTIVITY,
+WHATSAPP REMINDER FUNCTIONS, AND UPDATE MECHANISMS, IS PROVIDED "AS IS" AND
+"AS AVAILABLE", WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO:
+
+  — WARRANTIES OF MERCHANTABILITY
+  — FITNESS FOR A PARTICULAR PURPOSE
+  — NON-INFRINGEMENT
+  — ACCURACY OR COMPLETENESS OF DATA
+  — UNINTERRUPTED OR ERROR-FREE OPERATION
+  — SECURITY AGAINST UNAUTHORIZED ACCESS OR DATA BREACHES
+  — COMPATIBILITY WITH ALL DEVICES, OPERATING SYSTEMS, OR NETWORKS
+
+THE LICENSOR DOES NOT WARRANT THAT WHATSAPP AUTOMATION WILL FUNCTION
+INDEFINITELY, AS IT IS DEPENDENT ON THIRD-PARTY SERVICES OUTSIDE THE
+LICENSOR'S CONTROL.
+
+================================================================================
+11. LIMITATION OF LIABILITY
+================================================================================
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL THE
+LICENSOR, RISHI MAHENDRA KHANDEKAR, BE LIABLE FOR ANY:
+
+  a. DIRECT DAMAGES exceeding the total license fees paid by you to the Licensor
+     in the twelve (12) months preceding the event giving rise to the claim.
+
+  b. INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES,
+     including but not limited to:
+       — Loss of business profits or revenue
+       — Loss of business data or Customer Data
+       — Business interruption or downtime
+       — Loss of goodwill or customer relationships
+       — Cost of procuring substitute software or services
+       — Regulatory fines due to data loss or breach
+
+  c. DAMAGES arising from reliance on WhatsApp automation, including missed
+     reminders, customer complaints, or subscription lapses.
+
+  d. DAMAGES arising from third-party service outages (Supabase, WhatsApp,
+     Google, GitHub) beyond the Licensor's reasonable control.
+
+THIS LIMITATION APPLIES REGARDLESS OF THE FORM OF ACTION, WHETHER IN CONTRACT,
+TORT, NEGLIGENCE, STRICT LIABILITY, OR ANY OTHER THEORY, EVEN IF THE LICENSOR
+HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+================================================================================
+12. INDEMNIFICATION
+================================================================================
+
+You agree to indemnify, defend, and hold harmless the Licensor and any
+associated individuals from and against any and all claims, liabilities,
+damages, losses, costs, and expenses (including reasonable legal fees) arising
+out of or in connection with:
+
+  a. Your use or misuse of the Software.
+  b. Your violation of any term of this Agreement.
+  c. Your violation of any applicable law or third-party rights.
+  d. Any Customer Data you store, process, or transmit using the Software.
+  e. Your use of the WhatsApp automation features in violation of WhatsApp's
+     Terms of Service.
+
+================================================================================
+13. TERMINATION
+================================================================================
+
+  a. Termination by Licensor: The Licensor may terminate this license immediately
+     and without notice if you:
+       — Breach any term of this Agreement
+       — Attempt to reverse engineer or redistribute the Software
+       — Use the Software for illegal purposes
+       — Fail to pay applicable license fees when due
+
+  b. Termination by Licensee: You may terminate this Agreement at any time by
+     uninstalling the Software and destroying all copies in your possession.
+
+  c. Effect of Termination: Upon termination for any reason:
+       — Your license to use the Software immediately ceases
+       — Cloud database access will be revoked within 24 hours
+       — Your Customer Data will be retained for 30 days, after which it may
+         be permanently deleted
+       — Sections 4(e), 7, 9, 10, 11, 12, and 15 shall survive termination
+
+================================================================================
+14. UPDATES AND VERSION CONTROL
+================================================================================
+
+  a. The Licensor may release updates, patches, or new versions of the Software
+     from time to time. Updates may include bug fixes, security patches, new
+     features, or changes to existing functionality.
+
+  b. The Software includes an automatic update detection system. When a new
+     version is available, you will be notified at login with a mandatory update
+     prompt.
+
+  c. You must install all mandatory security updates promptly. The Licensor
+     reserves the right to restrict access to outdated versions that pose a
+     security risk.
+
+  d. The Licensor is not obligated to provide updates indefinitely and may
+     discontinue support for older versions with reasonable notice.
+
+================================================================================
+15. GOVERNING LAW AND DISPUTE RESOLUTION
+================================================================================
+
+  a. This Agreement shall be governed by and construed in accordance with the
+     laws of India, without regard to its conflict of law provisions.
+
+  b. Any dispute arising out of or in connection with this Agreement shall first
+     be attempted to be resolved through good-faith negotiation between the
+     parties.
+
+  c. If negotiation fails, disputes shall be subject to the exclusive
+     jurisdiction of the courts located in Maharashtra, India.
+
+  d. Nothing in this clause shall prevent the Licensor from seeking injunctive
+     or other equitable relief in any competent court to protect intellectual
+     property rights.
+
+================================================================================
+16. GENERAL PROVISIONS
+================================================================================
+
+  a. Entire Agreement: This Agreement constitutes the entire agreement between
+     you and the Licensor regarding the Software and supersedes all prior
+     negotiations, representations, warranties, and understandings.
+
+  b. Severability: If any provision of this Agreement is found to be
+     unenforceable or invalid by a court of competent jurisdiction, that
+     provision shall be limited or eliminated to the minimum extent necessary,
+     and the remaining provisions shall continue in full force and effect.
+
+  c. No Waiver: The failure of the Licensor to enforce any right or provision of
+     this Agreement shall not constitute a waiver of such right or provision.
+
+  d. Assignment: You may not assign or transfer your rights or obligations under
+     this Agreement without the prior written consent of the Licensor. The
+     Licensor may freely assign this Agreement.
+
+  e. Amendments: The Licensor reserves the right to update this Agreement at any
+     time. Continued use of the Software after such updates constitutes
+     acceptance of the revised terms. Material changes will be communicated
+     through the in-app update notification system.
+
+  f. Force Majeure: The Licensor shall not be liable for any failure or delay in
+     performance resulting from causes beyond its reasonable control, including
+     natural disasters, government actions, third-party service failures, or
+     internet infrastructure outages.
+
+  g. Contact: For licensing inquiries, support requests, or legal notices,
+     contact the Licensor at:
+
+         Rishi Mahendra Khandekar
+         Developer, Customer Management System (CMS)
+         Maharashtra, India
+
+================================================================================
+ACKNOWLEDGEMENT
+================================================================================
+
+BY INSTALLING, ACTIVATING, OR USING THE SOFTWARE, YOU ACKNOWLEDGE THAT:
+
+  1. You have read and understood this End User License Agreement in its entirety.
+  2. You agree to be legally bound by all terms and conditions stated herein.
+  3. You are of legal age and have the authority to enter into this Agreement on
+     behalf of yourself or your business entity.
+  4. You understand that this is a legally enforceable contract under the laws
+     of India.
+
+If you are accepting this Agreement on behalf of a business entity, you
+represent and warrant that you have the legal authority to bind that entity to
+these terms.
+
+================================================================================
+  Customer Management System (CMS)
+  Copyright © 2026 Rishi Mahendra Khandekar. All Rights Reserved.
+  Version 1.0.0 | Effective April 1, 2026
+================================================================================
