@@ -8,3 +8,7 @@ __pycache__/
 
 # Private WhatsApp Session
 WhatsApp_Session/
+
+build/
+dist/
+*.spec
